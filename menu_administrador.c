@@ -89,7 +89,7 @@ void gestionClientes() {
 
     /* Menú con las distintas opciones de gestión de clientes */
     int opcion;
-    unsigned int id_cliente;
+    char id_cliente[8];
     unsigned opcion_busqueda;
     do {
         printf("\nGESTION DE CLIENTES\n");
@@ -106,7 +106,7 @@ void gestionClientes() {
                 alta_cliente(&v_clientes);
                 break;
             case 2:
-                leer_unsigned("Ingrese el ID del cliente a eliminar", &id_cliente);
+                leer_cadena("Ingrese el ID del cliente a eliminar", id_cliente, 8);
                 eliminar_cliente(&v_clientes, id_cliente);
                 break;
             case 3:
@@ -114,7 +114,7 @@ void gestionClientes() {
                 leer_unsigned("Buscar por:\n1. ID\n2. Email", &opcion_busqueda);
                 if (opcion_busqueda == 1) {
                     // Buscar por ID
-                    leer_unsigned("Ingrese el ID del cliente a buscar", &id_cliente);
+                    leer_cadena("Ingrese el ID del cliente a buscar", id_cliente, 8);
                     Cliente *cliente = buscar_cliente_por_id(&v_clientes, id_cliente);
                     if (cliente != NULL) {
                         listar_cliente(cliente);
@@ -152,7 +152,7 @@ void gestionClientes() {
                 break;
             case 5:
                 // Solicitar el ID del cliente a modificar
-                leer_unsigned("Ingrese el ID del cliente a modificar", &id_cliente);
+                leer_cadena("Ingrese el ID del cliente a modificar", id_cliente, 8);
                 Cliente *cliente_modificar = buscar_cliente_por_id(&v_clientes, id_cliente);
                 if (cliente_modificar != NULL) {
                     modificar_cliente(cliente_modificar);

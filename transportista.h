@@ -1,22 +1,33 @@
 #ifndef TRANSPORTISTA_H
 #define TRANSPORTISTA_H
-#include "stdbool.h"
-#include "pedido.h"
-#include "string.h"
-#include "fecha.h"
-#include "utilidades.h"
+
+
+
 // Estructura que representa a un transportista
 typedef struct {
-    int id_transportista; // 4 digitos
+    char id_transportista[5]; // 4 digitos
     char nombre[21]; // Nombre del transportista
     char email[31]; // Email del transportista
     char contrasena[16]; // Contraseña de acceso
     char nombre_empresa[21]; // Nombre de la empresa de transporte
     char ciudad[21]; // Ciudad de operación
 } Transportista;
-void mostrar_perfil_transportista(Transportista  v_transportistas);
-void modificar_perfil_transportista(Transportista* v_transport, int pos_transportista);
-int seleecion_transportista(Transportista* transportistas, int n_transportistas) ;
+
+// Estructura para almacenar un vector de transportistas junto a su tamaño
+typedef struct {
+    Transportista* transportistas;
+    unsigned size;
+} VectorTransportistas;
+
+void cargar_transportistas(VectorTransportistas* transportistas);
+
+void guardar_transportistas(VectorTransportistas* transportistas);
+
+Transportista* buscar_transportista_id(VectorTransportistas* transportistas, char* id_transportista);
+
+Transportista* buscar_transportista_email(VectorTransportistas* transportistas, char* email);
+
+void listar_transportista(Transportista* transportista);
 
 #endif // TRANSPORTISTA_H
 

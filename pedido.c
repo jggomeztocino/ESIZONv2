@@ -30,9 +30,9 @@
     Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
     Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
 */
-void cargar_pedidos(VectorPedidos* v_pedidos)
+void cargar_pedidos(VectorPedidos *v_pedidos)
 {
-    FILE* f = fopen("pedidos.txt", "r");
+    FILE *f = fopen("pedidos.txt", "r");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de pedidos\n");
@@ -44,12 +44,12 @@ void cargar_pedidos(VectorPedidos* v_pedidos)
     {
         if (v_pedidos->size == 0)
         {
-            v_pedidos->pedidos = (Pedido*)malloc(sizeof(Pedido));
+            v_pedidos->pedidos = (Pedido *)malloc(sizeof(Pedido));
         }
         else
         {
-            v_pedidos->pedidos = (Pedido*)realloc(v_pedidos->pedidos, (v_pedidos->size + 1) * sizeof(Pedido));
-            if(v_pedidos->pedidos == NULL)
+            v_pedidos->pedidos = (Pedido *)realloc(v_pedidos->pedidos, (v_pedidos->size + 1) * sizeof(Pedido));
+            if (v_pedidos->pedidos == NULL)
             {
                 perror("Error al reservar memoria para los pedidos\n");
                 free(v_pedidos->pedidos);
@@ -57,7 +57,7 @@ void cargar_pedidos(VectorPedidos* v_pedidos)
             }
         }
 
-        char* token = strtok(linea, "-");
+        char *token = strtok(linea, "-");
         strcpy(v_pedidos->pedidos[v_pedidos->size].id_pedido, token);
 
         token = strtok(NULL, "-");
@@ -95,9 +95,9 @@ void cargar_pedidos(VectorPedidos* v_pedidos)
     fclose(f);
 }
 
-void guardar_pedidos(VectorPedidos* v_pedidos)
+void guardar_pedidos(VectorPedidos *v_pedidos)
 {
-    FILE* f = fopen("pedidos.txt", "w");
+    FILE *f = fopen("pedidos.txt", "w");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de pedidos\n");
@@ -144,9 +144,9 @@ void guardar_pedidos(VectorPedidos* v_pedidos)
     Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
     Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
 */
-void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido)
+void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
 {
-    FILE* f = fopen("productos_pedido.txt", "r");
+    FILE *f = fopen("productos_pedido.txt", "r");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de productos de pedido\n");
@@ -154,16 +154,20 @@ void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido)
     }
 
     char linea[100];
-    while (fgets(linea, 100, f) != NULL) {
+    while (fgets(linea, 100, f) != NULL)
+    {
         // Si el vector no tiene ningún producto pedido, se reserva memoria para un solo producto pedido
-        if (v_productos_pedido->size == 0) {
-            v_productos_pedido->productos_pedido = (ProductoPedido *) malloc(sizeof(ProductoPedido));
-        } else // Si ya hay productos pedidos, se reserva memoria para un producto pedido más
+        if (v_productos_pedido->size == 0)
         {
-            v_productos_pedido->productos_pedido = (ProductoPedido *) realloc(v_productos_pedido->productos_pedido,
-                                                                              (v_productos_pedido->size + 1) *
-                                                                              sizeof(ProductoPedido));
-            if (v_productos_pedido->productos_pedido == NULL) {
+            v_productos_pedido->productos_pedido = (ProductoPedido *)malloc(sizeof(ProductoPedido));
+        }
+        else // Si ya hay productos pedidos, se reserva memoria para un producto pedido más
+        {
+            v_productos_pedido->productos_pedido = (ProductoPedido *)realloc(v_productos_pedido->productos_pedido,
+                                                                             (v_productos_pedido->size + 1) *
+                                                                                 sizeof(ProductoPedido));
+            if (v_productos_pedido->productos_pedido == NULL)
+            {
                 perror("Error al reservar memoria para los productos de pedido\n");
                 free(v_productos_pedido->productos_pedido);
                 return;
@@ -206,27 +210,36 @@ void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido)
         // Se obtiene el siguiente token
         token = strtok(NULL, "-");
         // Si el estado es distinto de «enPreparación», se copia el token en el campo id_transportista del producto pedido
-        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado != 1) {
+        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado != 1)
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_transportista, token);
-        } else {
+        }
+        else
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_transportista, " ");
         }
 
         // Se obtiene el siguiente token
         token = strtok(NULL, "-");
         // Si el estado es «enLocker», se copia el token en el campo id_locker del producto pedido
-        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4) {
+        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4)
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_locker, token);
-        } else {
+        }
+        else
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_locker, " ");
         }
 
         // Se obtiene el siguiente token
         token = strtok(NULL, "-");
         // Si el estado es «enLocker», se copia el token en el campo cod_locker del producto pedido
-        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4) {
+        if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4)
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, token);
-        } else {
+        }
+        else
+        {
             strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, " ");
         }
 
@@ -234,7 +247,8 @@ void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido)
         token = strtok(NULL, "-");
         // Si el estado es «entregado» o «devuelto», se obtiene la fecha de entrega/devolución
         if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 5 ||
-            v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 6) {
+            v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 6)
+        {
             sscanf(token, "%d/%d/%d",
                    &v_productos_pedido->productos_pedido[v_productos_pedido->size].fecha_entrega_devolucion.dia,
                    &v_productos_pedido->productos_pedido[v_productos_pedido->size].fecha_entrega_devolucion.mes,
@@ -243,9 +257,9 @@ void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido)
     }
 }
 
-void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido)
+void guardar_productos_pedido(VectorProductosPedido *v_productos_pedido)
 {
-    FILE* f = fopen("productos_pedido.txt", "w");
+    FILE *f = fopen("productos_pedido.txt", "w");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de productos de pedido\n");
@@ -262,7 +276,7 @@ void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido)
     free(v_productos_pedido->productos_pedido);
 }
 
-Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido)
+Pedido *buscar_pedido_por_id(VectorPedidos *v_pedidos, char *id_pedido)
 {
     int i;
     for (i = 0; i < v_pedidos->size; i++)
@@ -276,7 +290,7 @@ Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido)
     return NULL;
 }
 
-void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente)
+void listar_pedidos_cliente(VectorPedidos *v_pedidos, char *id_cliente)
 {
     int i;
     for (i = 0; i < v_pedidos->size; i++)
@@ -296,4 +310,3 @@ void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente)
         }
     }
 }
-

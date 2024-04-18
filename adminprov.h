@@ -1,7 +1,7 @@
 #ifndef ADMINPROV_H
 #define ADMINPROV_H
 
-/* Estructura para administradores-proveedores */
+// Estructura para administradores-proveedores
 typedef struct {
     char id_empresa[5]; // 4 dígitos + '\0'
     char nombre[21];
@@ -10,10 +10,20 @@ typedef struct {
     char perfil_usuario[12]; // "administrador" o "proveedor"
 } AdminProv;
 
-/* Vector de administradores proveedores */
+// Vector de administradores proveedores
 typedef struct {
     AdminProv *admin_provs;
     unsigned size;
 } VectorAdminProv;
+
+void cargar_adminprov(VectorAdminProv *v_adminprov);
+
+void guardar_adminprov(VectorAdminProv *v_adminprov);
+
+AdminProv *buscar_adminprov_id(VectorAdminProv *v_adminprov, char *id_empresa);
+
+AdminProv *buscar_adminprov_email(VectorAdminProv *v_adminprov, char *email);
+
+void listar_adminprov(AdminProv *adminprov);
 
 #endif

@@ -34,4 +34,7 @@ add_executable(
         transportista.c
         utilidades.c
         utilidades.h
+        locker.c
+        categoria.c
+        adminprov.c
 )
