@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.22.1)
 project(ESIZON C)
 
 # Establece el estándar del lenguaje C al estándar ANSI C (C89/C90)
