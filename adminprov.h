@@ -1,7 +1,7 @@
 #ifndef ADMINPROV_H
 #define ADMINPROV_H
 
-#include "productos.h"
+
 #include "utilidades.h"
 
 // Estructura para administradores-proveedores

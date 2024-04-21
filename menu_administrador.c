@@ -300,7 +300,8 @@ void gestionProductos()
                         if(strcmp(respuesta, "s") == 0 || strcmp(respuesta, "S") == 0)
                         {
                             printf("\nMODIFICACIÓN DE PRODUCTO\n");
-                            modificar_producto(producto);
+                            modificar_producto(producto,&v_categorias,&v_adminprov);
+
                         }
                     }
                     else
@@ -323,7 +324,7 @@ void gestionProductos()
                         if(producto != NULL)
                         {
                             printf("\nMODIFICACIÓN DE PRODUCTO\n");
-                            modificar_producto(producto);
+                            modificar_producto(producto,&v_categorias,&v_adminprov);
                         }
                         else
                         {
@@ -338,7 +339,7 @@ void gestionProductos()
                 break;
             case 2:
                 printf("\nALTA DE PRODUCTO\n");
-                listar_producto(alta_producto(&v_productos, &v_categorias, &v_adminprov));
+                listar_producto((Producto *)alta_producto(&v_productos, &v_categorias, &v_adminprov));
                 break;
             case 3:
                 printf("\nBAJA DE PRODUCTO\n");

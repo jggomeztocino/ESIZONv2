@@ -94,7 +94,7 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos)
     }
     v_compartimentos->compartimentos = (CompartimentoLocker*)malloc(sizeof(CompartimentoLocker));
     v_compartimentos->size = 0;
-    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u\n",
+    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u-%u\n",
                   v_compartimentos->compartimentos[v_compartimentos->size].id_locker,
                   &v_compartimentos->compartimentos[v_compartimentos->size].n_compartimento,
                   v_compartimentos->compartimentos[v_compartimentos->size].cod_locker,
