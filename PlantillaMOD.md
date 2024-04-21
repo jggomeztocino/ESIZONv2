@@ -88,36 +88,164 @@ En las siguientes secciones se describirá el contenido a incluir en cada uno de
 
 <div id='usuario' />
 # Documentación de usuario
-Documentación relacionadas con las funciones del sistema pero no se hace referencia a nada relativo a su implementación. Está orientado a las personas que van a usar el sistema no a los que lo van a mantener.  
+
 
 
 <div id='funcional' />
 ## Descripción funcional
 
-[comment]:<>* Debe describir de forma simple el propósito del sistema.
-[comment]:<>* En esta sección se debe incluir una breve descripción funcional sobre lo que hace y no hace el sistema.
-[comment]:<>* Se pueden incluir pequeños ejemplos para dar una visión general de las características del sistema.
+###Proposito del sistema
+
+El objetivo de esta aplicación es implementar una versión simplificada de una plataforma de comercio electrónico online. La plataforma permitirá la adquisición de productos clasificados en diferentes categorías, así como el control de los pedidos de los clientes. Además, los clientes podrán aplicar códigos promocionales y cheques de descuento en el momento de realizar un pedido, y elegir entre la entrega a domicilio o en un punto de recogida ESILocker.
+
+ESIZON será proveedor de los productos vendidos en la plataforma y también gestionará productos suministrados por proveedores externos, quienes se encargarán del control de sus propios productos y stock.
+
+El sistema contará con cuatro perfiles de usuarios: cliente, administrador, proveedor y transportista. Los clientes podrán realizar búsquedas de productos, gestionar pedidos y devoluciones, y añadir dinero a la cartera, entre otras funciones. Los administradores realizarán tareas de configuración de la plataforma, como el tratamiento de clientes, productos, pedidos, devoluciones, stock, ESILockers y proveedores. Los proveedores gestionarán sus propios productos, stock y devoluciones, además de acceder a sus datos de perfil. Los transportistas actualizarán su perfil y se encargarán del reparto de pedidos asignados.
+
+Para conservar la información entre sesiones, todos los datos de ESIZON estarán almacenados en ficheros. Al iniciar el sistema, esta información se cargará en las estructuras de datos correspondientes en memoria, y al cerrar el programa, se actualizarán los datos en los ficheros. De esta manera, el sistema funcionará en memoria principal.
+
+##Funcionamiento
+
+
+El sistema divide a los usuarios en cuatro perfiles: Usuario, Administrador, Proveedor y Transportista, cada uno con acceso a diferentes funciones.
+
+Usuario: Al iniciar sesión, el usuario tiene acceso a las siguientes opciones:
+```c
+1.Perfil: Permite al usuario ver y editar su perfil.
+
+2.Productos: Permite al usuario buscar y explorar los productos disponibles.
+
+3.Descuentos: Permite al usuario visualizar sus códigos promocionales y cheques de descuento.
+
+4.Pedidos: Permite al realizar pedidos y ver el historial de los mismos.
+
+5.Devoluciones: Permite al usuario gestionar sus devoluciones.
+
+6.Salir del sistema: Finaliza la sesión del usuario.
+```
+
+Administrador: Al iniciar sesión, el administrador tiene acceso a las siguientes opciones:
+```c
+1.Perfil: Permite al administrador ver y editar su perfil.
+
+2.Clientes: Permite al administrador gestionar clientes, incluyendo alta, baja, modificación y listado.
+
+3.Proveedores: Permite al administrador gestionar proveedores, incluyendo alta, baja, modificación y listado.
+
+4.Productos: Permite al administrador gestionar productos, incluyendo alta, baja, modificación y listado.
+
+5.Categorías: Permite al administrador gestionar categorías de productos.
+
+6.Pedidos: Permite al administrador gestionar pedidos de clientes.
+
+7.Transportista: Permite al administrador gestionar información sobre transportistas.
+
+8.Descuentos: Permite al administrador gestionar códigos promocionales y cheques de descuento.
+
+9.Devoluciones: Permite al administrador gestionar devoluciones.
+
+10.Salir del sistema: Finaliza la sesión del administrador.
+```
+Proveedor: Al iniciar sesión, la empresa tiene acceso a las siguientes opciones:
+
+```c
+1.Perfil: Permite al proveedor ver y editar su perfil.
+
+2.Productos: Permite a la proveedor gestionar sus productos, incluyendo alta, baja, modificación y listado.
+
+3.Pedidos: Permite a la proveedor visualizar información y modificar el estado de los pedidos y productos que suministra.
+
+4.Salir del sistema: Finaliza la sesión del proveedor.
+```
+
+Transportista: Al iniciar sesión, el transportista tiene acceso a las siguientes opciones:
+```c
+1.Perfil: Permite al transportista ver y editar su perfil.
+
+2.Repartos: Permite al transportista gestionar la entrega de pedidos asignados.
+
+3.Retornos: Permite al transportista gestionar devoluciones de productos.
+
+4.Salir del sistema: Finaliza la sesión del transportista.
+```
+El sistema solicita al usuario que introduzca su nombre de usuario y contraseña. Una vez iniciada la sesión, se mostrará un menú correspondiente al perfil del usuario. Cada opción del menú permite realizar diferentes acciones según el perfil del usuario. Al seleccionar una opción, el usuario podrá realizar las operaciones correspondientes, y luego podrá optar por continuar utilizando el sistema o salir del mismo.
 
 
 <div id='tecnología' />
 ## Tecnología
 
-Un listado con una breve descripción de las tecnologías usadas en el proyecto: aplicaciones, frameworks, librerías, arquitecturas,...
-Por ejemplo, se puede añadir información sobre el tipo de programa, desarrollador, última versión estable y enlace a la página web oficial, entre otros detalles. 
-Para añadir el enlace puede hacerlo de esta forma:
+##Programas utilizados
+* [Clion](https://www.jetbrains.com/es-es/clion/): Version 2024.1
+* [Visual Studio Code](https://code.visualstudio.com/): Version 1.88
 
-* [Code::Blocks](https://www.codeblocks.org/): Version 20.3 
-* [Typora](https://typora.io/): Version 0.9.96 (beta)
 
-También se pueden añadir los iconos representativos de las herramientas, para ello incluir la imagen como se ha descrito más arriba.  
+##Librerias utilizadas
 
-Si se necesita hacer referencia a algunos documentos se incluyen las citas que sean necesarias [@Ejemplo1][@Ejemplo2][@Ejemplo3].
+* stdio.h
+* string.h
+* locale.h
+* stdlib.h
+
+##Librerias propias
+
+* Utilidades.h
+* Fecha.h
+
+##Requisitos del sistema para el uso de la aplicación
+
+**Requisitos Mínimos:**
+- **Sistema Operativo:** Microsoft Windows 95, 98, NT 4
+- **RAM:** 8 MB con un archivo de intercambio grande
+- **Procesador:** Compatible Intel a 100 Mhz
+- **Espacio en Disco Duro:** 30 MB libres
+
+**Requisitos Recomendados:**
+- **Sistema Operativo:** Microsoft Windows 2000, XP
+- **RAM:** 32 MB
+- **Procesador:** Compatible Intel a 400 Mhz
+- **Espacio en Disco Duro:** 200 MB libres
+
 
 
 <div id='instalación' />
-## Manual de instalación
 
-Una breve descripción que explique como instalar el sistema y adecuarlo a las configuraciones particulares del _hardware_, indicando las características mínimas de _hardware_ requeridas para el funcionamiento del programa.  
+## Manual de Instalación de ESIZON
+
+### Requisitos Previos:
+- **Sistema Operativo:** Windows
+- **MinGW (GCC):** Instalado siguiendo los pasos del manual anterior.
+- **Carpeta ESIZON:** Contiene todos los archivos necesarios para la compilación.
+- **Datos:** Los ficheros de texto se encuentran en el subdirectorio "data" dentro de la carpeta ESIZON.
+
+### Pasos para Compilar ESIZON:
+
+1. **Descargar ESIZON:**
+    - Descarga la carpeta ESIZON que contiene todos los archivos necesarios para la compilación desde la fuente correspondiente.
+
+2. **Preparar los Datos:**
+    - Asegúrate de que los ficheros de texto con los datos se encuentran en el subdirectorio "data" dentro de la carpeta ESIZON.
+
+3. **Abrir la Consola de Comandos:**
+    - Abre el Símbolo del Sistema o la Consola de Comandos de Windows.
+
+4. **Navegar a la Carpeta ESIZON:**
+    - Utiliza el comando `cd` para navegar a la carpeta ESIZON donde se encuentran los archivos del proyecto.
+      ```bash
+      cd ruta_a_ESIZON
+      ```
+
+5. **Compilar el Código:**
+    - Utiliza el compilador GCC para compilar el código fuente de ESIZON. Asegúrate de incluir todos los archivos necesarios en el comando de compilación.
+      ```bash
+      gcc *.c -o esizon
+      ```
+
+6. **Ejecutar ESIZON:**
+    - Una vez compilado correctamente, ejecuta el archivo ejecutable generado.
+      ```bash
+      esizon
+      ```
+
 
 
 <div id='acceso' />
