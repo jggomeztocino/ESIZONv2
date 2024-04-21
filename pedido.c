@@ -33,38 +33,32 @@
 //EJemplo : Primer caso a domicilio con cheque regalo (no aplica codigo locker) y segundo caso entrega a locker sin cheque regalo
 //0000001-02/02/2024-0000001-domicilio- -che001
 //0000002-03/02/2024-0000002-locker-Lock001-
-void cargar_pedidos(VectorPedidos *v_pedidos)
-{
+void cargar_pedidos(VectorPedidos *v_pedidos) {
     FILE *f = fopen("../data/Pedidos.txt", "r");
-    if (f == NULL)
-    {
-        perror("Error al abrir el archivo de pedidos\n");
+    if (f == NULL) {
+        perror("Error al abrir el archivo de pedidos");
         return;
     }
 
     char linea[100];
-    while (fgets(linea, 100, f) != NULL)
-    {
-        if (v_pedidos->size == 0)
-        {
-            v_pedidos->pedidos = (Pedido *)malloc(sizeof(Pedido));
+    Pedido *temp;
+    while (fgets(linea, sizeof(linea), f) != NULL) {
+        temp = (Pedido *)realloc(v_pedidos->pedidos, (v_pedidos->size + 1) * sizeof(Pedido));
+        if (temp == NULL) {
+            perror("Error al reservar memoria para los pedidos");
+            free(v_pedidos->pedidos);
+            fclose(f);
+            return;
         }
-        else
-        {
-            v_pedidos->pedidos = (Pedido *)realloc(v_pedidos->pedidos, (v_pedidos->size + 1) * sizeof(Pedido));
-            if (v_pedidos->pedidos == NULL)
-            {
-                perror("Error al reservar memoria para los pedidos\n");
-                free(v_pedidos->pedidos);
-                return;
-            }
-        }
+        v_pedidos->pedidos = temp;
 
         char *token = strtok(linea, "-");
         strcpy(v_pedidos->pedidos[v_pedidos->size].id_pedido, token);
 
         token = strtok(NULL, "-");
-        sscanf(token, "%d/%d/%d", &v_pedidos->pedidos[v_pedidos->size].fecha.dia, &v_pedidos->pedidos[v_pedidos->size].fecha.mes, &v_pedidos->pedidos[v_pedidos->size].fecha.anio);
+        sscanf(token, "%d/%d/%d", &v_pedidos->pedidos[v_pedidos->size].fecha.dia,
+               &v_pedidos->pedidos[v_pedidos->size].fecha.mes,
+               &v_pedidos->pedidos[v_pedidos->size].fecha.anio);
 
         token = strtok(NULL, "-");
         strcpy(v_pedidos->pedidos[v_pedidos->size].id_cliente, token);
@@ -73,22 +67,16 @@ void cargar_pedidos(VectorPedidos *v_pedidos)
         v_pedidos->pedidos[v_pedidos->size].lugar = atoi(token);
 
         token = strtok(NULL, "-");
-        if (v_pedidos->pedidos[v_pedidos->size].lugar == 2)
-        {
+        if (v_pedidos->pedidos[v_pedidos->size].lugar == 2) {
             strcpy(v_pedidos->pedidos[v_pedidos->size].id_locker, token);
-        }
-        else
-        {
+        } else {
             strcpy(v_pedidos->pedidos[v_pedidos->size].id_locker, " ");
         }
 
         token = strtok(NULL, "-");
-        if (strlen(token) > 0)
-        {
+        if (token && strlen(token) > 0) {
             strcpy(v_pedidos->pedidos[v_pedidos->size].id_descuento, token);
-        }
-        else
-        {
+        } else {
             strcpy(v_pedidos->pedidos[v_pedidos->size].id_descuento, " ");
         }
 

@@ -26,37 +26,59 @@
     Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
     Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
  */
+#include <stdio.h>
+#include <stdlib.h>
+
 void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
+    // Abrir archivo de devoluciones para lectura
     FILE *f = fopen("../data/Devoluciones.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("Error al abrir el archivo");
         return;
     }
+
+    // Inicializar la memoria para almacenar devoluciones
     v_devoluciones->devoluciones = (Devolucion *) malloc(sizeof(Devolucion));
-    v_devoluciones->n_devoluciones = 0;
-    while (fscanf(f, "%7[^-]-%7[^-]-%d/%d/%d-%50[^-]-%8[^-]-%d/%d/%d-%d/%d/%d\n",
-                  v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].id_pedido,
-                  v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].id_producto,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_devolucion.dia,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_devolucion.mes,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_devolucion.anio,
-                  v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].motivo,
-                  v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].estado,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_aceptacion.dia,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_aceptacion.mes,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_aceptacion.anio,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_caducidad.dia,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_caducidad.mes,
-                  &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones].fecha_caducidad.anio) == 14) {
-        v_devoluciones->n_devoluciones++;
-        v_devoluciones->devoluciones = (Devolucion *) realloc(v_devoluciones->devoluciones,
-                                                              (v_devoluciones->n_devoluciones + 1) * sizeof(Devolucion));
-        if (v_devoluciones->devoluciones == NULL) {
-            free(v_devoluciones->devoluciones);
-            perror("\nError al reservar memoria\n");
-        }
+    if (v_devoluciones->devoluciones == NULL) {
+        perror("Error al reservar memoria inicial");
         fclose(f);
+        return;
     }
+    v_devoluciones->n_devoluciones = 0;
+
+    Devolucion* temp;
+    int n_devoluciones_actual = 0;
+
+    // Leer los datos de las devoluciones del archivo
+    while (fscanf(f, "%7[^-]-%7[^-]-%d/%d/%d-%50[^-]-%8[^-]-%d/%d/%d-%d/%d/%d\n",
+                  v_devoluciones->devoluciones[n_devoluciones_actual].id_pedido,
+                  v_devoluciones->devoluciones[n_devoluciones_actual].id_producto,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.dia,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.mes,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.anio,
+                  v_devoluciones->devoluciones[n_devoluciones_actual].motivo,
+                  v_devoluciones->devoluciones[n_devoluciones_actual].estado,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.dia,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.mes,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.anio,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.dia,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.mes,
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.anio) == 14) {
+
+        n_devoluciones_actual++;
+        temp = (Devolucion *) realloc(v_devoluciones->devoluciones, (n_devoluciones_actual + 1) * sizeof(Devolucion));
+        if (temp == NULL) {
+            perror("Error al reservar memoria durante la lectura");
+            free(v_devoluciones->devoluciones);
+            fclose(f);
+            return;
+        }
+        v_devoluciones->devoluciones = temp;
+    }
+
+    // Actualizar la cantidad de devoluciones después de la lectura completa
+    v_devoluciones->n_devoluciones = n_devoluciones_actual;
+    fclose(f);
 }
 
 

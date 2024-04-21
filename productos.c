@@ -5,35 +5,52 @@
 
 #include "productos.h"
 
-void cargar_productos(VectorProductos* v_productos)
-{
+void cargar_productos(VectorProductos* v_productos) {
+    // Abrir archivo de productos para lectura
     FILE* f = fopen("../data/Productos.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("Error al abrir el archivo");
         return;
     }
     printf("Productos.txt abierto\n");
+
+    // Inicializar la memoria para almacenar los productos
     v_productos->productos = (Producto*)malloc(sizeof(Producto));
-    v_productos->size = 0;
-    // Rehecho para que se ajuste a los tamaños y tipos de datos de los campos
-    while (fscanf(f, "%7[^-]-%15[^-]-%50[^-]-%4[^-]-%4[^-]-%u-%u-%f\n",
-                  v_productos->productos[v_productos->size].id_producto,
-                  v_productos->productos[v_productos->size].nombre,
-                  v_productos->productos[v_productos->size].descripcion,
-                  v_productos->productos[v_productos->size].id_categoria,
-                  v_productos->productos[v_productos->size].id_gestor,
-                  &v_productos->productos[v_productos->size].stock,
-                  &v_productos->productos[v_productos->size].entrega,
-                  &v_productos->productos[v_productos->size].importe) == 8) {
-        v_productos->size++;
-        // Producto n cargado
-        printf("Producto %d cargado\n", v_productos->size);
-        v_productos->productos = (Producto*)realloc(v_productos->productos, (v_productos->size + 1) * sizeof(Producto));
-        if(v_productos->productos == NULL) {
-            free(v_productos->productos);
-            perror("\nError al reservar memoria\n");
-        }
+    if (v_productos->productos == NULL) {
+        perror("Error al reservar memoria inicial");
+        fclose(f);
+        return;
     }
+    v_productos->size = 0;
+
+    Producto* temp;
+    int n_productos_actual = 0;
+
+    // Leer los datos de los productos del archivo
+    while (fscanf(f, "%7[^-]-%15[^-]-%50[^-]-%4[^-]-%4[^-]-%u-%u-%f\n",
+                  v_productos->productos[n_productos_actual].id_producto,
+                  v_productos->productos[n_productos_actual].nombre,
+                  v_productos->productos[n_productos_actual].descripcion,
+                  v_productos->productos[n_productos_actual].id_categoria,
+                  v_productos->productos[n_productos_actual].id_gestor,
+                  &v_productos->productos[n_productos_actual].stock,
+                  &v_productos->productos[n_productos_actual].entrega,
+                  &v_productos->productos[n_productos_actual].importe) == 8) {
+
+        n_productos_actual++;
+        printf("Producto %d cargado\n", n_productos_actual);
+        temp = (Producto*)realloc(v_productos->productos, (n_productos_actual + 1) * sizeof(Producto));
+        if (temp == NULL) {
+            perror("Error al reservar memoria durante la lectura");
+            free(v_productos->productos);
+            fclose(f);
+            return;
+        }
+        v_productos->productos = temp;
+    }
+
+    // Actualizar la cantidad de productos después de la lectura completa
+    v_productos->size = n_productos_actual;
     fclose(f);
 }
 

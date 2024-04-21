@@ -85,33 +85,52 @@ void listar_lockers_localidad(VectorLockers* lockers, char* localidad)
 }
 //Ejemplo:
 //Lock001-01-134697-ocupado-08/01/2024-13/03/2024
-void cargar_compartimentos(VectorCompartimentos* v_compartimentos)
-{
+void cargar_compartimentos(VectorCompartimentos* v_compartimentos) {
+    // Abrir archivo de compartimentos para lectura
     FILE* f = fopen("../data/compartimentos.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("Error al abrir el archivo");
         return;
     }
+
+    // Inicializar la memoria para almacenar los compartimentos
     v_compartimentos->compartimentos = (CompartimentoLocker*)malloc(sizeof(CompartimentoLocker));
-    v_compartimentos->size = 0;
-    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u-%u\n",
-                  v_compartimentos->compartimentos[v_compartimentos->size].id_locker,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].n_compartimento,
-                  v_compartimentos->compartimentos[v_compartimentos->size].cod_locker,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].estado,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.dia,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.mes,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.anio,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.dia,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.mes,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.anio) == 10) {
-        v_compartimentos->size++;
-        v_compartimentos->compartimentos = (CompartimentoLocker*)realloc(v_compartimentos->compartimentos, (v_compartimentos->size + 1) * sizeof(CompartimentoLocker));
-        if(v_compartimentos->compartimentos == NULL) {
-            free(v_compartimentos->compartimentos);
-            perror("\nError al reservar memoria\n");
-        }
+    if (v_compartimentos->compartimentos == NULL) {
+        perror("Error al reservar memoria inicial");
+        fclose(f);
+        return;
     }
+    v_compartimentos->size = 0;
+
+    CompartimentoLocker* temp;
+    int n_compartimentos_actual = 0;
+
+    // Leer los datos de los compartimentos del archivo
+    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u-%u\n",
+                  v_compartimentos->compartimentos[n_compartimentos_actual].id_locker,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].n_compartimento,
+                  v_compartimentos->compartimentos[n_compartimentos_actual].cod_locker,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].estado,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_ocupacion.dia,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_ocupacion.mes,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_ocupacion.anio,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_caducidad.dia,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_caducidad.mes,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_caducidad.anio) == 10) {
+
+        n_compartimentos_actual++;
+        temp = (CompartimentoLocker*)realloc(v_compartimentos->compartimentos, (n_compartimentos_actual + 1) * sizeof(CompartimentoLocker));
+        if (temp == NULL) {
+            perror("Error al reservar memoria durante la lectura");
+            free(v_compartimentos->compartimentos);
+            fclose(f);
+            return;
+        }
+        v_compartimentos->compartimentos = temp;
+    }
+
+    // Actualizar la cantidad de compartimentos después de la lectura completa
+    v_compartimentos->size = n_compartimentos_actual;
     fclose(f);
 }
 

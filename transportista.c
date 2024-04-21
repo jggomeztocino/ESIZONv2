@@ -7,29 +7,48 @@
 //Ejemplo:
 //0001-Rafael Guitierrez- rafael@gutitrans.com-rf001-GutiTrans-Cádiz
 //0002-Pepe Tinoco-pepe@itranspo.com-pp001-TransPo-Cádiz
-void cargar_transportistas(VectorTransportistas* transportistas)
-{
+void cargar_transportistas(VectorTransportistas* transportistas) {
+    // Abrir archivo de transportistas para lectura
     FILE* f = fopen("../data/Transportistas.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("Error al abrir el archivo");
         return;
     }
+
+    // Inicializar la memoria para almacenar los transportistas
     transportistas->transportistas = (Transportista*)malloc(sizeof(Transportista));
-    transportistas->size = 0;
-    while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^-]\n",
-                  transportistas->transportistas[transportistas->size].id_transportista,
-                  transportistas->transportistas[transportistas->size].nombre,
-                  transportistas->transportistas[transportistas->size].email,
-                  transportistas->transportistas[transportistas->size].contrasena,
-                  transportistas->transportistas[transportistas->size].nombre_empresa,
-                  transportistas->transportistas[transportistas->size].ciudad) == 6) {
-        transportistas->size++;
-        transportistas->transportistas = (Transportista*)realloc(transportistas->transportistas, (transportistas->size + 1) * sizeof(Transportista));
-        if(transportistas->transportistas == NULL) {
-            free(transportistas->transportistas);
-            perror("\nError al reservar memoria\n");
-        }
+    if (transportistas->transportistas == NULL) {
+        perror("Error al reservar memoria inicial");
+        fclose(f);
+        return;
     }
+    transportistas->size = 0;
+
+    Transportista* temp;
+    int n_transportistas_actual = 0;
+
+    // Leer los datos de los transportistas del archivo
+    while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^-]\n",
+                  transportistas->transportistas[n_transportistas_actual].id_transportista,
+                  transportistas->transportistas[n_transportistas_actual].nombre,
+                  transportistas->transportistas[n_transportistas_actual].email,
+                  transportistas->transportistas[n_transportistas_actual].contrasena,
+                  transportistas->transportistas[n_transportistas_actual].nombre_empresa,
+                  transportistas->transportistas[n_transportistas_actual].ciudad) == 6) {
+
+        n_transportistas_actual++;
+        temp = (Transportista*)realloc(transportistas->transportistas, (n_transportistas_actual + 1) * sizeof(Transportista));
+        if (temp == NULL) {
+            perror("Error al reservar memoria durante la lectura");
+            free(transportistas->transportistas);
+            fclose(f);
+            return;
+        }
+        transportistas->transportistas = temp;
+    }
+
+    // Actualizar la cantidad de transportistas después de la lectura completa
+    transportistas->size = n_transportistas_actual;
     fclose(f);
 }
 
