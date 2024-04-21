@@ -126,6 +126,7 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
     char id_pedido[8];
     unsigned opcion_lugar;
     sprintf(id_pedido, "%07d", atoi(v_pedidos.pedidos[v_pedidos.size - 1].id_pedido) + 1);
+
     strcpy(pedido_temp.id_pedido, id_pedido);
     //Obtener la fecha actual
     pedido_temp.fecha = obtener_fecha_actual();
