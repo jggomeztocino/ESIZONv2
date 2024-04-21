@@ -230,3 +230,20 @@ AdminProv *modificar_proveedor(VectorAdminProv *v_adminprov)
     }
 }
 
+AdminProv* buscar_proveedor_id(VectorAdminProv* v_adminprov, char* id_proveedor)
+{
+    AdminProv *proveedor = buscar_adminprov_id(v_adminprov, id_proveedor);
+    if (proveedor == NULL || strcmp(proveedor->perfil_usuario, "proveedor") != 0){
+        return NULL;
+    }
+    return proveedor;
+}
+
+AdminProv* buscar_proveedor_email(VectorAdminProv* v_adminprov, char* email)
+{
+    AdminProv *proveedor = buscar_adminprov_email(v_adminprov, email);
+    if (proveedor == NULL || strcmp(proveedor->perfil_usuario, "proveedor") != 0){
+        return NULL;
+    }
+    return proveedor;
+}

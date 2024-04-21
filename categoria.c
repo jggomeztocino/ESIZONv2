@@ -5,23 +5,6 @@
 
 #include "categoria.h"
 
-/*
-// Estructura que representa a una categoría de productos
-typedef struct {
-    char id_categoria[5]; // 4 dígitos + '\0'
-    char descripcion[51]; // Descripción de la categoría
-} Categoria;
-
-// Estructura para almacenar un vector de categorías junto a su tamaño
-typedef struct {
-    Categoria* categorias;
-    unsigned size;
-} VectorCategorias;
- */
-//Ejemplo:
-//0001-tv video home cinema
-//0002-audio HIFI
-
 void cargar_categorias(VectorCategorias* categorias)
 {
     FILE* f = fopen("../data/Categorias.txt", "r");

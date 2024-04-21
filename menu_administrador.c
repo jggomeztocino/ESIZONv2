@@ -470,6 +470,38 @@ void gestionProductos()
     guardar_adminprov(&v_adminprov);
 }
 
+/*
+ *  Categorías
+    Mediante esta opción el administrador podrá acceder a la información de las categorías
+    dadas de alta en la plataforma. Mediante el menú correspondiente podrá realizar altas,
+    bajas, búsquedas, listados y modificaciones de categorías. Además, podrá generar listados de
+    productos por categoría.
+
+    Para ello deberá hacer uso de las funciones de gestión de categorías y productos.
+
+    Las opciones a mostrar son:
+    1. Búsqueda de categoría
+    2. Alta de categoría
+    3. Baja de categoría
+    4. Modificación de categoría
+    5. Listado de categorías
+    6. Listado de productos por categoría
+    7. Volver
+
+    1. Búsqueda de categoría
+    El sistema solicitará al administrador que introduzca el ID de la categoría a buscar.
+    - Si la categoría existe, se mostrará la información de la categoría y se preguntará si se desea modificar.
+    - Si la categoría no existe, se mostrará un mensaje indicando que la categoría no existe.
+
+    2. Alta de categoría
+    - El ID será generado automáticamente por el sistema. Para ello, se deberá buscar el último ID existente en el vector,
+    transformarlo a entero, incrementarlo en 1 y convertirlo de nuevo a cadena de caracteres.
+    - El sistema solicitará al administrador que introduzca la descripción de la categoría. Si la descripción ya existe,
+
+    3. Baja de categoría
+    El sistema solicitará al administrador que introduzca el ID de la categoría a eliminar.
+
+ */
 
 void mostrarMenuAdministrador(AdminProv* admin) {
     int opcion;

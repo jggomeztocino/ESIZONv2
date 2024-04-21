@@ -41,4 +41,8 @@ void baja_proveedor(VectorAdminProv *v_adminprov);
 
 AdminProv *modificar_proveedor(VectorAdminProv *v_adminprov);
 
+AdminProv* buscar_proveedor_id(VectorAdminProv* v_adminprov, char* id_proveedor);
+
+AdminProv* buscar_proveedor_email(VectorAdminProv* v_adminprov, char* email);
+
 #endif//ADMINPROV_H

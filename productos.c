@@ -12,7 +12,6 @@ void cargar_productos(VectorProductos* v_productos) {
         perror("Error al abrir el archivo");
         return;
     }
-    printf("Productos.txt abierto\n");
 
     // Inicializar la memoria para almacenar los productos
     v_productos->productos = (Producto*)malloc(sizeof(Producto));
@@ -38,7 +37,6 @@ void cargar_productos(VectorProductos* v_productos) {
                   &v_productos->productos[n_productos_actual].importe) == 8) {
 
         n_productos_actual++;
-        printf("Producto %d cargado\n", n_productos_actual);
         temp = (Producto*)realloc(v_productos->productos, (n_productos_actual + 1) * sizeof(Producto));
         if (temp == NULL) {
             perror("Error al reservar memoria durante la lectura");
@@ -168,7 +166,7 @@ Producto* alta_producto(VectorProductos* v_productos, VectorCategorias* v_catego
     while (!valido) {
         char id_categoria[5];
         leer_cadena("Introduzca el ID de la categoría del producto (4 dígitos): ", id_categoria, 5);
-        Categoria* categoria = buscar_categoria_id(v_categorias, v_productos->productos[v_productos->size].id_categoria);
+        Categoria* categoria = buscar_categoria_id(v_categorias, id_categoria);
         if (categoria != NULL) {
             strcpy(v_productos->productos[v_productos->size].id_categoria, id_categoria);
             valido = 1;
@@ -184,7 +182,7 @@ Producto* alta_producto(VectorProductos* v_productos, VectorCategorias* v_catego
     while (!valido) {
         char id_gestor[5];
         leer_cadena("Introduzca el ID del gestor del producto (4 dígitos): ", id_gestor, 5);
-        AdminProv* adminprov = buscar_adminprov_id(v_adminprov, v_productos->productos[v_productos->size].id_gestor);
+        AdminProv* adminprov = buscar_proveedor_id(v_adminprov, id_gestor);
         if (adminprov != NULL) {
             strcpy(v_productos->productos[v_productos->size].id_gestor, id_gestor);
             valido = 1;
@@ -252,7 +250,7 @@ Producto* modificar_producto(Producto* producto, VectorCategorias* v_categorias,
                 while (!valido) {
                     char id_categoria[5];
                     leer_cadena("Introduzca el ID de la categoría del producto (4 dígitos): ", id_categoria, 5);
-                    Categoria *categoria = buscar_categoria_id(v_categorias, producto->id_categoria);
+                    Categoria *categoria = buscar_categoria_id(v_categorias, id_categoria);
                     if (categoria != NULL) {
                         strcpy(producto->id_categoria, id_categoria);
                         valido = 1;
@@ -270,7 +268,7 @@ Producto* modificar_producto(Producto* producto, VectorCategorias* v_categorias,
                 while (!valido) {
                     char id_gestor[5];
                     leer_cadena("Introduzca el ID del gestor del producto (4 dígitos): ", id_gestor, 5);
-                    AdminProv *adminprov = buscar_adminprov_id(v_adminprov, producto->id_gestor);
+                    AdminProv *adminprov = buscar_adminprov_id(v_adminprov, id_gestor);
                     if (adminprov != NULL) {
                         strcpy(producto->id_gestor, id_gestor);
                         valido = 1;
