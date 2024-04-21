@@ -8,12 +8,13 @@
 void cargar_adminprov(VectorAdminProv *v_adminprov) {
     FILE* f = fopen("../data/AdminProv.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("Error al abrir el archivo");
         return;
     }
 
     v_adminprov->admin_provs = NULL;
     v_adminprov->size = 0;
+    AdminProv* temp;
 
     AdminProv ap;
 
@@ -24,16 +25,14 @@ void cargar_adminprov(VectorAdminProv *v_adminprov) {
                   ap.contrasena,
                   ap.perfil_usuario) == 5) {
 
-        AdminProv* nuevo_v_adminproc = (AdminProv*)realloc(v_adminprov->admin_provs, (v_adminprov->size + 1) * sizeof(AdminProv));
-
-        if (nuevo_v_adminproc == NULL) {
-            perror("\nError al reservar memoria\n");
+        temp = (AdminProv*)realloc(v_adminprov->admin_provs, (v_adminprov->size + 1) * sizeof(AdminProv));
+        if (temp == NULL) {
+            perror("Error al reservar memoria");
             free(v_adminprov->admin_provs);
             fclose(f);
             return;
         }
-
-        v_adminprov->admin_provs = nuevo_v_adminproc;
+        v_adminprov->admin_provs = temp;
         v_adminprov->admin_provs[v_adminprov->size] = ap;
         v_adminprov->size++;
     }
