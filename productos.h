@@ -47,4 +47,5 @@ unsigned listar_productos_nombre(VectorProductos* v_productos, char* nombre);
 void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
 
 
+
 #endif//ESIZON_PRODUCTOS_H_

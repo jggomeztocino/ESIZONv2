@@ -47,8 +47,26 @@ void guardar_pedidos(VectorPedidos* v_pedidos);
 // Búsqueda de un pedido por su identificador
 Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido);
 
+
+
 // Listado de pedidos de un cliente
 void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente);
+
+//Listado de productos de un pedido
+void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido);
+
+//Funcion de listar para los productos pedidos asignados a un transportista en un pedido
+void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
+
+//Funcion que lista los pedidos de un cliente que se encuentran en lockers
+void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente);
+
+//Comprueba si un producto pertenece a un pedido
+int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto);
+
+//FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
+ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
+
 
 // Funciones para cargar y guardar los productos de un pedido (al estilo de cliente.c)
 void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido);

@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include <string.h>
 #include <malloc.h>
-
+#include "stdlib.h"
 #include "devoluciones.h"
 
 // Funciones para cargar y guardar los pedidos (al estilo de cliente.c)
@@ -305,4 +305,84 @@ void listar_pedidos_cliente(VectorPedidos *v_pedidos, char *id_cliente)
             printf("\n");
         }
     }
+}
+
+//listar productos de un pedido
+void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++)
+    {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0)
+        {
+            printf("Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
+            printf("Unidades: %d\n", v_productos_pedido->productos_pedido[i].num_unidades);
+            printf("Fecha prevista de entrega: %02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
+            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
+            printf("Estado: %d\n", v_productos_pedido->productos_pedido[i].estado);
+            if (v_productos_pedido->productos_pedido[i].estado != 1)
+            {
+                printf("Transportista: %s\n", v_productos_pedido->productos_pedido[i].id_transportista);
+            }
+            if (v_productos_pedido->productos_pedido[i].estado == 4)
+            {
+                printf("Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
+                printf("Código locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+            }
+            if (v_productos_pedido->productos_pedido[i].estado == 5 || v_productos_pedido->productos_pedido[i].estado == 6)
+            {
+                printf("Fecha de entrega/devolución: %02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
+            }
+            printf("\n");
+        }
+    }
+}
+
+//Funcion que lista los pedidos de un cliente marcados en locker
+void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
+{
+    int i;
+    for (i = 0; i < v_pedidos->size; i++)
+    {
+        if (strcmp(v_pedidos->pedidos[i].id_cliente, id_cliente) == 0 && v_pedidos->pedidos[i].lugar == 2)
+        {
+            printf("Pedido: %s\n", v_pedidos->pedidos[i].id_pedido);
+            printf("Fecha: %02d/%02d/%d\n", v_pedidos->pedidos[i].fecha.dia, v_pedidos->pedidos[i].fecha.mes, v_pedidos->pedidos[i].fecha.anio);
+            printf("Cliente: %s\n", v_pedidos->pedidos[i].id_cliente);
+            printf("Lugar: locker\n");
+            printf("Locker: %s\n", v_pedidos->pedidos[i].id_locker);
+            printf("Descuento: %s\n", v_pedidos->pedidos[i].id_descuento);
+            printf("\n");
+        }
+    }
+}
+
+//Funcion que comprueba si un producto pertenece a un pedido
+int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++)
+    {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_producto, id_producto) == 0)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+//FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
+ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++)
+    {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_producto, id_producto) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0 && v_productos_pedido->productos_pedido[i].estado == 3)
+        {
+            return &v_productos_pedido->productos_pedido[i];
+        }
+    }
+
+    return NULL;
 }

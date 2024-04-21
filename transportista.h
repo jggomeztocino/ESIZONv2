@@ -1,6 +1,6 @@
 #ifndef TRANSPORTISTA_H
 #define TRANSPORTISTA_H
-
+#include "pedido.h"
 
 
 // Estructura que representa a un transportista
@@ -28,6 +28,8 @@ Transportista* buscar_transportista_id(VectorTransportistas* transportistas, cha
 Transportista* buscar_transportista_email(VectorTransportistas* transportistas, char* email);
 
 void listar_transportista(Transportista* transportista);
+
+void listar_productos_asignados(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, char* id_transportista);
 
 #endif // TRANSPORTISTA_H
 

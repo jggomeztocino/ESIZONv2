@@ -176,3 +176,13 @@ Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo)
     }
     return NULL;
 }
+DescuentoCliente obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo){
+    int i;
+    for (i = 0; i < v_descuentosclientes->n_descuentosclientes; i++) {
+        if (strcmp(v_descuentosclientes->descuentosClientes[i].id_cliente, id_cliente) == 0 && strcmp(v_descuentosclientes->descuentosClientes[i].id_codigo, id_codigo) == 0) {
+            return v_descuentosclientes->descuentosClientes[i];
+        }
+    }
+    DescuentoCliente descuentoCliente;
+    return descuentoCliente;
+}

@@ -58,4 +58,5 @@ void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, 
  */
 Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo);
 
+DescuentoCliente obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
 #endif//_DESCUENTOS_H_
