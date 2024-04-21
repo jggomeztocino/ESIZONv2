@@ -80,26 +80,38 @@ void mostrar_descuentos(Cliente* cliente)
 //Devolver mensajes en caso de que no se haya podido aplicar , en caso de aplicarlo actualizar a estado correspondiente. El descuento se aplica restando el importe del descuento al importe del pedido
 float aplicar_descuento_a_importe( VectorDescuentosClientes* v_descuentos_cliente, VectorDescuentos* v_descuentos, char* id_cliente, char* id_descuento, float importe)
 {
-    DescuentoCliente descuento_cliente = obtener_descuento_cliente(v_descuentos_cliente, id_cliente, id_descuento);
+
+    DescuentoCliente* descuento_cliente = obtener_descuento_cliente(v_descuentos_cliente, id_cliente, id_descuento);
+    if (descuento_cliente == NULL)
+    {
+        printf("Descuento no encontrado\n");
+        return importe;
+    }
     Descuento* descuento = obtener_descuento(v_descuentos, id_descuento);
-    if (descuento_cliente.estado == 0)
+    if (descuento == NULL)
     {
-        printf("Descuento no aplicado: No está activo\n");
+        printf("Descuento no encontrado\n");
+        return importe;
     }
-    else if (comparar_fechas(descuento_cliente.fecha_caducidad, obtener_fecha_actual()) < 0)
+    if (strcmp(descuento->estado, "inactivo") == 0)
     {
-        printf("Descuento no aplicado: Fecha de caducidad\n");
+        printf("Descuento inactivo\n");
+        return importe;
     }
-    else if (strcmp(descuento->aplicable, "todos") != 0)
+    if (strcmp(descuento->aplicable, "esizon") == 0)
     {
-        printf("Descuento no aplicado: No es aplicable\n");
+        printf("Descuento no aplicable\n");
+        return importe;
     }
-    else
+    Fecha fecha_actual;
+    fecha_actual = obtener_fecha_actual();
+    if (comparar_fechas(fecha_actual, descuento_cliente->fecha_caducidad) > 0)
     {
-        importe -= descuento->importe;
-        descuento_cliente.estado = 1;
-        printf("Descuento aplicado\n");
+        printf("Descuento caducado\n");
+        return importe;
     }
+    importe -= descuento->importe;
+    descuento_cliente->estado = 1;
     return importe;
 }
 
