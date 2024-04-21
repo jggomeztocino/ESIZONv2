@@ -4,17 +4,19 @@
 #include <stdlib.h>
 
 #include "transportista.h"
-
+//Ejemplo:
+//0001-Rafael Guitierrez- rafael@gutitrans.com-rf001-GutiTrans-Cádiz
+//0002-Pepe Tinoco-pepe@itranspo.com-pp001-TransPo-Cádiz
 void cargar_transportistas(VectorTransportistas* transportistas)
 {
-    FILE* f = fopen("../data/transportistas.txt", "r");
+    FILE* f = fopen("../data/Transportistas.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
     }
     transportistas->transportistas = (Transportista*)malloc(sizeof(Transportista));
     transportistas->size = 0;
-    while (fscanf(f, "%s-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^-]\n",
+    while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^-]\n",
                   transportistas->transportistas[transportistas->size].id_transportista,
                   transportistas->transportistas[transportistas->size].nombre,
                   transportistas->transportistas[transportistas->size].email,
@@ -33,7 +35,7 @@ void cargar_transportistas(VectorTransportistas* transportistas)
 
 void guardar_transportistas(VectorTransportistas* transportistas)
 {
-    FILE* f = fopen("../data/transportistas.txt", "w");
+    FILE* f = fopen("../data/Transportistas.txt", "w");
     if (f == NULL) {
         return;
     }

@@ -10,7 +10,7 @@
  *                la variable cadena */
 void leer_cadena(char *texto, char *cadena, int largo) {
     if (texto != NULL) {
-        printf("%s: ", texto);
+        printf("%s", texto);
     }
 
     if (fgets(cadena, largo, stdin) != NULL) {
@@ -28,7 +28,7 @@ void leer_cadena(char *texto, char *cadena, int largo) {
  * Precondición: texto será la frase que se imprimirá para solicitar el dato y caracter es la variable dónde se escribirá el dato
  * Postcondición: imprime por pantalla un mensaje que pedirá una cadena y se introducirá dentro de la variable caracter */
 void leer_caracter(char *texto, char *caracter) {
-    printf("%s: ", texto);
+    printf("%s", texto);
     while ((*caracter = getchar()) == '\n'); // Repeat until a non-newline character is read
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF); // Clear the rest of the line
@@ -81,30 +81,3 @@ void leer_unsigned(char *texto, unsigned int *num) {
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF); // Clear the rest of the line
 }
-
-/* Cabecera int busqueda_cliente(clientes * v_clientes, char nomb_cli[6], int n_clientes)
-   Precondición: Ninguna
-   Postcondición: Devuelve la posición del cliente + 1 en la estructura clientes, si devuelve 0 el cliente no existe
-int busqueda_cliente(clientes *v_clientes, char nomb_cli[6], int n_clientes) {
-    int i;
-    for (i = 0; i < n_clientes; i++) {  
-        if (strcmp(nomb_cli, v_clientes[i].usuario) == 0) {
-            return i + 1;
-        }
-    }
-    return 0;
-}
-
-Cabecera int comprobacion_contrasena(clientes * v_clientes, char contra[9], int i)
-   Precondición: i debe ser la posición del cliente en la estructura clientes y > 0
-   Postcondición: Devuelve 1 si la contraseña es correcta y 0 si no 
-int comprobacion_contrasena(clientes *v_clientes, char contra[9], int i) {
-    if (!strcmp(v_clientes[i - 1].contrasena, contra)) {
-        puts("Contraseña correcta");
-        return 1;
-    } else {
-        puts("Contraseña incorrecta");
-        return 0;
-    }
-}
-*/

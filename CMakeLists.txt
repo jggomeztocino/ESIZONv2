@@ -37,4 +37,8 @@ add_executable(
         locker.c
         categoria.c
         adminprov.c
+        menutransportista.c
+        menutransportista.h
+        menuproveedor.c
+        menuproveedor.h
 )

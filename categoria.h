@@ -21,4 +21,6 @@ Categoria* buscar_categoria_id(VectorCategorias* categorias, char* id_categoria)
 
 void listar_categoria(Categoria* categoria);
 
+void listar_categorias(VectorCategorias* categorias);
+
 #endif // CATEGORIA_H

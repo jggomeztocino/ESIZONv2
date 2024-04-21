@@ -1,5 +1,2 @@
-1-Juan-Perez-Plaza Juan de Austria 1-Puerto Real-Cadiz-juanperez@gmail.com-psw1234-1000
-2-Pedro-Lopez-Calle Plocia 2-Cadiz-Cadiz-pedroncio@gmail.com-password-500
-3-Laura-Rdmor-Calle del Romero 4-San Fernando-Cadiz-soylaredmor@gmail.com-red420-758
-4-Joseph-Joestar-Camino Lisa Lisa 2-Chiclana-Cadiz-overdrive@gmail.com-hamonbeat-15630
-5-Nombre-Apellido-Direccion-Ciudad-Provincia-cliente-cliente-9999
+0000001-Juan Pérez-Plaza San Francisco 1 11100-San Fernando-Cádiz-juanperez@gmail.com-psw1234-1000,00
+0000002-Guillermo López-Calle Sacramento 2 11003-Cádiz-Cádiz-guillelopez@gmail.com-psw4321-500,00

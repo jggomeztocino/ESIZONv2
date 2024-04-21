@@ -1,6 +1,9 @@
 #ifndef ADMINPROV_H
 #define ADMINPROV_H
 
+#include "productos.h"
+#include "utilidades.h"
+
 // Estructura para administradores-proveedores
 typedef struct {
     char id_empresa[5]; // 4 dígitos + '\0'
@@ -26,4 +29,16 @@ AdminProv *buscar_adminprov_email(VectorAdminProv *v_adminprov, char *email);
 
 void listar_adminprov(AdminProv *adminprov);
 
-#endif
+void listar_admins(VectorAdminProv *v_adminprov);
+
+void listar_provs(VectorAdminProv *v_adminprov);
+
+AdminProv* alta_proveedor(VectorAdminProv *v_adminprov);
+
+void eliminar_proveedor(VectorAdminProv *v_adminprov, AdminProv *proveedor);
+
+void baja_proveedor(VectorAdminProv *v_adminprov);
+
+AdminProv *modificar_proveedor(VectorAdminProv *v_adminprov);
+
+#endif//ADMINPROV_H

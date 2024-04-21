@@ -17,14 +17,18 @@
  */
 void cargar_clientes(VectorClientes* v_clientes)
 {
-    FILE* f = fopen("../data/clientes.txt", "r");
+    FILE* f = fopen("../data/Clientes.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
     }
     v_clientes->clientes = (Cliente*)malloc(sizeof(Cliente));
     v_clientes->size = 0;
-    while (fscanf(f, "%s-%20[^-]-%50[^-]-%20[^-]-%20[^-]-%30[^-]-%15[^-]-%f\n",
+    // 0000001-Juan Pérez-Plaza San Francisco 1 11100-San Fernando-Cádiz-juanperez@gmail.com-psw1234-1000
+    // 0000002-Guillermo López-Calle Sacramento 2 11003-Cádiz-Cádiz-guillelopez@gmail.com/psw4321/500
+    // Debe cargar todos los clientes del archivo
+
+    while (fscanf(f, "%7[^-]-%20[^-]-%50[^-]-%20[^-]-%20[^-]-%30[^-]-%15[^-]-%f\n",
                   v_clientes->clientes[v_clientes->size].id_cliente,
                   v_clientes->clientes[v_clientes->size].nombre_cliente,
                   v_clientes->clientes[v_clientes->size].direccion_cliente,
@@ -45,7 +49,7 @@ void cargar_clientes(VectorClientes* v_clientes)
 
 void guardar_clientes(VectorClientes* v_clientes)
 {
-    FILE* f = fopen("../data/clientes.txt", "w");
+    FILE* f = fopen("../data/Clientes.txt", "w");
     if (f == NULL) {
         return;
     }
@@ -167,6 +171,7 @@ Cliente* buscar_cliente_por_email(VectorClientes* v_clientes, char* email) {
 }
 
 void listar_clientes(VectorClientes* v_clientes) {
+    printf("Tamaño del vector: %d\n", v_clientes->size);
     int i;
     printf("---------------------------\n");
     for (i = 0; i < v_clientes->size; i++) {

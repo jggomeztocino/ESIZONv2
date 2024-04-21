@@ -27,7 +27,7 @@
     Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
  */
 void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
-    FILE *f = fopen("../data/devoluciones.txt", "r");
+    FILE *f = fopen("../data/Devoluciones.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
@@ -61,7 +61,7 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
 
 
 void guardar_devoluciones(VectorDevoluciones* v_devoluciones) {
-    FILE *f = fopen("../data/devoluciones.txt", "w");
+    FILE *f = fopen("../data/Devoluciones.txt", "w");
     if (f == NULL) {
         return;
     }

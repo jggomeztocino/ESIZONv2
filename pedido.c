@@ -30,9 +30,12 @@
     Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
     Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
 */
+//EJemplo : Primer caso a domicilio con cheque regalo (no aplica codigo locker) y segundo caso entrega a locker sin cheque regalo
+//0000001-02/02/2024-0000001-domicilio- -che001
+//0000002-03/02/2024-0000002-locker-Lock001-
 void cargar_pedidos(VectorPedidos *v_pedidos)
 {
-    FILE *f = fopen("pedidos.txt", "r");
+    FILE *f = fopen("../data/Pedidos.txt", "r");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de pedidos\n");
@@ -97,7 +100,7 @@ void cargar_pedidos(VectorPedidos *v_pedidos)
 
 void guardar_pedidos(VectorPedidos *v_pedidos)
 {
-    FILE *f = fopen("pedidos.txt", "w");
+    FILE *f = fopen("../data/Pedidos.txt", "w");
     if (f == NULL)
     {
         perror("Error al abrir el archivo de pedidos\n");
@@ -144,6 +147,11 @@ void guardar_pedidos(VectorPedidos *v_pedidos)
     Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
     Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
 */
+
+//Ejemplo:
+//0000001-000001-1-07/03/2024-340-enPreparación
+//0000001-000002-1-03/02/2024-45-entregado-0001
+//0000002-000001-2-08/02/2024-45-enLocker-0002-Lock001-134697-08/02/2024
 void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
 {
     FILE *f = fopen("productos_pedido.txt", "r");

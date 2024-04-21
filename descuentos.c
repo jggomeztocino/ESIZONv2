@@ -23,16 +23,20 @@
     Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
     Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
  */
+
+//Ejemplo:
+//black001-Black Friday-codpro-activo-10-esizon
+//che001-cheque regalo nivel 1-cheqreg-activo-5-todos
 void cargar_descuentos(VectorDescuentos* v_descuentos)
 {
-    FILE* f = fopen("../data/descuentos.txt", "r");
+    FILE* f = fopen("../data/Descuentos.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
     }
     v_descuentos->descuentos = (Descuento*)malloc(sizeof(Descuento));
     v_descuentos->n_descuentos = 0;
-    while (fscanf(f, "%s-%50[^-]-%7[^-]-%7[^-]-%f-%7[^-]\n",
+    while (fscanf(f, "%10[^-]-%50[^-]-%7[^-]-%7[^-]-%f-%7[^-]\n",
                   v_descuentos->descuentos[v_descuentos->n_descuentos].id_codigo,
                   v_descuentos->descuentos[v_descuentos->n_descuentos].descripcion,
                   v_descuentos->descuentos[v_descuentos->n_descuentos].tipo,
@@ -51,7 +55,7 @@ void cargar_descuentos(VectorDescuentos* v_descuentos)
 
 void guardar_descuentos(VectorDescuentos* v_descuentos)
 {
-    FILE* f = fopen("../data/descuentos.txt", "w");
+    FILE* f = fopen("../data/Descuentos.txt", "w");
     if (f == NULL) {
         return;
     }
@@ -70,6 +74,9 @@ void guardar_descuentos(VectorDescuentos* v_descuentos)
     v_descuentos->n_descuentos = 0;
 }
 
+//Ejemplo:
+//0000001-black001-25/01/2024-27/03/2024-0
+//0000002-che001-01/02/2024-01/06/2024-0
 void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 {
     FILE* f = fopen("../data/descuentos_clientes.txt", "r");
@@ -79,7 +86,7 @@ void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
     }
     v_descuentosclientes->descuentosClientes = (DescuentoCliente*)malloc(sizeof(DescuentoCliente));
     v_descuentosclientes->n_descuentosclientes = 0;
-    while (fscanf(f, "%s-%s-%d-%d-%d-%d-%d-%d\n",
+    while (fscanf(f, "%9[^-]-%10[^-]-%d-%d-%d-%d-%d-%d\n",
                   v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].id_cliente,
                   v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].id_codigo,
                   &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_asignacion.dia,

@@ -4,17 +4,18 @@
 #include <stdlib.h>
 
 #include "locker.h"
-
+//Ejemplo:
+//Lock001-Puerto Real-Cádiz-local 12-15-0
 void cargar_lockers(VectorLockers* lockers)
 {
-    FILE* f = fopen("../data/lockers.txt", "r");
+    FILE* f = fopen("../data/Lockers.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
     }
     lockers->lockers = (Locker*)malloc(sizeof(Locker));
     lockers->size = 0;
-    while (fscanf(f, "%s-%20[^-]-%20[^-]-%20[^-]-%u-%u\n",
+    while (fscanf(f, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%u-%u\n",
                   lockers->lockers[lockers->size].id_locker,
                   lockers->lockers[lockers->size].localidad,
                   lockers->lockers[lockers->size].provincia,
@@ -33,7 +34,7 @@ void cargar_lockers(VectorLockers* lockers)
 
 void guardar_lockers(VectorLockers* lockers)
 {
-    FILE* f = fopen("../data/lockers.txt", "w");
+    FILE* f = fopen("../data/Lockers.txt", "w");
     if (f == NULL) {
         return;
     }
@@ -82,7 +83,8 @@ void listar_lockers_localidad(VectorLockers* lockers, char* localidad)
         }
     }
 }
-
+//Ejemplo:
+//Lock001-01-134697-ocupado-08/01/2024-13/03/2024
 void cargar_compartimentos(VectorCompartimentos* v_compartimentos)
 {
     FILE* f = fopen("../data/compartimentos.txt", "r");
@@ -92,17 +94,17 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos)
     }
     v_compartimentos->compartimentos = (CompartimentoLocker*)malloc(sizeof(CompartimentoLocker));
     v_compartimentos->size = 0;
-    while (fscanf(f, "%s-%u-%s-%u-%u-%u-%u-%u-%u\n",
+    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u\n",
                   v_compartimentos->compartimentos[v_compartimentos->size].id_locker,
                   &v_compartimentos->compartimentos[v_compartimentos->size].n_compartimento,
                   v_compartimentos->compartimentos[v_compartimentos->size].cod_locker,
                   &v_compartimentos->compartimentos[v_compartimentos->size].estado,
                   &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.dia,
                   &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.mes,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.ano,
+                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_ocupacion.anio,
                   &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.dia,
                   &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.mes,
-                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.ano) == 10) {
+                  &v_compartimentos->compartimentos[v_compartimentos->size].fecha_caducidad.anio) == 10) {
         v_compartimentos->size++;
         v_compartimentos->compartimentos = (CompartimentoLocker*)realloc(v_compartimentos->compartimentos, (v_compartimentos->size + 1) * sizeof(CompartimentoLocker));
         if(v_compartimentos->compartimentos == NULL) {
@@ -128,10 +130,10 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos)
                 v_compartimentos->compartimentos[i].estado,
                 v_compartimentos->compartimentos[i].fecha_ocupacion.dia,
                 v_compartimentos->compartimentos[i].fecha_ocupacion.mes,
-                v_compartimentos->compartimentos[i].fecha_ocupacion.ano,
+                v_compartimentos->compartimentos[i].fecha_ocupacion.anio,
                 v_compartimentos->compartimentos[i].fecha_caducidad.dia,
                 v_compartimentos->compartimentos[i].fecha_caducidad.mes,
-                v_compartimentos->compartimentos[i].fecha_caducidad.ano);
+                v_compartimentos->compartimentos[i].fecha_caducidad.anio);
     }
     fclose(f);
     free(v_compartimentos->compartimentos);
@@ -155,8 +157,8 @@ void listar_compartimento(CompartimentoLocker* v_compartimento)
     printf("Número de compartimento: %u\n", v_compartimento->n_compartimento);
     printf("Código del locker: %s\n", v_compartimento->cod_locker);
     printf("Estado: %s\n", v_compartimento->estado == 0 ? "vacío" : "ocupado");
-    printf("Fecha de ocupación: %u/%u/%u\n", v_compartimento->fecha_ocupacion.dia, v_compartimento->fecha_ocupacion.mes, v_compartimento->fecha_ocupacion.ano);
-    printf("Fecha de caducidad: %u/%u/%u\n", v_compartimento->fecha_caducidad.dia, v_compartimento->fecha_caducidad.mes, v_compartimento->fecha_caducidad.ano);
+    printf("Fecha de ocupación: %u/%u/%u\n", v_compartimento->fecha_ocupacion.dia, v_compartimento->fecha_ocupacion.mes, v_compartimento->fecha_ocupacion.anio);
+    printf("Fecha de caducidad: %u/%u/%u\n", v_compartimento->fecha_caducidad.dia, v_compartimento->fecha_caducidad.mes, v_compartimento->fecha_caducidad.anio);
 }
 
 void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* id_locker)

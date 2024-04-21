@@ -18,17 +18,20 @@ typedef struct {
     unsigned size;
 } VectorCategorias;
  */
+//Ejemplo:
+//0001-tv video home cinema
+//0002-audio HIFI
 
 void cargar_categorias(VectorCategorias* categorias)
 {
-    FILE* f = fopen("../data/categorias.txt", "r");
+    FILE* f = fopen("../data/Categorias.txt", "r");
     if (f == NULL) {
         perror("\nError al abrir el archivo\n");
         return;
     }
     categorias->categorias = (Categoria*)malloc(sizeof(Categoria));
     categorias->size = 0;
-    while (fscanf(f, "%s-%50[^\n]\n",
+    while (fscanf(f, "%4[^-]-%50[^\n]\n",
                   categorias->categorias[categorias->size].id_categoria,
                   categorias->categorias[categorias->size].descripcion) == 2) {
         categorias->size++;
@@ -43,7 +46,7 @@ void cargar_categorias(VectorCategorias* categorias)
 
 void guardar_categorias(VectorCategorias* categorias)
 {
-    FILE* f = fopen("../data/categorias.txt", "w");
+    FILE* f = fopen("../data/Categorias.txt", "w");
     if (f == NULL) {
         return;
     }
@@ -73,4 +76,12 @@ void listar_categoria(Categoria* categoria)
 {
     printf("ID: %s\n", categoria->id_categoria);
     printf("Descripción: %s\n", categoria->descripcion);
+}
+
+void listar_categorias(VectorCategorias* categorias)
+{
+    int i;
+    for (i = 0; i < categorias->size; i++) {
+        listar_categoria(&categorias->categorias[i]);
+    }
 }

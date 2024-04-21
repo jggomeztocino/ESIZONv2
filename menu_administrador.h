@@ -4,6 +4,9 @@
 #include "utilidades.h"
 #include "adminprov.h"
 #include "cliente.h"
+#include "productos.h"
+#include "adminprov.h"
+#include "categoria.h"
 
 void modificarIdEmpresa(AdminProv *admin);
 
@@ -30,8 +33,6 @@ void gestionTransportistas();
 void gestionDescuentos();
 
 void gestionDevoluciones();
-
-void salirDelSistema();
 
 void mostrarMenuAdministrador(AdminProv* admin);
 
