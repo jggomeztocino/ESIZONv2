@@ -40,12 +40,12 @@ Producto* modificar_producto(Producto* producto, VectorCategorias* v_categorias,
 
 void listar_productos(VectorProductos* v_productos);
 
-void listar_productos_categoria(VectorProductos* v_productos, int id_categoria);
+unsigned listar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
 unsigned listar_productos_nombre(VectorProductos* v_productos, char* nombre);
 
 void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
 
-
+void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
 #endif//ESIZON_PRODUCTOS_H_

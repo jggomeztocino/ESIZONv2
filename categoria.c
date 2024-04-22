@@ -68,3 +68,41 @@ void listar_categorias(VectorCategorias* categorias)
         listar_categoria(&categorias->categorias[i]);
     }
 }
+
+Categoria* modificar_categoria(Categoria* categoria)
+{
+    leer_cadena("Ingrese la nueva descripción de la categoría: ", categoria->descripcion, 50);
+    return categoria;
+}
+
+Categoria* alta_categoria(VectorCategorias* categorias)
+{
+    categorias->categorias = (Categoria*)realloc(categorias->categorias, (categorias->size + 1) * sizeof(Categoria));
+    if(categorias->categorias == NULL) {
+        free(categorias->categorias);
+        perror("\nError al reservar memoria\n");
+    }
+    sprintf(categorias->categorias[categorias->size].id_categoria, "%04d", atoi(categorias->categorias[categorias->size - 1].id_categoria) + 1);
+    leer_cadena("Ingrese la descripción de la categoría: ", categorias->categorias[categorias->size].descripcion, 51);
+    categorias->size++;
+    return &categorias->categorias[categorias->size - 1];
+}
+
+void baja_categoria(VectorCategorias* categorias, VectorProductos* v_productos, char* id_categoria)
+{
+    int i;
+    for (i = 0; i < categorias->size; i++) {
+        if (strcmp(categorias->categorias[i].id_categoria, id_categoria) == 0) {
+            break;
+        }
+    }
+    for (; i < categorias->size - 1; i++) {
+        categorias->categorias[i] = categorias->categorias[i + 1];
+    }
+    categorias->size--;
+    categorias->categorias = (Categoria*)realloc(categorias->categorias, categorias->size * sizeof(Categoria));
+    if(categorias->categorias == NULL) {
+        free(categorias->categorias);
+        perror("\nError al reservar memoria\n");
+    }
+}

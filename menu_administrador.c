@@ -500,8 +500,252 @@ void gestionProductos()
 
     3. Baja de categoría
     El sistema solicitará al administrador que introduzca el ID de la categoría a eliminar.
+    - Si la categoría existe, se mostrará la información de la categoría y se pedirá confirmación para eliminarla.
+    o Además, se eliminarán todos los productos asociados a dicha categoría.
+    - Si la categoría no existe, se mostrará un mensaje indicando que la categoría no existe y se indicará la posibilidad de listar las categorías.
 
+    4. Modificación de categoría
+    El sistema solicitará al administrador que introduzca el ID de la categoría a modificar.
+    - Si la categoría existe, se mostrará la información de la categoría y se permitirá modificar la descripción.
+    - Si la categoría no existe, se mostrará un mensaje indicando que la categoría no existe y se indicará la posibilidad de listar las categorías.
+
+   5. Listado de categorías
+    Se mostrará un listado con la información de todas las categorías dadas de alta en el sistema.
+
+    6. Listado de productos por categoría
+    El sistema solicitará al administrador que introduzca el ID de la categoría a buscar.
+    - Si la categoría existe, se mostrará un listado con la información de todos los productos pertenecientes a dicha categoría.
+    - Si la categoría no existe, se mostrará un mensaje indicando que la categoría no existe y se indicará la posibilidad de listar las categorías.
+
+    7. Volver
+    Volverá al menú principal de administrador.
  */
+
+void gestionCategorias()
+{
+    // Carga de las categorias
+    VectorCategorias v_categorias;
+    cargar_categorias(&v_categorias);
+
+    // Carga de los productos
+    VectorProductos v_productos;
+    cargar_productos(&v_productos);
+
+    unsigned opcion = 0;
+    char id_categoria[5];
+    char respuesta[2];
+    unsigned dependencias;
+    do{
+        printf("\nGESTIÓN DE CATEGORÍAS\n");
+        printf("1. Búsqueda de categoría\n");
+        printf("2. Alta de categoría\n");
+        printf("3. Baja de categoría\n");
+        printf("4. Modificación de categoría\n");
+        printf("5. Listado de categorías\n");
+        printf("6. Listado de productos por categoría\n");
+        printf("7. Volver\n");
+        leer_unsigned("Seleccione una opción", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("\nBÚSQUEDA DE CATEGORÍA\n");
+                leer_cadena("Ingrese el ID de la categoría a buscar", id_categoria, 5);
+                Categoria *categoria = buscar_categoria_id(&v_categorias, id_categoria);
+                if (categoria != NULL) {
+                    listar_categoria(categoria);
+                    leer_cadena("Desea modificar esta categoría? (s/n)", respuesta, sizeof(respuesta));
+                    if ((strcmp(respuesta, "s") == 0)||(strcmp(respuesta, "S") == 0)) {
+                        listar_categoria(modificar_categoria(categoria));
+                    }
+                } else {
+                    printf("Categoría no encontrada.\n");
+                }
+                break;
+            case 2:
+                printf("\nALTA DE CATEGORÍA\n");
+                alta_categoria(&v_categorias);
+                break;
+            case 3:
+                printf("\nBAJA DE CATEGORÍA\n");
+                leer_cadena("Ingrese el ID de la categoría a eliminar", id_categoria, 5);
+                printf("Analizando dependencias de productos...\n");
+                dependencias = listar_productos_categoria(&v_productos, id_categoria);
+                if(dependencias == 0) {
+                    printf("No hay productos asociados a esta categoría.\n");
+                } else {
+                    printf("Estos productos serán eliminados si continúa con la baja de la categoría.\n");
+                }
+                leer_cadena("Desea continuar con la baja de la categoría? (S/N)", respuesta, sizeof(respuesta));
+                if ((strcmp(respuesta, "s") == 0)||(strcmp(respuesta, "S") == 0)) {
+                    if(dependencias > 0) {
+                        eliminar_productos_categoria(&v_productos, id_categoria);
+                    }
+                    baja_categoria(&v_categorias, &v_productos, id_categoria);
+                }
+                break;
+            case 4:
+                printf("\nMODIFICACIÓN DE CATEGORÍA\n");
+                leer_cadena("Ingrese el ID de la categoría a modificar", id_categoria, 5);
+                Categoria *categoria_modificar = buscar_categoria_id(&v_categorias, id_categoria);
+                if (categoria_modificar != NULL) {
+                    listar_categoria(modificar_categoria(categoria_modificar));
+                } else {
+                    printf("Categoría no encontrada.\n");
+                }
+                break;
+            case 5:
+                printf("\nLISTADO DE CATEGORÍAS\n");
+                listar_categorias(&v_categorias);
+                break;
+            case 6:
+                printf("\nLISTADO DE PRODUCTOS POR CATEGORÍA\n");
+                leer_cadena("Ingrese el ID de la categoría de la que listar los productos", id_categoria, 5);
+                if (listar_productos_categoria(&v_productos, id_categoria) == 0) {
+                    printf("Categoría no encontrada.\n");
+                }
+                break;
+            case 7:
+                printf("Volviendo al menú principal...\n");
+                break;
+            default:
+                printf("Opción no válida, por favor intente de nuevo.\n");
+                break;
+        }
+    }while(opcion != 7);
+
+    guardar_categorias(&v_categorias);
+    guardar_productos(&v_productos);
+}
+
+/*
+ *  f ) Pedidos
+    Mediante esta opción el administrador podrá acceder a la información de los pedidos dados de
+    alta en la plataforma.
+    • Mediante el menú correspondiente podrá realizar altas, bajas, búsquedas, listados y
+    modificaciones de pedidos.
+    • En los listados habrá que contemplar la posibilidad de listarlos según su estado. Esto es
+    necesario para poder localizar rápidamente los pedidos cuya fecha de entrega sea próxima
+    y que, por tanto, deben ser procesados con mayor prioridad.
+    • Otras opciones permitidas será la asignación de transportistas a los productos pedidos en
+    función de la dirección del cliente y ciudad de reparto.
+    • Así como llevar a cabo la asignación de lockers a los pedidos en base a la localidad de
+    entrega y ubicación del locker.
+
+    Para ello deberá hacer uso de las funciones de pedidos, lockers y transportistas.
+
+    Las opciones a mostrar son:
+    1. Búsqueda de pedido
+    2. Alta de pedido
+    3. Baja de pedido
+    4. Modificación de pedido
+    5. Listado de pedidos
+    6. Listado de pedidos por estado (ordenados por fecha de entrega)
+    7. Volver
+
+    Para listar un pedido, se mostrará la información del pedido, junto a todos los productos que pertenecen a dicho pedido.
+
+    1. Búsqueda de pedido
+    a. El sistema solicitará al administrador que introduzca el ID del pedido a buscar.
+    b. Si el pedido existe, se lista el pedido y se preguntará si se desea modificar.
+    c. Si el pedido no existe, se mostrará un mensaje indicando que el pedido no existe.
+
+    2. Alta de pedido
+    a. El ID será generado automáticamente por el sistema. Para ello, se deberá buscar el último ID existente en el vector, transformarlo a entero, incrementarlo en 1 y convertirlo de nuevo a cadena de caracteres.
+    b. Se registra la fecha del sistema como fecha de pedido.
+    c. El sistema solicitará al administrador que introduzca el ID del cliente que realiza el pedido.
+    d. El sistema comprueba si el cliente existe. Si no existe, se mostrará un mensaje indicando que el cliente no existe y se dará la opción de dar de alta al cliente.
+    e. El sistema solicitará al administrador que introduzca el lugar de entrega del pedido (1: domicilio, 2: locker).
+    f. Si el lugar de entrega es un locker, se solicitará al administrador que introduzca el ID del locker.
+    g. El sistema comprobará si el locker existe. Si no existe, se informará del error y dará la opción de listar según la localidad.
+    h. El sistema preguntará si se desea aplicar un descuento al pedido. Si la respuesta es afirmativa, se solicitará el ID del descuento.
+    i. El sistema comprueba si el descuento existe. Si no existe, se mostrará un mensaje indicando que el descuento no existe, dando la posibilidad a introducir de nuevo otro código.
+    j. El sistema preguntará preguntará indefinidamente si se desea añadir productos al pedido, hasta que el usuario indique lo contrario.
+        Para cada producto:
+        1. Se solicitará el ID del producto.
+        2. Se solicitará el número de unidades.
+        3. Se solicitará la fecha prevista de entrega (por defecto, la fecha de entrega será 1 semana después de la fecha de pedido).
+        4. Se especificará el importe total del producto en el pedido, consultando su valor en el vector de productos correspondiente.
+        5. Automáticamente, se asignará el estado del producto en el pedido como «enPreparación».
+        6. Se solicitará el ID del transportista asignado al producto.
+        7. El sistema comprobará si el transportista existe. Si no existe, se mostrará un mensaje indicando que el transportista no existe y dara la opción de listar los transportistas.
+        8. Si el lugar de entrega es un locker, se asigna el mismo ID de locker especificado para el pedido.
+
+    3. Baja de pedido
+    a. El sistema solicitará al administrador que introduzca el ID del pedido a eliminar.
+    b. Si el pedido existe, se mostrará la información del pedido y se pedirá confirmación para eliminarlo.
+    c. Si el pedido no existe, se mostrará un mensaje indicando que el pedido no existe.
+
+    4. Modificación de pedido
+    a. El sistema solicitará al administrador que introduzca el ID del pedido a modificar.
+    b. Si el pedido existe, se mostrará la información del pedido y se permitirá modificar la información del pedido (siguiendo la misma metodología que el alta).
+    c. Si el pedido no existe, se mostrará un mensaje indicando que el pedido no existe.
+
+    5. Listado de pedidos
+    a. Se mostrará un listado con la información de todos los pedidos dados de alta en el sistema, junto a la información de los productos que pertenecen a cada pedido.
+
+    6. Listado de pedidos por estado
+    a. Se mostrará un listado con la información de todos los pedidos dados de alta en el sistema, ordenados por fecha de entrega ascendentemente (fecha más próxima primero) y estado (enPreparación primero).
+
+    7. Volver
+    a. Volverá al menú principal de administrador.
+ */
+
+void gestionPedidos()
+{
+
+}
+
+/*
+ *  g) Transportistas
+    Mediante esta opción el administrador podrá acceder a la información de todos los
+    transportistas dados de alta en la plataforma. Mediante el menú correspondiente podrá realizar
+    altas, bajas, búsquedas, listados y modificaciones de transportistas.
+
+    Para ello deberá hacer uso de las funciones de gestión de transportistas.
+
+    Las opciones a mostrar son:
+    1. Búsqueda de transportista
+    2. Alta de transportista
+    3. Baja de transportista
+    4. Modificación de transportista
+    5. Listado de transportistas
+    6. Lista de transportistas por ciudad
+    7. Volver
+
+    1. Búsqueda de transportista
+    a. El sistema solicitará al administrador que introduzca el ID del transportista a buscar.
+    b. Si el transportista existe, se mostrará la información del transportista y se preguntará si se desea modificar.
+    c. Si el transportista no existe, se mostrará un mensaje indicando que el transportista no existe.
+
+    2. Alta de transportista
+    a. El ID será generado automáticamente por el sistema. Para ello, se deberá buscar el último ID existente en el vector, transformarlo a entero, incrementarlo en 1 y convertirlo de nuevo a cadena de caracteres.
+    b. El sistema solicitará al administrador que introduzca el nombre del transportista.
+    c. El sistema solicitará al administrador que introduzca el email del transportista.
+    d. El sistema solicitará al administrador que introduzca la contraseña del transportista.
+    e. El sistema solicitará al administrador que introduzca el nombre de la empresa de transporte.
+    f. El sistema solicitará al administrador que introduzca la ciudad de operación.
+
+    3. Baja de transportista
+    a. El sistema solicitará al administrador que introduzca el ID del transportista a eliminar.
+    b. Si el transportista existe, se mostrará la información del transportista y se pedirá confirmación para eliminarlo.
+    c. Si existen pedidos asociados al transportista y alguno de ellos está en estado <<enviado>> o <<transportista>> se mostrará un mensaje indicando que no se puede eliminar el transportista.
+    d. Si el transportista no existe, se mostrará un mensaje indicando que el transportista no existe.
+
+    4. Modificación de transportista
+    a. El sistema solicitará al administrador que introduzca el ID del transportista a modificar.
+    b. Si el transportista existe, se mostrará la información del transportista y se permitirá modificar la información del transportista.
+    c. Si el transportista no existe, se mostrará un mensaje indicando que el transportista no existe.
+
+    5. Listado de transportistas
+    a. Se mostrará un listado con la información de todos los transportistas dados de alta en el sistema.
+
+    6. Lista de transportistas por ciudad
+    a. Se mostrará un listado con la información de todos los transportistas que operan en una ciudad dada.
+
+    7. Volver
+    a. Volverá al menú principal de administrador.
+ */
+
 
 void mostrarMenuAdministrador(AdminProv* admin) {
     int opcion;
@@ -533,7 +777,7 @@ void mostrarMenuAdministrador(AdminProv* admin) {
                 gestionProductos();
                 break;
             case 5:
-                //gestionCategorias();
+                gestionCategorias();
                 break;
             case 6:
                 //gestionPedidos();

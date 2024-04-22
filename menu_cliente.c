@@ -52,8 +52,8 @@ void listado_productos()
     }
     else if (opcion == 2)
     {
-        int id_categoria;
-        leer_entero("Introduce el id de la categoria: ", &id_categoria);
+        char id_categoria[5];
+        leer_cadena("Introduce el ID de la categoría: ", id_categoria, 5);
         listar_productos_categoria(&v_productos, id_categoria);
     }
     else

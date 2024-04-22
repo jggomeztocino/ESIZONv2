@@ -117,14 +117,17 @@ void listar_productos(VectorProductos* v_productos)
     }
 }
 
-void listar_productos_categoria(VectorProductos* v_productos, int id_categoria)
+unsigned listar_productos_categoria(VectorProductos* v_productos, char* id_categoria)
 {
+    unsigned encontrados = 0;
     int i;
     for (i = 0; i < v_productos->size; i++) {
-        if (atoi(v_productos->productos[i].id_categoria) == id_categoria) {
+        if (strcmp(v_productos->productos[i].id_categoria, id_categoria) == 0){
+            encontrados++;
             listar_producto(&v_productos->productos[i]);
         }
     }
+    return encontrados;
 }
 
 unsigned listar_productos_nombre(VectorProductos* v_productos, char* nombre)
@@ -300,4 +303,15 @@ Producto* modificar_producto(Producto* producto, VectorCategorias* v_categorias,
     } while (opcion != 8);
 
     return producto;
+}
+
+void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria)
+{
+    int i;
+    for (i = 0; i < v_productos->size; i++) {
+        if (strcmp(v_productos->productos[i].id_categoria, id_categoria) == 0) {
+            baja_producto(v_productos, v_productos->productos[i].id_producto);
+            i--;
+        }
+    }
 }
