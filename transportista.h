@@ -19,17 +19,27 @@ typedef struct {
     unsigned size;
 } VectorTransportistas;
 
-void cargar_transportistas(VectorTransportistas* transportistas);
+void cargar_transportistas(VectorTransportistas* v_transportistas);
 
-void guardar_transportistas(VectorTransportistas* transportistas);
+void guardar_transportistas(VectorTransportistas* v_transportistas);
 
-Transportista* buscar_transportista_id(VectorTransportistas* transportistas, char* id_transportista);
+Transportista* buscar_transportista_id(VectorTransportistas* v_transportistas, char* id_transportista);
 
-Transportista* buscar_transportista_email(VectorTransportistas* transportistas, char* email);
+Transportista* buscar_transportista_email(VectorTransportistas* v_transportistas, char* email);
 
 void listar_transportista(Transportista* transportista);
 
 void listar_productos_asignados(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, char* id_transportista);
+
+Transportista* alta_transportista(VectorTransportistas* v_transportistas);
+
+void baja_transportista(VectorTransportistas* v_transportistas, char* id_transportista);
+
+Transportista* modificar_transportista(Transportista* transportista);
+
+void listar_transportistas(VectorTransportistas* v_transportistas);
+
+void listar_transportistas_ciudad(VectorTransportistas* v_transportistas, char* ciudad);
 
 #endif // TRANSPORTISTA_H
 

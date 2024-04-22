@@ -745,6 +745,29 @@ void gestionPedidos()
     7. Volver
     a. Volverá al menú principal de administrador.
  */
+void gestionTransportistas()
+{
+    // Carga de los transportistas
+    VectorTransportistas v_transportistas;
+    cargar_transportistas(&v_transportistas);
+
+    // Carga de los pedidos
+    VectorPedidos v_pedidos;
+    cargar_pedidos(&v_pedidos);
+
+    unsigned opcion;
+    char id_transportista[5];
+    char email_transportista[31];
+    char ciudad[16];
+    char respuesta[2];
+
+    // Guardar los transportistas
+    guardar_transportistas(&v_transportistas);
+
+    // Guardar los pedidos
+    guardar_pedidos(&v_pedidos);
+
+}
 
 
 void mostrarMenuAdministrador(AdminProv* admin) {
