@@ -1,6 +1,5 @@
 #include "stdio.h"
 #include <string.h>
-#include <malloc.h>
 #include <stdlib.h>
 
 #include "locker.h"
@@ -159,16 +158,8 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos)
     v_compartimentos->size = 0;
 }
 
-CompartimentoLocker* buscar_compartimento_id(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned n_compartimento)
-{
-    int i;
-    for (i = 0; i < v_compartimentos->size; i++) {
-        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].n_compartimento == n_compartimento) {
-            return &v_compartimentos->compartimentos[i];
-        }
-    }
-    return NULL;
-}
+
+
 
 void listar_compartimento(CompartimentoLocker* v_compartimento)
 {
@@ -202,16 +193,5 @@ CompartimentoLocker* buscar_compartimento_libre(VectorCompartimentos* v_comparti
     return NULL;
 }
 
-//Buscar un compartimento ocupado en el locker
-CompartimentoLocker* buscar_compartimento_ocupado(VectorCompartimentos* v_compartimentos, char* id_locker)
-{
-    int i;
-    for (i = 0; i < v_compartimentos->size; i++) {
-        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].estado == 1) {
-            return &v_compartimentos->compartimentos[i];
-        }
-    }
-    return NULL;
-}
 
 

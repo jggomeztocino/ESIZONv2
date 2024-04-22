@@ -98,9 +98,10 @@ float aplicar_descuento_a_importe( VectorDescuentosClientes* v_descuentos_client
         printf("Descuento inactivo\n");
         return importe;
     }
-    if (strcmp(descuento->aplicable, "esizon") == 0)
+    //Comprobar si se ha utilizado ya el descuento o no
+    if (descuento_cliente->estado == 1)
     {
-        printf("Descuento no aplicable\n");
+        printf("Descuento ya utilizado\n");
         return importe;
     }
     Fecha fecha_actual;
@@ -149,6 +150,9 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
         printf("2. Locker\n");
         leer_unsigned("Introduce una opcion valida",&opcion_lugar);
     } while (opcion_lugar != 1 && opcion_lugar != 2);
+
+    //Inicializar el lugar del pedido
+     pedido_temp.lugar = opcion_lugar;
 
 
     //Listar los productos
@@ -210,7 +214,7 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
     //Mostrar el importe total y  el numero de productos solicitados (size del vector temporal)
 
     printf("Importe total: %.2f\n", importe);
-    printf("Numero de productos: %u\n", v_productos_pedido_temp.size);
+    printf("Numero de productos: %u\n", v_productos_pedido_temp.size); //Productos diferentes
 
     //Preguntar si desea aplicar un descuento
     char respuesta;
@@ -220,15 +224,29 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
         //Mostrar los descuentos del cliente EN CONCRETO
         mostrar_descuentos_cliente(&v_descuentos_cliente, &v_descuentos, cliente->id_cliente);
         //Pedirle que introduzca el id del descuento
+        //Si aplicar descuento retorna el mismo importe significa que ha habido algun error en la aplicacion y hay que preguntarle si quiere aplicar otro descuento
+        //Si no se aplica descuento copiar un string vacio en el id del descuento del pedido temporal
+        //Hay que hacer un bucle que pregunte si quiere aplicar otro descuento
+        //Usa un auxiliar en el caso de que el descuento no se pueda aplicar para no perder el valor del importe
         char id_descuento[11];
-        leer_cadena("Introduce el id del descuento: ", id_descuento, 11);
-        //Aplicar el descuento al importe del pedido
-        printf("Importe antes del descuento: %.2f\n", importe);
-        importe = aplicar_descuento_a_importe(&v_descuentos_cliente, &v_descuentos, cliente->id_cliente, id_descuento, importe);
+        do {
+            leer_cadena("Introduce el id del descuento: ", id_descuento, 11);
+            float aux = importe;
+            importe = aplicar_descuento_a_importe(&v_descuentos_cliente, &v_descuentos, cliente->id_cliente, id_descuento, importe);
+            if (aux == importe) {
+                printf("No se ha podido aplicar el descuento\n");
+            } else {
+                printf("Descuento aplicado\n");
+                //Imprimir un desglose del importe formateado
+                printf("Importe sin descuento: %.2f\n", aux);
+                printf("Descuento aplicado: %.2f\n",importe);
+                break;
+            }
+            leer_caracter("¿Desea aplicar otro descuento? (s/n): ",&respuesta);
+        } while (respuesta == 's' || respuesta == 'S');
+
         //Copiar el id del descuento en el pedido temporal
         strcpy(pedido_temp.id_descuento, id_descuento);
-
-        printf("Su nuevo importe es de %.2f\n", importe);
     }else{
         //Si no se aplica descuento copiar un string vacio en el id del descuento del pedido temporal
         strcpy(pedido_temp.id_descuento, " ");
@@ -249,10 +267,11 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
             perror("Error al reservar memoria");
             return;
         }
+
         v_pedidos.pedidos = temp;
         v_pedidos.pedidos[v_pedidos.size] = pedido_temp;
         v_pedidos.size++;
-
+        //Si el lugar del pedido es un locker
     }
 }
 
@@ -270,68 +289,17 @@ de los productos recogidos, en consecuencia, se debe actualizar
  */
 void recoger_pedido(Cliente* cliente,VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos)
 {
+   //Otra opción para el cliente es la recogida de un pedido que haya sido depositado en
+    //un ESILocker antes de la fecha de caducidad, para ello se le debe mostrar la opción
+    //solicitándole el código locker asociado. Una vez introducido, el sistema mostrará un
+    //mensaje en pantalla indicando el número de compartimento que se ha abierto. El estado
+    //de los productos recogidos, en consecuencia, se debe actualizar.
 
-      //Mostrar los pedidos del cliente que se encuentran en lockers
-    listar_pedidos_locker_decliente(&v_pedidos, cliente->id_cliente);
-      //Pedirle que seleccione un pedido para recogerlo
-    char id_pedido[8];
-    leer_cadena("Introduce el id del pedido a recoger: ", id_pedido, 8);
-    //Comprobar que el pedido corresponde al cliente , se encuentra en locker y no ha caducado la fecha de recogida
-    if (pertenece_pedido(&v_productos_pedido, id_pedido, cliente->id_cliente))
-    {
-        Pedido* pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
-       //Comprobar que el pedido se encuentra en un locker
-        if (pedido->lugar == 2)
-        {
-           //Comprobar que estamos en una fecha valida para recogerlo
-            Fecha fecha_actual;
-            fecha_actual = obtener_fecha_actual();
-            if (comparar_fechas(fecha_actual, pedido->fecha) <= 0)
-            {
-                char codigo_locker[11];
-                leer_cadena("Introduce el código del locker: ", codigo_locker, 11);
-                Locker* locker = buscar_locker_id(&v_lockers, codigo_locker);
-                if (locker != NULL)
-                {
-                    CompartimentoLocker* compartimento = buscar_compartimento_id(&v_compartimentos, codigo_locker, 1);
-                    if (compartimento != NULL)
-                    {
-                        printf("Se ha abierto el compartimento %u\n", compartimento->n_compartimento);
-                        //Actualizar el estado de los productos recogidos
-                        int i;
-                        for (i = 0; i < v_productos_pedido.size; i++)
-                        {
-                            if (strcmp(v_productos_pedido.productos_pedido[i].id_pedido, id_pedido) == 0)
-                            {
-                                v_productos_pedido.productos_pedido[i].estado = 5;
-                                v_productos_pedido.productos_pedido[i].fecha_entrega_devolucion = fecha_actual;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        printf("El locker no tiene compartimentos\n");
-                    }
-                }
-                else
-                {
-                    printf("Locker no encontrado\n");
-                }
-            }
-            else
-            {
-                printf("Fecha de recogida caducada\n");
-            }
-        }
-        else
-        {
-            printf("El pedido no se encuentra en un locker\n");
-        }
-}
-    else
-    {
-        printf("El pedido no pertenece al cliente\n");
-    }
+    //Solicitar el codigo locker
+    char cod_locker[21];
+    leer_cadena("Introduce el código del locker: ", cod_locker, 21);
+    //Buscar el compartimento
+
 
 }
 

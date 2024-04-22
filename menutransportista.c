@@ -4,29 +4,6 @@
 void listar_productos_no_recogidos(VectorCompartimentos* v_compartimentos,VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, VectorLockers* v_lockers, char* localidad)
 {
 
-    //// Estructura que representa a un locker
-    //typedef struct {
-    //    char id_locker[11]; // 10 caracteres + '\0'
-    //    char localidad[21]; // Localidad donde se encuentra el locker
-    //    char provincia[21]; // Provincia donde se encuentra el locker
-    //    char ubicacion[21]; // Ubicación específica del locker
-    //    unsigned num_compartimentos_total; // Número total de compartimentos
-    //    unsigned num_compartimentos_ocupados; // Número de compartimentos ocupados
-    //} Locker;
-    //typedef struct {
-    //    char id_locker[11]; // 10 caracteres + '\0'
-    //    unsigned n_compartimento; // Número de compartimento
-    //    char cod_locker[11]; // Código del locker
-    //    unsigned estado; // 0: vacío, 1: ocupado
-    //    Fecha fecha_ocupacion; // Fecha de ocupación
-    //    Fecha fecha_caducidad; // Fecha de caducidad
-    //} CompartimentoLocker;
-
-    //Recorrer los lockers de la localidad
-    //Recorrer los compartimentos de cada locker
-    //Mirar si el producto asociado al compartimento no ha sido recogido en fecha
-    //Mostrar el producto no recogido
-    //Para saber si mostrar el producto pedido hay que mirar que la fecha actual no sea mayor a la fecha de caducidad del compartimento en el que se encuentra
     int i;
     int j;
     int flag_localidad =0;

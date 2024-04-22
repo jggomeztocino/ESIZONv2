@@ -58,7 +58,6 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos);
 
 void guardar_compartimentos(VectorCompartimentos* v_compartimentos);
 
-CompartimentoLocker* buscar_compartimento_id(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned n_compartimento);
 
 void listar_compartimento(CompartimentoLocker* v_compartimento);
 
@@ -67,7 +66,6 @@ void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* 
 //Buscar compartimento libre
 CompartimentoLocker* buscar_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker);
 
-//Buscar un compartimento ocupado en el locker
-CompartimentoLocker* buscar_compartimento_ocupado(VectorCompartimentos* v_compartimentos, char* id_locker);
+
 
 #endif // LOCKER_H
