@@ -183,6 +183,8 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
                 strcpy(producto_pedido_temp.id_locker, "");
                 strcpy(producto_pedido_temp.cod_locker, "");
                 producto_pedido_temp.fecha_entrega_devolucion = crearFecha(0, 0, 0);
+                //suma las fechas para calcular la fecha prevista de entrega
+                producto_pedido_temp.fecha_prevista_entrega = crearFecha( producto->entrega+pedido_temp.fecha.dia, pedido_temp.fecha.mes, pedido_temp.fecha.anio);
                 //Aumentar el numero de productos en el vector de productos pedido temporal
                 v_productos_pedido_temp.size++;
                 //Incluir el producto pedido temporal en el vector de productos pedido temporal
@@ -207,7 +209,6 @@ void realizar_pedido( Cliente* cliente, VectorPedidos v_pedidos, VectorProductos
             if (respuesta == 'n' || respuesta == 'N') {
                 break;
             }
-
         }
     } while (1); //Se han terminado de añadir productos
 
