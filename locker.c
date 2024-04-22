@@ -193,5 +193,8 @@ CompartimentoLocker* buscar_compartimento_libre(VectorCompartimentos* v_comparti
     return NULL;
 }
 
+//Quiero funciones de busqueda para buscar productos pedidos en los lockers
+
+
 
 

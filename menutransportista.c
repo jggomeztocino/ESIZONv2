@@ -1,5 +1,8 @@
 #include "menutransportista.h"
 
+
+
+
 //Funcion que lista los productos pedidos no recogidos en fecha de lockers de una localidad
 void listar_productos_no_recogidos(VectorCompartimentos* v_compartimentos,VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, VectorLockers* v_lockers, char* localidad)
 {
@@ -166,13 +169,9 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
         printf("Producto asignado al locker %s en el compartimento %u\n", locker->id_locker, compartimento->n_compartimento);
     }
 }
-/*Getion de repartos, al principio de la función cargará en memoria los vectores necesarios y al terminar los guardará
 
- Mostrará un submenu con las siguientes opciones:
-    1. Listar productos asignados al transportista con su fecha de entrega
-    2. Gestionar una entrega
-    3. Salir
- */
+
+
 void gestion_repartos( Transportista* transportista)
 {
     //Cargar en memoria los vectores necesarios
@@ -215,69 +214,12 @@ void gestion_repartos( Transportista* transportista)
 
 }
 
-//Funcion que gestiona la recogida de un producto de un locker
+//Funcion que gestiona la recogida de un producto de un compartimento locker
 void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, Transportista* transportista, VectorLockers* v_lockers, VectorCompartimentos* v_compartimentos)
 {
-    //Listar los productos no recogidos en fecha
-    char localidad[21];
-    char id_locker[11];
-    char id_producto[9];
-    unsigned n_compartimento;
-    leer_cadena("Introduzca la localidad: ", localidad, 21);
-    listar_productos_no_recogidos(v_compartimentos, v_pedidos, v_productos_pedido, v_lockers, localidad);
-
-    //Seleccionar un producto pedido para recoger introduciendo el id del locker , el id del producto y el número de compartimento
-
-    leer_cadena("Introduzca el id del locker: ", id_locker, 11);
-    leer_cadena("Introduzca el id del producto: ", id_producto, 9);
-    leer_unsigned( "Introduzca el número de compartimento: ", &n_compartimento);
-    //Hay que comprpbar que el producto no haya sido recogido ya, que el locker exista y que el compartimento exista y que haya pasado la fecha de caducidad
-    //Buscar el producto pedido
-    ProductoPedido* producto_pedido = buscar_producto_pedido_locker(v_productos_pedido, id_locker, n_compartimento);
-    if(producto_pedido == NULL)
-    {
-        printf("No se ha encontrado un producto asociado a ese id para su recogida\n");
-        return;
-    }
-    //Comprobar si el producto ya ha sido recogido
-    if(producto_pedido->estado == 6)
-    {
-        printf("El producto ya ha sido recogido\n");
-        return;
-    }
-    //Comprobar si el producto ha caducado, comparando la fecha actual con la fecha actual del compartimento en el que se encuentra el producto pedido
-    CompartimentoLocker* compartimento = buscar_compartimento_id(v_compartimentos, id_locker, n_compartimento);
-    if(comparar_fechas(obtener_fecha_actual(), compartimento->fecha_caducidad) == 1)
-    {
-        printf("El producto ha caducado\n");
-        return;
-    }
-    //Marcar el producto como recogido
-    producto_pedido->estado = 7;
-    //Marcar el compartimento como vacío
-    compartimento->estado = 0;
-    //Decrementar el número de compartimentos ocupados en el locker
-    Locker* locker = buscar_locker_id(v_lockers, id_locker);
-    locker->num_compartimentos_ocupados--;
-    //Borrar el codigo del locker del producto pedido
-    strcpy(producto_pedido->id_locker, "");
-    strcpy(producto_pedido->cod_locker, "");
-    printf("Producto recogido\n");
 }
-/*Getion de retornos, al principio de la función cargará en memoria los vectores necesarios y al terminar los guardará
 
- Mostrará un submenu con las siguientes opciones:
-    1. Consultar lockers por localidad y mostrando pedidos no recogidos en fecha
-    2. Gestionar recogida de producto de un locker
-    3. Salir
 
-    El sistema facilitará al transportista la tarea de retornar a origen todos los productos que no
-hayan sido recogidos de los lockers en el plazo determinado, permitiéndole consultar todos los
-lockers por localidad y mostrando sus pedidos. En el momento de la recogida de los productos
-para su retorno, el sistema debe actualizar automáticamente el número de compartimentos
-ocupados y eliminar el código locker asociado al producto. Así como el estado de los productos
-y el stock de los mismos para que quede reflejada la operación.
- */
 void gestion_retornos( Transportista* transportista)
 {
     //Cargar en memoria los vectores necesarios
@@ -322,6 +264,11 @@ void gestion_retornos( Transportista* transportista)
         }
     } while (opcion != 3);
 
+    //Guardar en memoria los vectores necesarios
+    guardar_pedidos(&v_pedidos);
+    guardar_productos_pedido(&v_productos_pedido);
+    guardar_lockers(&v_lockers);
+    guardar_compartimentos(&v_compartimentos);
 }
 
 
