@@ -6,6 +6,8 @@
 #include "pedido.h"
 #include "fecha.h"
 #include "productos.h"
+#include "cliente.h"
+
 
 typedef struct
 {
@@ -29,11 +31,10 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones);
 void guardar_devoluciones(VectorDevoluciones* v_devoluciones);
 
 // Función que muestra las devoluciones con estado pendiente de un cliente.
-void mostrar_devoluciones_pendientes(VectorDevoluciones* v_devoluciones, char* id_cliente);
-
+void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente);
 // Función que da de alta una devolución.
-void alta_devolucion(VectorDevoluciones* v_devoluciones, char* id_cliente, char* id_pedido, char* id_producto, char* motivo);
-
+//            alta_devolucion(&v_devoluciones,pedido, id_producto, motivo);
+void alta_devolucion(VectorDevoluciones* v_devoluciones, Pedido* pedido, char* id_producto, char* motivo);
 /*
  * Función que permite modificar el estado de una devolución
  * 1. Pendiente
@@ -44,5 +45,6 @@ void alta_devolucion(VectorDevoluciones* v_devoluciones, char* id_cliente, char*
  */
 void modificar_estado_devolucion(VectorDevoluciones* v_devoluciones, char* id_devolucion, unsigned nuevo_estado);
 
+void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones);
 
 #endif//DEVOLUCIONES_H_

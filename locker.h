@@ -42,7 +42,7 @@ o Fecha caducidad (día, mes y año)
 typedef struct {
     char id_locker[11]; // 10 caracteres + '\0'
     unsigned n_compartimento; // Número de compartimento
-    char cod_locker[11]; // Código del locker
+    unsigned cod_locker; // Código del locker
     unsigned estado; // 0: vacío, 1: ocupado
     Fecha fecha_ocupacion; // Fecha de ocupación
     Fecha fecha_caducidad; // Fecha de caducidad
@@ -61,8 +61,13 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos);
 
 void listar_compartimento(CompartimentoLocker* v_compartimento);
 
+//listar todos los lockers
+void listar_todo_lockers(VectorLockers* v_lockers);
 
+CompartimentoLocker* buscar_compartimento(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned num_compartimento);
 
+//buscar primer compartimento libre de un locker
+CompartimentoLocker* buscar_primer_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker);
 
 
 #endif // LOCKER_H

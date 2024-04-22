@@ -105,10 +105,10 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos) {
     unsigned n_compartimentos_actual = 0;
 
     // Leer los datos de los compartimentos del archivo
-    while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u-%u\n",
+    while (fscanf(f, "%10[^-]-%u-%u-%u-%u-%u-%u-%u-%u-%u\n",
                   v_compartimentos->compartimentos[n_compartimentos_actual].id_locker,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].n_compartimento,
-                  v_compartimentos->compartimentos[n_compartimentos_actual].cod_locker,
+                  &v_compartimentos->compartimentos[n_compartimentos_actual].cod_locker,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].estado,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_ocupacion.dia,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].fecha_ocupacion.mes,
@@ -141,7 +141,7 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos)
     }
     int i;
     for (i = 0; i < v_compartimentos->size; i++) {
-        fprintf(f, "%s-%u-%s-%u-%u-%u-%u-%u-%u-%u\n",
+        fprintf(f, "%s-%u-%u-%u-%u-%u-%u-%u-%u-%u\n",
                 v_compartimentos->compartimentos[i].id_locker,
                 v_compartimentos->compartimentos[i].n_compartimento,
                 v_compartimentos->compartimentos[i].cod_locker,
@@ -165,7 +165,7 @@ void listar_compartimento(CompartimentoLocker* v_compartimento)
 {
     printf("ID: %s\n", v_compartimento->id_locker);
     printf("Número de compartimento: %u\n", v_compartimento->n_compartimento);
-    printf("Código del locker: %s\n", v_compartimento->cod_locker);
+    printf("Código del locker: %u\n", v_compartimento->cod_locker);
     printf("Estado: %s\n", v_compartimento->estado == 0 ? "vacío" : "ocupado");
     printf("Fecha de ocupación: %u/%u/%u\n", v_compartimento->fecha_ocupacion.dia, v_compartimento->fecha_ocupacion.mes, v_compartimento->fecha_ocupacion.anio);
     printf("Fecha de caducidad: %u/%u/%u\n", v_compartimento->fecha_caducidad.dia, v_compartimento->fecha_caducidad.mes, v_compartimento->fecha_caducidad.anio);
@@ -180,6 +180,38 @@ void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* 
         }
     }
 }
+
+//Listar todos los lockers , haz uso de la funcion que lista 1 locker
+void listar_todo_lockers(VectorLockers* v_lockers)
+{
+    int i;
+    for (i = 0; i < v_lockers->size; i++) {
+        listar_locker(&v_lockers->lockers[i]);
+    }
+}
+
+
+CompartimentoLocker* buscar_compartimento(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned num_compartimento)
+{
+    int i;
+    for (i = 0; i < v_compartimentos->size; i++) {
+        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].n_compartimento == num_compartimento) {
+            return &v_compartimentos->compartimentos[i];
+        }
+    }
+    return NULL;
+}
+CompartimentoLocker* buscar_primer_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker)
+{
+    int i;
+    for (i = 0; i < v_compartimentos->size; i++) {
+        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].estado == 0) {
+            return &v_compartimentos->compartimentos[i];
+        }
+    }
+    return NULL;
+}
+
 
 
 

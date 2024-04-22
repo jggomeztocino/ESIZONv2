@@ -1,6 +1,6 @@
 #ifndef DESCUENTOS_H_
 #define DESCUENTOS_H_
-
+#include "cliente.h
 #include "fecha.h"
 
 // Estructura para almacenar la información de los distintos códigos promocionales de
@@ -51,12 +51,14 @@ void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
  * Itera sobre los descuentos de un cliente y los muestra por pantalla,
  * buscando la información correspondiente en el vector de descuentos.
  */
-void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos, char* id_cliente);
-
+//            mostrar_descuentos(cliente, &v_descuentos_cliente, &v_descuentos);
+void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos,  char *id_cliente);
 /*
  * Función que devuelve un descuento a partir de su id.
  */
 Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo);
 
 DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
+//cabecera aplicar descuento importe
+float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe);
 #endif//DESCUENTOS_H_

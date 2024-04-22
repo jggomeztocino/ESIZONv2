@@ -315,3 +315,42 @@ void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categor
         }
     }
 }
+
+// Menu que pregunta si se quiere listar los productos por id o categoria
+void listado_productos()
+{
+
+    VectorProductos v_productos;
+    cargar_productos(&v_productos);
+
+    printf("1. Buscar por id\n");
+    printf("2. Buscar por categoria\n");
+    unsigned opcion;
+    leer_entero("Introduce una opcion valida", &opcion);
+    if (opcion == 1)
+    {
+        char id_producto[8];
+        leer_cadena("Introduce el id del producto: ", id_producto, 8);
+        Producto *producto = buscar_producto_id(&v_productos, id_producto);
+        if (producto == NULL)
+        {
+            printf("Producto no encontrado\n");
+        }
+        else
+        {
+            listar_producto(producto);
+        }
+    }
+    else if (opcion == 2)
+    {
+        char id_categoria[5];
+        leer_cadena("Introduce el ID de la categoría: ", id_categoria, 5);
+        listar_productos_categoria(&v_productos, id_categoria);
+    }
+    else
+    {
+        printf("Opcion no valida\n");
+    }
+    guardar_productos(&v_productos);
+}
+

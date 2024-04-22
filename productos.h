@@ -48,4 +48,7 @@ void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
 
 void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
+
+// Menu que pregunta si se quiere listar los productos por id o categoria
+void listado_productos();
 #endif //PRODUCTOS_H_

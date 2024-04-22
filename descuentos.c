@@ -135,6 +135,8 @@ void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
  * @param id_cliente Identificador del cliente.
  * @return void
  */
+
+
 void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos, char* id_cliente)
 {
 int i;
@@ -186,3 +188,47 @@ DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuen
     }
     return NULL;
 }
+
+// Aplica el descuento al importe de un pedido y lo devuelve con el descuento aplicado o no si no se puede aplicar el descuento al importe del pedido
+// Comprobar si es aplicable , si está activo y si no ha caducado la fecha de caducidad
+float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe)
+{
+
+    DescuentoCliente *descuento_cliente = obtener_descuento_cliente(v_descuentos_cliente, id_cliente, id_descuento);
+    if (descuento_cliente == NULL)
+    {
+        printf("Descuento no encontrado\n");
+        return importe;
+    }
+    Descuento *descuento = obtener_descuento(v_descuentos, id_descuento);
+    if (descuento == NULL)
+    {
+        printf("Descuento no encontrado\n");
+        return importe;
+    }
+    if (strcmp(descuento->estado, "inactivo") == 0)
+    {
+        printf("Descuento inactivo\n");
+        return importe;
+    }
+    // Comprobar si se ha utilizado ya el descuento o no
+    if (descuento_cliente->estado == 1)
+    {
+        printf("Descuento ya utilizado\n");
+        return importe;
+    }
+    Fecha fecha_actual;
+    fecha_actual = obtener_fecha_actual();
+    if (comparar_fechas(fecha_actual, descuento_cliente->fecha_caducidad) > 0)
+    {
+        printf("Descuento caducado\n");
+        return importe;
+    }
+    importe -= descuento->importe;
+    descuento_cliente->estado = 1;
+    if (importe < 0)
+        importe = 0;
+    return importe;
+}
+
+
