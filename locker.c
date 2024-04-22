@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 #include "locker.h"
-//Ejemplo:
-//Lock001-Puerto Real-Cádiz-local 12-15-0
+
+
 void cargar_lockers(VectorLockers* lockers)
 {
     FILE* f = fopen("../data/Lockers.txt", "r");
@@ -82,8 +82,8 @@ void listar_lockers_localidad(VectorLockers* lockers, char* localidad)
         }
     }
 }
-//Ejemplo:
-//Lock001-01-134697-ocupado-08/01/2024-13/03/2024
+
+
 void cargar_compartimentos(VectorCompartimentos* v_compartimentos) {
     // Abrir archivo de compartimentos para lectura
     FILE* f = fopen("../data/compartimentos.txt", "r");
@@ -181,7 +181,6 @@ void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* 
     }
 }
 
-//Listar todos los lockers , haz uso de la funcion que lista 1 locker
 void listar_todo_lockers(VectorLockers* v_lockers)
 {
     int i;
@@ -201,6 +200,7 @@ CompartimentoLocker* buscar_compartimento(VectorCompartimentos* v_compartimentos
     }
     return NULL;
 }
+
 CompartimentoLocker* buscar_primer_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker)
 {
     int i;

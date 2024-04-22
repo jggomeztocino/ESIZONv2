@@ -5,16 +5,9 @@
 #include "cliente.h"
 #include "utilidades.h"
 
-/* Carga los clientes desde un archivo, en la carpeta 'data' con extensión txt y con el siguiente formato:
- *  0000001-Juan Pérez-Plaza San Francisco 1 11100-San Fernando-Cádiz-juanperez@gmail.com-psw1234-1000
- *  0000002-Guillermo López-Calle Sacramento 2 11003-Cádiz-Cádiz-guillelopez@gmail.com-psw4321-500
- *  Es decir:
- *  id_cliente-nombre_cliente-direccion_cliente-poblacion-provincia-email-contrasena-cartera
- *
- *  Primero deberá inicializar el puntero de clientes para alojar un solo cliente y su tamaño a 0.
- *  Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
- *  Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
- */
+//Hacer los comentarios de las funciones como en categoria.h
+
+
 void cargar_clientes(VectorClientes* v_clientes)
 {
     FILE* f = fopen("../data/Clientes.txt", "r");
@@ -86,6 +79,7 @@ void listar_cliente(Cliente* cliente)
         cliente->provincia, cliente->email, cliente->contrasena, cliente->cartera);
 }
 
+
 void modificar_cliente(Cliente* cliente)
 {
     unsigned seleccion;
@@ -150,6 +144,7 @@ void modificar_cliente(Cliente* cliente)
     } while (seleccion != 8);
 }
 
+
 Cliente* buscar_cliente_por_id(VectorClientes* v_clientes, char* id_cliente) {
     int i;
     for (i = 0; i < v_clientes->size; i++) {
@@ -199,6 +194,7 @@ void eliminar_cliente(VectorClientes* v_clientes, char* id_cliente) {
         perror("\nError al reservar memoria\n");
     }
 }
+
 
 void alta_cliente(VectorClientes* v_clientes) {
     char nombre[21], direccion[51], poblacion[21], provincia[21], email[31], contrasena[16];

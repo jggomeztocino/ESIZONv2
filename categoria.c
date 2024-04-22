@@ -5,6 +5,9 @@
 
 #include "categoria.h"
 
+
+
+
 void cargar_categorias(VectorCategorias* categorias)
 {
     FILE* f = fopen("../data/Categorias.txt", "r");
@@ -27,6 +30,7 @@ void cargar_categorias(VectorCategorias* categorias)
     fclose(f);
 }
 
+
 void guardar_categorias(VectorCategorias* categorias)
 {
     FILE* f = fopen("../data/Categorias.txt", "w");
@@ -43,6 +47,7 @@ void guardar_categorias(VectorCategorias* categorias)
     free(categorias->categorias);
     categorias->size = 0;
 }
+
 
 Categoria* buscar_categoria_id(VectorCategorias* categorias, char* id_categoria)
 {
@@ -87,6 +92,7 @@ Categoria* alta_categoria(VectorCategorias* categorias)
     categorias->size++;
     return &categorias->categorias[categorias->size - 1];
 }
+
 
 void baja_categoria(VectorCategorias *categorias, char *id_categoria)
 {

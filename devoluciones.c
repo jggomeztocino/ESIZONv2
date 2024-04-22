@@ -113,7 +113,6 @@ void guardar_devoluciones(VectorDevoluciones *v_devoluciones)
     fclose(f);
 }
 
-// Función que muestra las devoluciones con estado pendiente de un cliente.
 void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente)
 {
 
@@ -138,7 +137,7 @@ void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevolucione
     }
 }
 
-// Funcion que realiza y da de alta una devolucion
+
 void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones)
 {
 

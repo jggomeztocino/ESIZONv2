@@ -33,6 +33,8 @@
 //EJemplo : Primer caso a domicilio con cheque regalo (no aplica codigo locker) y segundo caso entrega a locker sin cheque regalo
 //0000001-02/02/2024-0000001-domicilio- -che001
 //0000002-03/02/2024-0000002-locker-Lock001-
+
+
 void cargar_pedidos(VectorPedidos *v_pedidos) {
     FILE *f = fopen("../data/Pedidos.txt", "r");
     if (f == NULL) {
@@ -140,6 +142,8 @@ void guardar_pedidos(VectorPedidos *v_pedidos)
 //0000001-000001-1-07/03/2024-340-enPreparación
 //0000001-000002-1-03/02/2024-45-entregado-0001
 //0000002-000001-2-08/02/2024-45-enLocker-0002-Lock001-134697-08/02/2024
+
+
 void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
 {
     FILE *f = fopen("productos_pedido.txt", "r");
@@ -310,7 +314,7 @@ void listar_pedidos_cliente(VectorPedidos *v_pedidos, char *id_cliente)
     }
 }
 
-//listar productos de un pedido
+
 void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido)
 {
     int i;
@@ -361,7 +365,7 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
     }
 }
 
-//Funcion que comprueba si un producto pertenece a un pedido
+
 int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto)
 {
     int i;
@@ -376,7 +380,7 @@ int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido,
     return 0;
 }
 
-//FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
+
 ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista)
 {
     int i;
@@ -391,7 +395,6 @@ ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido
     return NULL;
 }
 
-//Funcion que dado un id_locker y un n_compartimento devuelve el producto pedido
 ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento)
 {
     int i;
@@ -406,7 +409,7 @@ ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *
     return NULL;
 }
 
-// Funcion para realizar un pedido,
+
 void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos, VectorDescuentos v_descuentos, VectorDescuentosClientes v_descuentos_cliente, VectorProductos v_productos)
 {
 
@@ -645,3 +648,27 @@ void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosP
     }
 }
 
+void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++) {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 &&
+            strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0) {
+            printf("========================================\n");
+            printf("ID Pedido: %s\n", v_productos_pedido->productos_pedido[i].id_pedido);
+            printf("ID Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
+            printf("Unidades: %u\n", v_productos_pedido->productos_pedido[i].num_unidades);
+            printf("Fecha prevista de entrega: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia,
+                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes,
+                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
+            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
+            printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
+            printf("ID Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
+            //printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+            // Rehacer con el nuevo tipo de dato TODO
+            printf("Fecha de entrega o devolución: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia,
+                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes,
+                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
+        }
+    }
+}

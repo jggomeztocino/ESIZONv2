@@ -46,41 +46,111 @@ typedef struct {
     int size;
 } VectorProductosPedido;
 
-// Funciones para cargar y guardar los pedidos (al estilo de cliente.c)
-void cargar_pedidos(VectorPedidos* v_pedidos);
+/**
+ * @brief Carga los pedidos desde el archivo Pedidos.txt
+ *     y los almacena en un vector de pedidos
+ * @param v_pedidos Vector de pedidos
+ */
+ void cargar_pedidos(VectorPedidos* v_pedidos);
+/**
+* @brief Guarda los pedidos en el archivo Pedidos.txt
+* @param v_pedidos Vector de pedidos
+*/
 void guardar_pedidos(VectorPedidos* v_pedidos);
 
-// Búsqueda de un pedido por su identificador
+/**
+ * @brief Busca un pedido por su identificador
+ *
+ * @param v_pedidos Vector de pedidos
+ * @param id_pedido Identificador del pedido
+ * @return Pedido* Puntero al pedido encontrado o NULL si no se encuentra
+ */
+
 Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido);
 
 
 
-// Listado de pedidos de un cliente
-void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente);
+/**
+ * @brief Función que lista los pedidos de un cliente
+ *
+ * @param v_pedidos Vector de pedidos
+ * @param id_cliente Identificador del cliente
+ */
+ void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente);
 
-//Listado de productos de un pedido
-void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido);
+/**
+ * @brief Función que lista los productos de un pedido
+ *
+ * @param v_productos_pedido Vector de productos de pedido
+ * @param id_pedido Identificador del pedido
+ */
+ void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido);
 
-//Funcion de listar para los productos pedidos asignados a un transportista en un pedido
-void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
+/**
+    Funcion que lista los productos asignados a un pedido
+    para un transportista en concreto
+    @param v_productos_pedido Vector de productos pedido
+    @param id_pedido Identificador del pedido
+    @param id_transportista Identificador del transportista
+
+ */
+ void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
 
 //Funcion que lista los pedidos de un cliente que se encuentran en lockers
 void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente);
 
-//Comprueba si un producto pertenece a un pedido
-int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto);
+/**
+ * Función que comprueba si un producto pedido pertenece a un pedido
+ * @param v_productos_pedido Vector de productos pedido
+ * @param id_pedido Identificador del pedido
+ * @param id_producto Identificador del producto
+ */
+ int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto);
 
-//FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
-ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
+/**
+ * Función que busca un producto pedido por su id_pedido, id_producto e id_transportista
+ * @param v_productos_pedido Vector de productos pedido
+ * @param id_pedido Identificador del pedido
+ * @param id_producto Identificador del producto
+ * @param id_transportista Identificador del transportista
+ * @return ProductoPedido* Puntero al producto pedido encontrado o NULL si no se encuentra
+ */
+ ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
 
-//Funcion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
-ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento);
+/**
+ * @brief Función que busca un producto pedido por su compartimento
+ *
+ * @param v_productos_pedido Vector de productos pedido
+ * @param id_locker Identificador del locker
+ * @param n_compartimento Número de compartimento
+ * @return ProductoPedido* Producto pedido encontrado o NULL si no se encuentra
+ */
+ ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento);
 
 
-// Funcion para realizar un pedido,
-void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos, VectorDescuentos v_descuentos, VectorDescuentosClientes v_descuentos_cliente, VectorProductos v_productos);
-// Funciones para cargar y guardar los productos de un pedido (al estilo de cliente.c)
-void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido);
-void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido);
+/**
+ * @brief Realiza un pedido
+ *
+ * @param cliente Cliente que realiza el pedido
+ * @param v_pedidos Vector de pedidos
+ * @param v_productos_pedido Vector de productos pedido
+ * @param v_lockers Vector de lockers
+ * @param v_compartimentos Vector de compartimentos
+ * @param v_descuentos Vector de descuentos
+ * @param v_descuentos_cliente Vector de descuentos de cliente
+ * @param v_productos Vector de productos
+ */
+ void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos, VectorDescuentos v_descuentos, VectorDescuentosClientes v_descuentos_cliente, VectorProductos v_productos);
+/**
+ * @brief Carga los productos de pedido desde el archivo productos_pedido.txt
+ * @param v_productos_pedido Vector de productos de pedido
+ */
+ void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido);
+/**
+ * @brief Guarda los productos de pedido en el archivo productos_pedido.txt
+ *
+ * @param v_productos_pedido Vector de productos de pedido
+ */
+ void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido);
 
 #endif//PEDIDO_H_

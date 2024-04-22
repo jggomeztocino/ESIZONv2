@@ -204,7 +204,7 @@ Producto* alta_producto(VectorProductos* v_productos, VectorCategorias* v_catego
     return &v_productos->productos[v_productos->size - 1];
 }
 
-// Buscará el producto a eliminar, parará cuando lo encuentre y reorganizará el vector
+
 void baja_producto(VectorProductos* v_productos, char* id_producto)
 {
     int i;

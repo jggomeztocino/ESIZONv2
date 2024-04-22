@@ -18,15 +18,41 @@ typedef struct {
     Locker* lockers;
     unsigned size;
 } VectorLockers;
-
+/**
+ * Cargar los lockers desde el archivo Lockers.txt
+ * @param lockers Vector de lockers
+ * @pre El puntero lockers no debe ser nulo
+ * @post Los lockers se cargan en el vector de lockers
+ * @return void
+ */
 void cargar_lockers(VectorLockers* lockers);
-
+/** Guardar los lockers en el archivo Lockers.txt
+ * @param lockers Vector de lockers
+ * @pre El puntero lockers no debe ser nulo
+ * @post Los lockers se guardan en el archivo Lockers.txt
+ * @return void
+ */
 void guardar_lockers(VectorLockers* lockers);
-
+/** Buscar un locker por su ID
+ * @param lockers Vector de lockers
+ * @param id_locker ID del locker a buscar
+ * @pre El puntero lockers no debe ser nulo
+ * @post Se devuelve el locker con el ID especificado o NULL si no se encuentra
+ * @return Locker encontrado o NULL
+ */
 Locker* buscar_locker_id(VectorLockers* lockers, char* id_locker);
-
+/**
+ * Listar un locker
+ * @param locker Locker a listar
+ * @return void
+ */
 void listar_locker(Locker* locker);
-
+/**
+ * Listar los lockers de una localidad
+ * @param lockers Vector de lockers
+ * @param localidad Localidad a buscar
+ * @return void
+ */
 void listar_lockers_localidad(VectorLockers* lockers, char* localidad);
 
 /*
@@ -54,20 +80,52 @@ typedef struct {
     unsigned size;
 } VectorCompartimentos;
 
+/** Funcion que carga los compartimentos desde el archivo compartimentoslockers.txt
+ * @param v_compartimentos Vector de compartimentos
+ * @pre El puntero v_compartimentos no debe ser nulo
+ * @post Los compartimentos se cargan en el vector de compartimentos
+ * @return void
+ */
 void cargar_compartimentos(VectorCompartimentos* v_compartimentos);
-
+/**
+ * Guardar los compartimentos en el archivo compartimentos.txt
+ * @param v_compartimentos Vector de compartimentos
+ * @pre El puntero v_compartimentos no debe ser nulo
+ * @post Los compartimentos se guardan en el archivo compartimentos.txt
+ * @return void
+ */
 void guardar_compartimentos(VectorCompartimentos* v_compartimentos);
 
-
+/**
+ * Listar un compartimento
+ * @param v_compartimento Compartimento a listar
+ * @return void
+ */
 void listar_compartimento(CompartimentoLocker* v_compartimento);
 
-//listar todos los lockers
-void listar_todo_lockers(VectorLockers* v_lockers);
-
+/**
+ * Listar todos los lockers
+ * @param v_lockers Vector de lockers
+ * @return void
+ */
+ void listar_todo_lockers(VectorLockers* v_lockers);
+/**
+ * Buscar un compartimento por su número de compartimento y el id del locker
+ * @param v_compartimentos Vector de compartimentos
+ * @param id_locker Identificador del locker
+ * @param num_compartimento Número de compartimento
+ * @return CompartimentoLocker* Puntero al compartimento encontrado o NULL si no se encuentra
+ */
 CompartimentoLocker* buscar_compartimento(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned num_compartimento);
 
-//buscar primer compartimento libre de un locker
-CompartimentoLocker* buscar_primer_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker);
+/**
+ * Buscar el primer compartimento libre por su número de compartimento y el id del locker
+ * @param v_compartimentos Vector de compartimentos
+ * @param id_locker Identificador del locker
+ * @param num_compartimento Número de compartimento
+ * @return CompartimentoLocker* Puntero al compartimento encontrado o NULL si no se encuentra
+ */
+ CompartimentoLocker* buscar_primer_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker);
 
 
 #endif // LOCKER_H

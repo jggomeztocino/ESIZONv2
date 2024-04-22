@@ -109,31 +109,7 @@ void listar_transportista(Transportista* transportista)
         transportista->ciudad);
 }
 
-//Funcion de listar para los productos pedidos asignados a un transportista en un pedido
-void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista)
-{
-    int i;
-    for (i = 0; i < v_productos_pedido->size; i++) {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 &&
-            strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0) {
-            printf("========================================\n");
-            printf("ID Pedido: %s\n", v_productos_pedido->productos_pedido[i].id_pedido);
-            printf("ID Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
-            printf("Unidades: %u\n", v_productos_pedido->productos_pedido[i].num_unidades);
-            printf("Fecha prevista de entrega: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
-            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
-            printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
-            printf("ID Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-            //printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
-            // Rehacer con el nuevo tipo de dato TODO
-            printf("Fecha de entrega o devolución: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
-        }
-    }
-}
+
 
 
 

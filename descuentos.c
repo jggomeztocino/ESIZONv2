@@ -24,9 +24,8 @@
     Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
  */
 
-//Ejemplo:
-//black001-Black Friday-codpro-activo-10-esizon
-//che001-cheque regalo nivel 1-cheqreg-activo-5-todos
+
+
 void cargar_descuentos(VectorDescuentos* v_descuentos)
 {
     FILE* f = fopen("../data/Descuentos.txt", "r");
@@ -74,9 +73,6 @@ void guardar_descuentos(VectorDescuentos* v_descuentos)
     v_descuentos->n_descuentos = 0;
 }
 
-//Ejemplo:
-//0000001-black001-25/01/2024-27/03/2024-0
-//0000002-che001-01/02/2024-01/06/2024-0
 void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 {
     FILE* f = fopen("../data/descuentos_clientes.txt", "r");
@@ -105,6 +101,7 @@ void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
     fclose(f);
 }
 
+
 void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 {
     FILE* f = fopen("../data/descuentos_clientes.txt", "w");
@@ -127,14 +124,6 @@ void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
     free(v_descuentosclientes->descuentosClientes);
     v_descuentosclientes->n_descuentosclientes = 0;
 }
-
-/*
- * Muestra los descuentos disponibles para un cliente.
- * @param v_descuentosclientes Vector de descuentos de clientes.
- * @param v_descuentos Vector de descuentos.
- * @param id_cliente Identificador del cliente.
- * @return void
- */
 
 
 void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos, char* id_cliente)
@@ -162,12 +151,7 @@ int i;
     }
 }
 
-/*
- * Devuelve un descuento a partir de su id.
- * @param v_descuentos Vector de descuentos.
- * @param id_codigo Identificador del descuento.
- * @return Descuento* Puntero al descuento.
- */
+
 Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo)
 {
     int i;
@@ -178,6 +162,8 @@ Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo)
     }
     return NULL;
 }
+
+
 DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo){
 
     int i;
@@ -189,8 +175,7 @@ DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuen
     return NULL;
 }
 
-// Aplica el descuento al importe de un pedido y lo devuelve con el descuento aplicado o no si no se puede aplicar el descuento al importe del pedido
-// Comprobar si es aplicable , si está activo y si no ha caducado la fecha de caducidad
+
 float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe)
 {
 

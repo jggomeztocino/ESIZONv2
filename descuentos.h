@@ -38,27 +38,90 @@ typedef struct {
     unsigned n_descuentosclientes;
 } VectorDescuentosClientes;
 
-// Funciones para cargar y guardar los descuentos (al estilo de cliente.c)
+/**
+ * @brief Carga los descuentos desde un archivo de texto.
+ * El archivo de texto tiene el siguiente formato:
+ * id_codigo-descripcion-tipo-estado-importe-aplicable
+ * @param v_descuentos Un puntero al vector de descuentos.
+ * @pre El puntero v_descuentos no debe ser nulo.
+ * @post Los descuentos se cargan en el vector de descuentos.
+ * @return void
+ */
 void cargar_descuentos(VectorDescuentos* v_descuentos);
+/**
+ * @brief Guarda los descuentos en un archivo de texto.
+ * El archivo de texto tiene el siguiente formato:
+ * id_codigo-descripcion-tipo-estado-importe-aplicable
+ * @param v_descuentos Un puntero al vector de descuentos.
+ * @pre El puntero v_descuentos no debe ser nulo.
+ * @post Los descuentos se guardan en un archivo de texto.
+ * @return void
+ */
 void guardar_descuentos(VectorDescuentos* v_descuentos);
 
-// Funciones para cargar y guardar los descuentos de los clientes (al estilo de cliente.c)
-void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes);
+/**
+ * @brief cargar descuentos de clientes desde un archivo de texto.
+ * El archivo de texto tiene el siguiente formato:
+ * id_cliente-id_codigo-fecha_asignacion-fecha_caducidad-estado
+ * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
+ * @pre El puntero v_descuentosclientes no debe ser nulo.
+ * @post Los descuentos de clientes se cargan en el vector de descuentos de clientes.
+ * @return void
+ */
+ void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes);
+/**
+ * @brief Guarda los descuentos de clientes en un archivo de texto.
+ * El archivo de texto tiene el siguiente formato:
+ * id_cliente-id_codigo-fecha_asignacion-fecha_caducidad-estado
+ * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
+ * @pre El puntero v_descuentosclientes no debe ser nulo.
+ * @post Los descuentos de clientes se guardan en un archivo de texto.
+ * @return void
+ */
+
 void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes);
 
-/*
- * Función que muestra los descuentos de un cliente.
- * Itera sobre los descuentos de un cliente y los muestra por pantalla,
- * buscando la información correspondiente en el vector de descuentos.
+/**
+ * @brief Muestra los descuentos de un cliente.
+ * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
+ * @param v_descuentos Un puntero al vector de descuentos.
+ * @param id_cliente El identificador del cliente.
+ * @pre Los punteros v_descuentosclientes y v_descuentos no deben ser nulos.
+ * @post Muestra los descuentos de un cliente.
+ * @return void
  */
-//            mostrar_descuentos(cliente, &v_descuentos_cliente, &v_descuentos);
 void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos,  char *id_cliente);
-/*
- * Función que devuelve un descuento a partir de su id.
+
+/**
+ * @brief Devuelve un descuento a partir de su id.
+ * @param v_descuentos Un puntero al vector de descuentos.
+ * @param id_codigo El identificador del descuento.
+ * @pre El puntero v_descuentos no debe ser nulo.
+ * @post Devuelve un descuento a partir de su id.
+ * @return Un puntero al descuento.
  */
 Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo);
-
+/**
+ * @brief Devuelve un descuento de cliente a partir de su id.
+ * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
+ * @param id_cliente El identificador del cliente.
+ * @param id_codigo El identificador del descuento.
+ * @pre El puntero v_descuentosclientes no debe ser nulo.
+ * @post Devuelve un descuento de cliente a partir de su id.
+ * @return Un puntero al descuento de cliente.
+ */
 DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
-//cabecera aplicar descuento importe
+
+/**
+ * @brief Aplica un descuento a un importe.
+ * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
+ * @param v_descuentos Un puntero al vector de descuentos.
+ * @param id_cliente El identificador del cliente.
+ * @param id_descuento El identificador del descuento.
+ * @param importe El importe al que se le aplica el descuento.
+ * @pre Los punteros v_descuentosclientes y v_descuentos no deben ser nulos.
+ * @post Aplica un descuento a un importe.
+ * @return El importe con el descuento aplicado.
+ */
 float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe);
 #endif//DESCUENTOS_H_
