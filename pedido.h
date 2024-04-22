@@ -4,6 +4,7 @@
 #include "fecha.h"
 #include "descuentos.h"
 #include "productos.h"
+#include "locker.h"
 
 typedef struct{
 	char id_pedido[8]; // 7 dígitos + '\0'
@@ -67,6 +68,7 @@ int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido,
 //FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
 ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
 
+ProductoPedido *buscar_producto_pedido_locker(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento);
 
 // Funciones para cargar y guardar los productos de un pedido (al estilo de cliente.c)
 void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido);

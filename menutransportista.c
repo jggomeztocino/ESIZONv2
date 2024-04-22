@@ -1,16 +1,81 @@
 #include "menutransportista.h"
-/*
- typedef struct {
-    char id_transportista[5]; // 4 digitos
-    char nombre[21]; // Nombre del transportista
-    char email[31]; // Email del transportista
-    char contrasena[16]; // Contraseña de acceso
-    char nombre_empresa[21]; // Nombre de la empresa de transporte
-    char ciudad[21]; // Ciudad de operación
-} Transportista;
- */
-//Mostrar la informacion del perfil del transportista
 
+//Funcion que lista los productos pedidos no recogidos en fecha de lockers de una localidad
+void listar_productos_no_recogidos(VectorCompartimentos* v_compartimentos,VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, VectorLockers* v_lockers, char* localidad)
+{
+
+    //// Estructura que representa a un locker
+    //typedef struct {
+    //    char id_locker[11]; // 10 caracteres + '\0'
+    //    char localidad[21]; // Localidad donde se encuentra el locker
+    //    char provincia[21]; // Provincia donde se encuentra el locker
+    //    char ubicacion[21]; // Ubicación específica del locker
+    //    unsigned num_compartimentos_total; // Número total de compartimentos
+    //    unsigned num_compartimentos_ocupados; // Número de compartimentos ocupados
+    //} Locker;
+    //typedef struct {
+    //    char id_locker[11]; // 10 caracteres + '\0'
+    //    unsigned n_compartimento; // Número de compartimento
+    //    char cod_locker[11]; // Código del locker
+    //    unsigned estado; // 0: vacío, 1: ocupado
+    //    Fecha fecha_ocupacion; // Fecha de ocupación
+    //    Fecha fecha_caducidad; // Fecha de caducidad
+    //} CompartimentoLocker;
+
+    //Recorrer los lockers de la localidad
+    //Recorrer los compartimentos de cada locker
+    //Mirar si el producto asociado al compartimento no ha sido recogido en fecha
+    //Mostrar el producto no recogido
+    //Para saber si mostrar el producto pedido hay que mirar que la fecha actual no sea mayor a la fecha de caducidad del compartimento en el que se encuentra
+    int i;
+    int j;
+    int flag_localidad =0;
+    int flag_productos_caducados=0;
+    for(i = 0; i < v_lockers->size; i++)
+    {
+        if(strcmp(v_lockers->lockers[i].localidad, localidad) == 0)
+        {
+            flag_localidad =1;
+
+            for(j = 0; j < v_compartimentos->size; j++)
+            {
+                if(strcmp(v_compartimentos->compartimentos[j].id_locker, v_lockers->lockers[i].id_locker) == 0)
+                {
+                    //Buscar el producto asociado al compartimento
+                    ProductoPedido* producto_pedido = buscar_producto_pedido_locker(v_productos_pedido, v_lockers->lockers[i].id_locker, v_compartimentos->compartimentos[j].n_compartimento);
+                    if(producto_pedido != NULL)
+                    {
+                        //Comprobar si la fecha actual es mayor a la fecha de caducidad del compartimento
+                        if(comparar_fechas(obtener_fecha_actual(), producto_pedido->fecha_entrega_devolucion) == 1)
+                        {
+                            flag_productos_caducados = 1;
+                            //Mostrar el producto no recogido
+                            printf("Producto no recogido\n");
+                            printf("ID: %s\n", producto_pedido->id_producto);
+                            printf("ID pedido: %s\n", producto_pedido->id_pedido);
+                            printf("Número de unidades: %u\n", producto_pedido->num_unidades);
+                            printf("Fecha prevista de entrega: %02d/%02d/%d\n", producto_pedido->fecha_prevista_entrega.dia, producto_pedido->fecha_prevista_entrega.mes, producto_pedido->fecha_prevista_entrega.anio);
+                            printf("Importe: %.2f\n", producto_pedido->importe);
+                            printf("Estado: %d\n", producto_pedido->estado);
+                            printf("Fecha de entrega: %02d/%02d/%d\n", producto_pedido->fecha_entrega_devolucion.dia, producto_pedido->fecha_entrega_devolucion.mes, producto_pedido->fecha_entrega_devolucion.anio);
+                            printf("Locker: %s\n", producto_pedido->id_locker);
+                            printf("Compartimento: %u\n", v_compartimentos->compartimentos[j].n_compartimento);
+                            printf("\n");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(flag_localidad == 0)
+    {
+        printf("No hay lockers en la localidad %s\n", localidad);
+    }
+    if(flag_productos_caducados == 0)
+    {
+        printf("No hay productos no recogidos en fecha\n");
+    }
+}
 
 void gestion_perfil( Transportista* transportista)
 {
@@ -95,7 +160,7 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
         char cod_locker[21];
         leer_cadena("Introduzca el código del locker: ", cod_locker, 21);
         //Buscar el locker por el código
-        Locker* locker = buscar_locker_cod(&v_lockers, cod_locker);
+        Locker* locker = buscar_locker_id(&v_lockers, cod_locker);
         if(locker == NULL)
         {
             printf("No se ha encontrado un locker con el código %s\n", cod_locker);
@@ -111,17 +176,18 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
         //Asignar el compartimento al producto
         strcpy(producto_pedido->id_locker, locker->id_locker);
         strcpy(producto_pedido->cod_locker, cod_locker);
+        //Actualizar el estado del producto
         producto_pedido->estado = 4;
+        //Actualizar la fecha de entrega del producto
         producto_pedido->fecha_entrega_devolucion = obtener_fecha_actual();
         //Actualizar el estado del compartimento
         compartimento->estado = 1;
+        //Actualizar la fecha de ocupación del compartimento
         compartimento->fecha_ocupacion = obtener_fecha_actual();
         //Incrementar el número de compartimentos ocupados en el locker
         locker->num_compartimentos_ocupados++;
         printf("Producto asignado al locker %s en el compartimento %u\n", locker->id_locker, compartimento->n_compartimento);
     }
-
-
 }
 /*Getion de repartos, al principio de la función cargará en memoria los vectores necesarios y al terminar los guardará
 
@@ -171,15 +237,113 @@ void gestion_repartos( Transportista* transportista)
     } while(opcion != 3);
 
 }
+
+//Funcion que gestiona la recogida de un producto de un locker
+void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, Transportista* transportista, VectorLockers* v_lockers, VectorCompartimentos* v_compartimentos)
+{
+    //Listar los productos no recogidos en fecha
+    char localidad[21];
+    char id_locker[11];
+    char id_producto[9];
+    unsigned n_compartimento;
+    leer_cadena("Introduzca la localidad: ", localidad, 21);
+    listar_productos_no_recogidos(v_compartimentos, v_pedidos, v_productos_pedido, v_lockers, localidad);
+
+    //Seleccionar un producto pedido para recoger introduciendo el id del locker , el id del producto y el número de compartimento
+
+    leer_cadena("Introduzca el id del locker: ", id_locker, 11);
+    leer_cadena("Introduzca el id del producto: ", id_producto, 9);
+    leer_unsigned( "Introduzca el número de compartimento: ", &n_compartimento);
+    //Hay que comprpbar que el producto no haya sido recogido ya, que el locker exista y que el compartimento exista y que haya pasado la fecha de caducidad
+    //Buscar el producto pedido
+    ProductoPedido* producto_pedido = buscar_producto_pedido_locker(v_productos_pedido, id_locker, n_compartimento);
+    if(producto_pedido == NULL)
+    {
+        printf("No se ha encontrado un producto asociado a ese id para su recogida\n");
+        return;
+    }
+    //Comprobar si el producto ya ha sido recogido
+    if(producto_pedido->estado == 6)
+    {
+        printf("El producto ya ha sido recogido\n");
+        return;
+    }
+    //Comprobar si el producto ha caducado, comparando la fecha actual con la fecha actual del compartimento en el que se encuentra el producto pedido
+    CompartimentoLocker* compartimento = buscar_compartimento_id(v_compartimentos, id_locker, n_compartimento);
+    if(comparar_fechas(obtener_fecha_actual(), compartimento->fecha_caducidad) == 1)
+    {
+        printf("El producto ha caducado\n");
+        return;
+    }
+    //Marcar el producto como recogido
+    producto_pedido->estado = 7;
+    //Marcar el compartimento como vacío
+    compartimento->estado = 0;
+    //Decrementar el número de compartimentos ocupados en el locker
+    Locker* locker = buscar_locker_id(v_lockers, id_locker);
+    locker->num_compartimentos_ocupados--;
+    //Borrar el codigo del locker del producto pedido
+    strcpy(producto_pedido->id_locker, "");
+    strcpy(producto_pedido->cod_locker, "");
+    printf("Producto recogido\n");
+}
 /*Getion de retornos, al principio de la función cargará en memoria los vectores necesarios y al terminar los guardará
 
  Mostrará un submenu con las siguientes opciones:
     1. Consultar lockers por localidad y mostrando pedidos no recogidos en fecha
     2. Gestionar recogida de producto de un locker
     3. Salir
+
+    El sistema facilitará al transportista la tarea de retornar a origen todos los productos que no
+hayan sido recogidos de los lockers en el plazo determinado, permitiéndole consultar todos los
+lockers por localidad y mostrando sus pedidos. En el momento de la recogida de los productos
+para su retorno, el sistema debe actualizar automáticamente el número de compartimentos
+ocupados y eliminar el código locker asociado al producto. Así como el estado de los productos
+y el stock de los mismos para que quede reflejada la operación.
  */
 void gestion_retornos( Transportista* transportista)
 {
+    //Cargar en memoria los vectores necesarios
+    VectorPedidos v_pedidos;
+    cargar_pedidos(&v_pedidos);
+    VectorProductosPedido v_productos_pedido;
+    cargar_productos_pedido(&v_productos_pedido);
+    //Inicializar los vectores de lockers y compartimentos
+    VectorLockers v_lockers;
+    cargar_lockers(&v_lockers);
+    VectorCompartimentos v_compartimentos;
+    cargar_compartimentos(&v_compartimentos);
+
+    //Mostrar el menu de opciones
+    unsigned opcion;
+
+    do {
+        printf("\nMenu retornos\n\n");
+        printf("1. Consultar lockers por localidad y mostrando pedidos no recogidos en fecha\n");
+        printf("2. Gestionar recogida de producto de un locker\n");
+        printf("3. Salir\n");
+        printf("\nOpcion: ");
+        scanf("%u", &opcion);
+        switch (opcion) {
+            case 1:
+                //Consultar lockers por localidad y mostrando pedidos no recogidos en fecha
+                char localidad[21];
+                leer_cadena("Introduzca la localidad: ", localidad, 21);
+                //Listar de una localidad los lockers
+                listar_lockers_localidad(&v_lockers, localidad);
+                //Listar los productos no recogidos en fecha
+                listar_productos_no_recogidos( &v_compartimentos, &v_pedidos, &v_productos_pedido, &v_lockers, localidad);
+                break;
+            case 2:
+                //Funcion para gestionar la recogida de un producto de un locker
+                gestion_recogida(&v_pedidos, &v_productos_pedido, transportista, &v_lockers, &v_compartimentos);
+                break;
+            case 3:
+                break;
+            default:
+                printf("\nOpcion no valida\n");
+        }
+    } while (opcion != 3);
 
 }
 

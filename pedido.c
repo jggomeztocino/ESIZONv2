@@ -386,3 +386,19 @@ ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido
 
     return NULL;
 }
+// //Buscar un producto pedido en el compartimento
+//buscar_producto_pedido_locker(&v_productos_pedido, locker->id_locker,compartimento->n_compartimento);
+
+ProductoPedido *buscar_producto_pedido_locker(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++)
+    {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_locker, id_locker) == 0 && v_productos_pedido->productos_pedido[i].estado == 4)
+        {
+            return &v_productos_pedido->productos_pedido[i];
+        }
+    }
+
+    return NULL;
+}

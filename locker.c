@@ -189,3 +189,29 @@ void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* 
         }
     }
 }
+
+//Buscar compartimento libre
+CompartimentoLocker* buscar_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker)
+{
+    int i;
+    for (i = 0; i < v_compartimentos->size; i++) {
+        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].estado == 0) {
+            return &v_compartimentos->compartimentos[i];
+        }
+    }
+    return NULL;
+}
+
+//Buscar un compartimento ocupado en el locker
+CompartimentoLocker* buscar_compartimento_ocupado(VectorCompartimentos* v_compartimentos, char* id_locker)
+{
+    int i;
+    for (i = 0; i < v_compartimentos->size; i++) {
+        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].estado == 1) {
+            return &v_compartimentos->compartimentos[i];
+        }
+    }
+    return NULL;
+}
+
+
