@@ -88,7 +88,7 @@ Categoria* alta_categoria(VectorCategorias* categorias)
     return &categorias->categorias[categorias->size - 1];
 }
 
-void baja_categoria(VectorCategorias* categorias, VectorProductos* v_productos, char* id_categoria)
+void baja_categoria(VectorCategorias *categorias, char *id_categoria)
 {
     int i;
     for (i = 0; i < categorias->size; i++) {

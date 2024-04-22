@@ -1,6 +1,6 @@
 
-#ifndef _MENU_CLIENTE_H_
-#define _MENU_CLIENTE_H_
+#ifndef MENU_CLIENTE_H_
+#define MENU_CLIENTE_H_
 
 #include "cliente.h"
 #include "productos.h"
@@ -15,4 +15,4 @@
 #include "fecha.h"
 
 void menu_cliente(Cliente* cliente);
-#endif//_MENU_CLIENTE_H_
+#endif//MENU_CLIENTE_H_

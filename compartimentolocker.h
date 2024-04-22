@@ -7,8 +7,8 @@
 typedef struct
 {
     char id_locker[11];    // 10 caracteres + '\0'
-    int num_compartimento; // Número del compartimento
-    char cod_locker[21];   // Código asociado al locker
+    unsigned num_compartimento; // Número del compartimento
+    unsigned cod_locker;   // Código asociado al locker
     char estado[8];        // "ocupado" o "vacío"
     Fecha fecha_ocupacion; // Fecha en que se ocupó el compartimento
     Fecha fecha_caducidad; // Fecha en que se liberará el compartimento

@@ -102,7 +102,7 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos) {
     v_compartimentos->size = 0;
 
     CompartimentoLocker* temp;
-    int n_compartimentos_actual = 0;
+    unsigned n_compartimentos_actual = 0;
 
     // Leer los datos de los compartimentos del archivo
     while (fscanf(f, "%10[^-]-%u-%10[^-]-%u-%u-%u-%u-%u-%u-%u\n",
@@ -141,7 +141,7 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos)
     }
     int i;
     for (i = 0; i < v_compartimentos->size; i++) {
-        fprintf(f, "%s-%u-%s-%u-%u-%u-%u-%u-%u\n",
+        fprintf(f, "%s-%u-%s-%u-%u-%u-%u-%u-%u-%u\n",
                 v_compartimentos->compartimentos[i].id_locker,
                 v_compartimentos->compartimentos[i].n_compartimento,
                 v_compartimentos->compartimentos[i].cod_locker,
@@ -181,19 +181,6 @@ void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* 
     }
 }
 
-//Buscar compartimento libre
-CompartimentoLocker* buscar_compartimento_libre(VectorCompartimentos* v_compartimentos, char* id_locker)
-{
-    int i;
-    for (i = 0; i < v_compartimentos->size; i++) {
-        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos->compartimentos[i].estado == 0) {
-            return &v_compartimentos->compartimentos[i];
-        }
-    }
-    return NULL;
-}
-
-//Quiero funciones de busqueda para buscar productos pedidos en los lockers
 
 
 

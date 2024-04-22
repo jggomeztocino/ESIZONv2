@@ -37,7 +37,7 @@ void modificarContrasena(AdminProv *admin) {
 
 // Funcion para mostrar y modificar el perfil del administrador
 void perfilAdministrador(AdminProv* admin) {
-    int opcion;
+    unsigned opcion;
 
     // Menu para modificar los datos del perfil
     do {
@@ -83,7 +83,7 @@ void gestionClientes() {
     cargar_clientes(&v_clientes);
 
     /* Menú con las distintas opciones de gestión de clientes */
-    int opcion;
+    unsigned opcion;
     char id_cliente[8];
     unsigned opcion_busqueda;
     do {
@@ -170,7 +170,7 @@ void gestionProveedores() {
     cargar_adminprov(&v_adminprov);
 
     /* Menú con las distintas opciones de gestión de proveedores */
-    int opcion;
+    unsigned opcion;
     char id_empresa[5];
     unsigned opcion_busqueda;
     do {
@@ -580,7 +580,7 @@ void gestionCategorias()
                     if(dependencias > 0) {
                         eliminar_productos_categoria(&v_productos, id_categoria);
                     }
-                    baja_categoria(&v_categorias, &v_productos, id_categoria);
+                    baja_categoria(&v_categorias, id_categoria);
                 }
                 break;
             case 4:
@@ -771,7 +771,7 @@ void gestionTransportistas()
 
 
 void mostrarMenuAdministrador(AdminProv* admin) {
-    int opcion;
+    unsigned opcion;
     do {
         printf("\nMENU ADMINISTRADOR\n");
         printf("1. Perfil\n");

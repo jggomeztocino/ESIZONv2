@@ -69,7 +69,7 @@ void leer_real(char *texto, float *num) {
  * Especificación: void leer_unsigned(char *, unsigned int *);
  * Precondición: num apunta a la variable de tipo unsigned int a la que se le quiere asignar un valor,
  *              y texto será la frase que se imprimirá para solicitar ese valor
- * Postcondición: asigna un valor al puntero a unsigned int num
+ * Postcondición: asigna un valor al puntero a unsigned unsigned num
  */
 void leer_unsigned(char *texto, unsigned int *num) {
     printf("%s: ", texto);

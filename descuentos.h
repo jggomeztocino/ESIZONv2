@@ -1,5 +1,5 @@
-#ifndef _DESCUENTOS_H_
-#define _DESCUENTOS_H_
+#ifndef DESCUENTOS_H_
+#define DESCUENTOS_H_
 
 #include "fecha.h"
 
@@ -17,7 +17,7 @@ typedef struct {
 // Estructura para definir un vector de descuentos junto a su tamaño
 typedef struct {
     Descuento* descuentos;
-    int n_descuentos;
+    unsigned n_descuentos;
 } VectorDescuentos;
 
 // Estructura para almacenar la información de los distintos códigos promocionales
@@ -29,13 +29,13 @@ typedef struct
     char id_codigo[11];     // 10 caracteres + '\0'
     Fecha fecha_asignacion; // Fecha en que se asignó el descuento
     Fecha fecha_caducidad;  // Fecha en que caduca el descuento
-    int estado;             // 1 (Aplicado) o 0 (No aplicado)
+    unsigned estado;             // 1 (Aplicado) o 0 (No aplicado)
 } DescuentoCliente;
 
 // Estructura para definir un vector de descuentos de clientes junto a su tamaño
 typedef struct {
     DescuentoCliente* descuentosClientes;
-    int n_descuentosclientes;
+    unsigned n_descuentosclientes;
 } VectorDescuentosClientes;
 
 // Funciones para cargar y guardar los descuentos (al estilo de cliente.c)
@@ -59,4 +59,4 @@ void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, 
 Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo);
 
 DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
-#endif//_DESCUENTOS_H_
+#endif//DESCUENTOS_H_

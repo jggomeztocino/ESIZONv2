@@ -29,25 +29,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
+void cargar_devoluciones(VectorDevoluciones *v_devoluciones)
+{
     // Abrir archivo de devoluciones para lectura
     FILE *f = fopen("../data/Devoluciones.txt", "r");
-    if (f == NULL) {
+    if (f == NULL)
+    {
         perror("Error al abrir el archivo");
         return;
     }
 
     // Inicializar la memoria para almacenar devoluciones
-    v_devoluciones->devoluciones = (Devolucion *) malloc(sizeof(Devolucion));
-    if (v_devoluciones->devoluciones == NULL) {
+    v_devoluciones->devoluciones = (Devolucion *)malloc(sizeof(Devolucion));
+    if (v_devoluciones->devoluciones == NULL)
+    {
         perror("Error al reservar memoria inicial");
         fclose(f);
         return;
     }
     v_devoluciones->n_devoluciones = 0;
 
-    Devolucion* temp;
-    int n_devoluciones_actual = 0;
+    Devolucion *temp;
+    unsigned n_devoluciones_actual = 0;
 
     // Leer los datos de las devoluciones del archivo
     while (fscanf(f, "%7[^-]-%7[^-]-%d/%d/%d-%50[^-]-%8[^-]-%d/%d/%d-%d/%d/%d\n",
@@ -63,11 +66,13 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
                   &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.anio,
                   &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.dia,
                   &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.mes,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.anio) == 14) {
+                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.anio) == 14)
+    {
 
         n_devoluciones_actual++;
-        temp = (Devolucion *) realloc(v_devoluciones->devoluciones, (n_devoluciones_actual + 1) * sizeof(Devolucion));
-        if (temp == NULL) {
+        temp = (Devolucion *)realloc(v_devoluciones->devoluciones, (n_devoluciones_actual + 1) * sizeof(Devolucion));
+        if (temp == NULL)
+        {
             perror("Error al reservar memoria durante la lectura");
             free(v_devoluciones->devoluciones);
             fclose(f);
@@ -81,14 +86,16 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones) {
     fclose(f);
 }
 
-
-void guardar_devoluciones(VectorDevoluciones* v_devoluciones) {
+void guardar_devoluciones(VectorDevoluciones *v_devoluciones)
+{
     FILE *f = fopen("../data/Devoluciones.txt", "w");
-    if (f == NULL) {
+    if (f == NULL)
+    {
         return;
     }
     int i;
-    for (i = 0; i < v_devoluciones->n_devoluciones; i++) {
+    for (i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
         fprintf(f, "%s-%s-%02d/%02d/%d-%s-%s-%02d/%02d/%d-%02d/%02d/%d\n",
                 v_devoluciones->devoluciones[i].id_pedido,
                 v_devoluciones->devoluciones[i].id_producto,
@@ -108,24 +115,29 @@ void guardar_devoluciones(VectorDevoluciones* v_devoluciones) {
 }
 
 // Función que muestra las devoluciones con estado pendiente de un cliente.
-void mostrar_devoluciones_pendientes(VectorDevoluciones* v_devoluciones, char* id_cliente) {
-    int i;
-    for (i = 0; i < v_devoluciones->n_devoluciones; i++) {
-        if (strcmp(v_devoluciones->devoluciones[i].estado, "pendiente") == 0) {
-            printf("Id pedido: %s\n", v_devoluciones->devoluciones[i].id_pedido);
-            printf("Id producto: %s\n", v_devoluciones->devoluciones[i].id_producto);
-            printf("Fecha devolución: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_devolucion.dia,
-                   v_devoluciones->devoluciones[i].fecha_devolucion.mes,
-                   v_devoluciones->devoluciones[i].fecha_devolucion.anio);
-            printf("Motivo: %s\n", v_devoluciones->devoluciones[i].motivo);
-            printf("Estado: %s\n", v_devoluciones->devoluciones[i].estado);
-            printf("Fecha aceptación: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_aceptacion.dia,
-                   v_devoluciones->devoluciones[i].fecha_aceptacion.mes,
-                   v_devoluciones->devoluciones[i].fecha_aceptacion.anio);
-            printf("Fecha caducidad: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_caducidad.dia,
-                   v_devoluciones->devoluciones[i].fecha_caducidad.mes,
-                   v_devoluciones->devoluciones[i].fecha_caducidad.anio);
+void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente)
+{
+    int i, j;
+    for (i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
+        for (j = 0; j < v_pedidos->size; j++)
+        {
+            if (strcmp(v_devoluciones->devoluciones[i].estado, "pendiente") == 0 && strcmp(v_pedidos->pedidos[j].id_pedido, v_devoluciones->devoluciones[i].id_pedido) == 0 && strcmp(v_pedidos->pedidos[j].id_cliente, id_cliente) == 0)
+            {
+                printf("Id pedido: %s\n", v_devoluciones->devoluciones[i].id_pedido);
+                printf("Id producto: %s\n", v_devoluciones->devoluciones[i].id_producto);
+                printf("Fecha devolución: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_devolucion.dia,
+                       v_devoluciones->devoluciones[i].fecha_devolucion.mes,
+                       v_devoluciones->devoluciones[i].fecha_devolucion.anio);
+                printf("Motivo: %s\n", v_devoluciones->devoluciones[i].motivo);
+                printf("Estado: %s\n", v_devoluciones->devoluciones[i].estado);
+                printf("Fecha aceptación: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_aceptacion.dia,
+                       v_devoluciones->devoluciones[i].fecha_aceptacion.mes,
+                       v_devoluciones->devoluciones[i].fecha_aceptacion.anio);
+                printf("Fecha caducidad: %02d/%02d/%d\n", v_devoluciones->devoluciones[i].fecha_caducidad.dia,
+                       v_devoluciones->devoluciones[i].fecha_caducidad.mes,
+                       v_devoluciones->devoluciones[i].fecha_caducidad.anio);
+            }
         }
     }
 }
-

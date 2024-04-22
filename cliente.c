@@ -88,7 +88,7 @@ void listar_cliente(Cliente* cliente)
 
 void modificar_cliente(Cliente* cliente)
 {
-    int seleccion;
+    unsigned seleccion;
     char nombre[21], direccion[51], poblacion[21], provincia[21], email[31], contrasena[16];
     float cartera;
     do {
@@ -103,7 +103,7 @@ void modificar_cliente(Cliente* cliente)
                "7. Cartera\n"
                "8. Salir\n"
                "---------------------------\n");
-        leer_entero("Introduce una opción [1-8]", &seleccion);
+        leer_unsigned("Introduce una opción [1-8]", &seleccion);
 
         if (seleccion < 1 || seleccion > 8) {
             puts("Introduzca una opción válida\n");

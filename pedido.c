@@ -232,11 +232,13 @@ void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
         // Si el estado es «enLocker», se copia el token en el campo cod_locker del producto pedido
         if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4)
         {
-            strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, token);
+            //strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, token);
+            // Rehacer con el nuevo tipo de dato TODO
         }
         else
         {
-            strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, " ");
+            //strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, " ");
+            // Rehacer con el nuevo tipo de dato TODO
         }
 
         // Se obtiene el siguiente token
@@ -265,7 +267,8 @@ void guardar_productos_pedido(VectorProductosPedido *v_productos_pedido)
     int i;
     for (i = 0; i < v_productos_pedido->size; i++)
     {
-        fprintf(f, "%s-%s-%d-%02d/%02d/%d-%.2f-%d-%s-%s-%s-%02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].id_pedido, v_productos_pedido->productos_pedido[i].id_producto, v_productos_pedido->productos_pedido[i].num_unidades, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio, v_productos_pedido->productos_pedido[i].importe, v_productos_pedido->productos_pedido[i].estado, v_productos_pedido->productos_pedido[i].id_transportista, v_productos_pedido->productos_pedido[i].id_locker, v_productos_pedido->productos_pedido[i].cod_locker, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
+        // fprintf(f, "%s-%s-%d-%02d/%02d/%d-%.2f-%d-%s-%s-%s-%02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].id_pedido, v_productos_pedido->productos_pedido[i].id_producto, v_productos_pedido->productos_pedido[i].num_unidades, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio, v_productos_pedido->productos_pedido[i].importe, v_productos_pedido->productos_pedido[i].estado, v_productos_pedido->productos_pedido[i].id_transportista, v_productos_pedido->productos_pedido[i].id_locker, v_productos_pedido->productos_pedido[i].cod_locker, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
+        // Rehacer con el nuevo tipo de dato TODO
     }
 
     fclose(f);
@@ -327,7 +330,8 @@ void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id
             if (v_productos_pedido->productos_pedido[i].estado == 4)
             {
                 printf("Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-                printf("Código locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+                // printf("Código locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+                // Rehacer con el nuevo tipo de dato TODO
             }
             if (v_productos_pedido->productos_pedido[i].estado == 5 || v_productos_pedido->productos_pedido[i].estado == 6)
             {
@@ -379,22 +383,6 @@ ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido
     for (i = 0; i < v_productos_pedido->size; i++)
     {
         if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_producto, id_producto) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0 && v_productos_pedido->productos_pedido[i].estado == 3)
-        {
-            return &v_productos_pedido->productos_pedido[i];
-        }
-    }
-
-    return NULL;
-}
-// //Buscar un producto pedido en el compartimento
-//buscar_producto_pedido_locker(&v_productos_pedido, locker->id_locker,compartimento->n_compartimento);
-
-ProductoPedido *buscar_producto_pedido_locker(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento)
-{
-    int i;
-    for (i = 0; i < v_productos_pedido->size; i++)
-    {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_locker, id_locker) == 0 && v_productos_pedido->productos_pedido[i].estado == 4)
         {
             return &v_productos_pedido->productos_pedido[i];
         }

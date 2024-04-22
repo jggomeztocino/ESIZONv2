@@ -1,5 +1,5 @@
-#ifndef _PEDIDO_H_
-#define _PEDIDO_H_
+#ifndef PEDIDO_H_
+#define PEDIDO_H_
 
 #include "fecha.h"
 #include "descuentos.h"
@@ -31,7 +31,7 @@ typedef struct
     unsigned estado;                // Estado del producto en el pedido (1: «enPreparacion», 2: «enviado», 3: «enReparto», 4: «enLocker», 5: «entregado», 6: «devuelto», 7: «transportista»)
     char id_transportista[5];       // 4 dígitos + '\0'
     char id_locker[11];           // 10 caracteres + '\0'
-    char cod_locker[21];            // Código del locker (si aplica)
+    unsigned cod_locker;            // Código del locker (si aplica)
     Fecha fecha_entrega_devolucion; // Fecha de entrega o devolución
 } ProductoPedido;
 
@@ -68,10 +68,9 @@ int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido,
 //FUncion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
 ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
 
-ProductoPedido *buscar_producto_pedido_locker(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento);
 
 // Funciones para cargar y guardar los productos de un pedido (al estilo de cliente.c)
 void cargar_productos_pedido(VectorProductosPedido* v_productos_pedido);
 void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido);
 
-#endif//_PEDIDO_H_
+#endif//PEDIDO_H_

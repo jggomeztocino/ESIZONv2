@@ -31,6 +31,6 @@ Categoria* modificar_categoria(Categoria* categoria);
 
 Categoria* alta_categoria(VectorCategorias* categorias);
 
-void baja_categoria(VectorCategorias* categorias, VectorProductos* v_productos, char* id_categoria);
+void baja_categoria(VectorCategorias *categorias, char *id_categoria);
 
 #endif // CATEGORIA_H

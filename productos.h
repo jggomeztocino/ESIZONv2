@@ -1,5 +1,5 @@
-#ifndef _PRODUCTOS_H_
-#define _PRODUCTOS_H_
+#ifndef PRODUCTOS_H_
+#define PRODUCTOS_H_
 
 #include "utilidades.h"
 #include "categoria.h"
@@ -48,4 +48,4 @@ void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
 
 void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
-#endif//ESIZON_PRODUCTOS_H_
+#endif //PRODUCTOS_H_

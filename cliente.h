@@ -1,5 +1,5 @@
-#ifndef _CLIENTE_H_
-#define _CLIENTE_H_
+#ifndef CLIENTE_H_
+#define CLIENTE_H_
 
 typedef struct {
     char id_cliente[8]; // 7 dígitos + '\0'

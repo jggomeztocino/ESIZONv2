@@ -25,7 +25,7 @@ void cargar_transportistas(VectorTransportistas* v_transportistas) {
     v_transportistas->size = 0;
 
     Transportista* temp;
-    int n_transportistas_actual = 0;
+    unsigned n_transportistas_actual = 0;
 
     // Leer los datos de los transportistas del archivo
     while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^-]\n",
@@ -126,7 +126,8 @@ void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido
             printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
             printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
             printf("ID Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-            printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+            //printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
+            // Rehacer con el nuevo tipo de dato TODO
             printf("Fecha de entrega o devolución: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia,
                    v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes,
                    v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
@@ -134,29 +135,8 @@ void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido
     }
 }
 
-//Funcion de listar productos pedidos asignados a un transportista
-void listar_productos_asignados(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, char* id_transportista)
-{
-    int i;
-    for (i = 0; i < v_productos_pedido->size; i++) {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0) {
-            printf("========================================\n");
-            printf("ID Pedido: %s\n", v_productos_pedido->productos_pedido[i].id_pedido);
-            printf("ID Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
-            printf("Unidades: %u\n", v_productos_pedido->productos_pedido[i].num_unidades);
-            printf("Fecha prevista de entrega: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
-            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
-            printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
-            printf("ID Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-            printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
-            printf("Fecha de entrega o devolución: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
-        }
-    }
-}
+
+
 
 Transportista* alta_transportista(VectorTransportistas* v_transportistas)
 {

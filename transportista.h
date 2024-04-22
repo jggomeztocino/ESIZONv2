@@ -29,8 +29,6 @@ Transportista* buscar_transportista_email(VectorTransportistas* v_transportistas
 
 void listar_transportista(Transportista* transportista);
 
-void listar_productos_asignados(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, char* id_transportista);
-
 Transportista* alta_transportista(VectorTransportistas* v_transportistas);
 
 void baja_transportista(VectorTransportistas* v_transportistas, char* id_transportista);

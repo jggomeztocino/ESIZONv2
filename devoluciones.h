@@ -1,6 +1,6 @@
 
-#ifndef _DEVOLUCIONES_H_
-#define _DEVOLUCIONES_H_
+#ifndef DEVOLUCIONES_H_
+#define DEVOLUCIONES_H_
 
 
 #include "pedido.h"
@@ -21,7 +21,7 @@ typedef struct
 // Estructura para definir un vector de devoluciones junto a su tamaño
 typedef struct {
     Devolucion* devoluciones;
-    int n_devoluciones;
+    unsigned n_devoluciones;
 } VectorDevoluciones;
 
 // Funciones para cargar y guardar las devoluciones (al estilo de cliente.c)
@@ -45,4 +45,4 @@ void alta_devolucion(VectorDevoluciones* v_devoluciones, char* id_cliente, char*
 void modificar_estado_devolucion(VectorDevoluciones* v_devoluciones, char* id_devolucion, unsigned nuevo_estado);
 
 
-#endif//_DEVOLUCIONES_H_
+#endif//DEVOLUCIONES_H_

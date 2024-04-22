@@ -23,7 +23,7 @@ void cargar_productos(VectorProductos* v_productos) {
     v_productos->size = 0;
 
     Producto* temp;
-    int n_productos_actual = 0;
+    unsigned n_productos_actual = 0;
 
     // Leer los datos de los productos del archivo
     while (fscanf(f, "%7[^-]-%15[^-]-%50[^-]-%4[^-]-%4[^-]-%u-%u-%f\n",
