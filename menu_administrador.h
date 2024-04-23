@@ -8,6 +8,7 @@
 #include "adminprov.h"
 #include "categoria.h"
 #include "transportista.h"
+#include "pedido.h"
 
 void modificarIdEmpresa(AdminProv *admin);
 

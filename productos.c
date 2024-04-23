@@ -326,7 +326,7 @@ void listado_productos()
     printf("1. Buscar por id\n");
     printf("2. Buscar por categoria\n");
     unsigned opcion;
-    leer_entero("Introduce una opcion valida", &opcion);
+    leer_unsigned("Introduce una opcion valida", &opcion);
     if (opcion == 1)
     {
         char id_producto[8];

@@ -75,8 +75,10 @@ Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido);
  *
  * @param v_pedidos Vector de pedidos
  * @param id_cliente Identificador del cliente
+ *
+ * @return unsigned Número de pedidos del cliente
  */
- void listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente);
+ unsigned listar_pedidos_cliente(VectorPedidos* v_pedidos, char* id_cliente);
 
 /**
  * @brief Función que lista los productos de un pedido
@@ -94,7 +96,7 @@ Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido);
     @param id_transportista Identificador del transportista
 
  */
- void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
+ // void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
 
 //Funcion que lista los pedidos de un cliente que se encuentran en lockers
 void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente);
@@ -108,14 +110,13 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
  int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto);
 
 /**
- * Función que busca un producto pedido por su id_pedido, id_producto e id_transportista
+ * Función que busca un producto pedido por su id_pedido, id_producto
  * @param v_productos_pedido Vector de productos pedido
  * @param id_pedido Identificador del pedido
  * @param id_producto Identificador del producto
- * @param id_transportista Identificador del transportista
  * @return ProductoPedido* Puntero al producto pedido encontrado o NULL si no se encuentra
  */
- ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista);
+ ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto);
 
 /**
  * @brief Función que busca un producto pedido por su compartimento
@@ -140,7 +141,7 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
  * @param v_descuentos_cliente Vector de descuentos de cliente
  * @param v_productos Vector de productos
  */
- void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos, VectorDescuentos v_descuentos, VectorDescuentosClientes v_descuentos_cliente, VectorProductos v_productos);
+void realizar_pedido(Cliente *cliente, VectorPedidos *v_pedidos, VectorProductosPedido *v_productos_pedido, VectorLockers *v_lockers, VectorDescuentos *v_descuentos, VectorDescuentosClientes *v_descuentos_cliente, VectorProductos *v_productos);
 /**
  * @brief Carga los productos de pedido desde el archivo productos_pedido.txt
  * @param v_productos_pedido Vector de productos de pedido
@@ -152,5 +153,34 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
  * @param v_productos_pedido Vector de productos de pedido
  */
  void guardar_productos_pedido(VectorProductosPedido* v_productos_pedido);
+
+/**
+ * @brief Listado de productos de un pedido asignados a un transportista
+ * @param v_productos_pedido Vector de productos de pedido
+ * @param id_transportista Identificador del transportista
+ *
+ * @return unsigned Número de productos asignados al transportista
+ */
+unsigned listar_productos_transportista(VectorProductosPedido* v_productos_pedido, char* id_transportista);
+
+/**
+ * @brief Lista un pedido
+ * @param pedido Pedido a listar
+ */
+void listar_pedido(Pedido* pedido);
+
+/**
+ * @brief Lista un producto de pedido
+ * @param producto_pedido Producto de pedido a listar
+ */
+void listar_producto_pedido(ProductoPedido* producto_pedido);
+
+/**
+ * @brief Modifica un pedido
+ * @param Pedido* pedido Pedido a modificar
+ *
+ * \returns Pedido* Puntero al pedido modificado
+ */
+Pedido* modificar_pedido(Pedido* pedido);
 
 #endif//PEDIDO_H_

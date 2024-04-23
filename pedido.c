@@ -4,37 +4,6 @@
 #include "stdlib.h"
 #include "pedido.h"
 
-// Funciones para cargar y guardar los pedidos (al estilo de cliente.c)
-/*
-    Los campos, separados por guiones, son los que se describen a continuación:
-    o Identificador del pedido (Id_pedido), 7 dígitos.
-    o Fecha del pedido (día, mes y año)
-    o Identificador del cliente que realiza el pedido (Id_cliente), 7 dígitos.
-    o Lugar de entrega (Lugar): «domicilio» o «locker»
-    o Identificador de Locker (id_locker), 10 caracteres máximo. [Solo si el lugar de entrega es locker]
-    o Identificador del código promocional o cheque regalo (id_descuento), 10 caracteres máximo. [Solo si el cliente ha introducido un código promocional o cheque regalo]
-
-    Ejemplo de línea de pedido con todos los campos completos:
-    0000001-01/01/2021-0000001-2-0000000001-0000000001
-
-    Ejemplo de línea de pedido con solo los campos obligatorios (dejando un espacio en blanco en los campos correspondientes):
-    0000002-01/01/2021-0000001-1- -
-
-    En general, el formato de la línea de pedido es el siguiente:
-    id_pedido-fecha_pedido-id_cliente-lugar-id_locker-id_descuento
-
-    Primero deberá inicializar el puntero de pedidos para alojar un solo pedido y su tamaño a 0.
-    Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
-    Si el vector, definido en el puntero de pedidos, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
-
-    Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
-    Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
-*/
-//EJemplo : Primer caso a domicilio con cheque regalo (no aplica codigo locker) y segundo caso entrega a locker sin cheque regalo
-//0000001-02/02/2024-0000001-domicilio- -che001
-//0000002-03/02/2024-0000002-locker-Lock001-
-
-
 void cargar_pedidos(VectorPedidos *v_pedidos) {
     FILE *f = fopen("../data/Pedidos.txt", "r");
     if (f == NULL) {
@@ -106,43 +75,6 @@ void guardar_pedidos(VectorPedidos *v_pedidos)
     fclose(f);
     free(v_pedidos->pedidos);
 }
-
-// Funciones para cargar y guardar los productos de un pedido (al estilo de cliente.c)
-/*
-    Los campos, separados por guiones, son los que se describen a continuación:
-    o Identificador del pedido (id_pedido), 7 dígitos.
-    o Identificador del producto (id_producto), 7 dígitos.
-    o Número de unidades (num_unidades)
-    o Fecha prevista de entrega (día, mes y año).
-    o Importe del producto en euros (importe). Importante que quede constancia del importe al que compra un cliente un producto si la empresa modifica posteriormente su importe.
-    o Estado del pedido: «enPreparación», «enviado», «enReparto», «enLocker», «entregado», «devuelto» o «transportista».
-    o Identificador del transportista (id_transportista), 4 dígitos. (Solo si el estado es distinto de «enPreparación»)
-    o Identificador del locker (id_locker), 10 caracteres máximo. (Solo si el estado es «enLocker»
-    o Código del locker (cod_locker). (Solo si el estado es «enLocker»)
-    o Fecha de entrega/devolución por el transportista (Solo si el estado es <<entregado>> o <<devuelto>>)
-
-    Ejemplo de línea de producto pedido con todos los campos completos:
-    0000001-0000001-1-01/01/2021-10.50-1-0001-0000000001-0000000001-01/01/2021
-
-    Ejemplo de línea de producto pedido con solo los campos obligatorios (dejando un espacio en blanco en los campos correspondientes):
-    0000002-0000001-1-01/01/2021-10.50-1- - - -
-
-    En general, el formato de la línea de pedido es el siguiente:
-    id_pedido-id_producto-num_unidades-fecha_prevista_entrega-importe-estado-id_transportista-id_locker-cod_locker-fecha_entrega_devolucion
-
-    Primero deberá inicializar el puntero de producto pedidos para alojar un solo producto pedido y su tamaño a 0.
-    Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
-    Si el vector, definido en el puntero de productos pedidos, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
-
-    Para los campos que tengan un espacio en blanco, deberá asignar el carácter de espacio en blanco " ".
-    Para los campos que no tengan un espacio en blanco, deberá copiar el contenido de la cadena leída en el campo correspondiente.
-*/
-
-//Ejemplo:
-//0000001-000001-1-07/03/2024-340-enPreparación
-//0000001-000002-1-03/02/2024-45-entregado-0001
-//0000002-000001-2-08/02/2024-45-enLocker-0002-Lock001-134697-08/02/2024
-
 
 void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
 {
@@ -236,13 +168,11 @@ void cargar_productos_pedido(VectorProductosPedido *v_productos_pedido)
         // Si el estado es «enLocker», se copia el token en el campo cod_locker del producto pedido
         if (v_productos_pedido->productos_pedido[v_productos_pedido->size].estado == 4)
         {
-            //strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, token);
-            // Rehacer con el nuevo tipo de dato TODO
+            v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker = atoi(token);
         }
         else
         {
-            //strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker, " ");
-            // Rehacer con el nuevo tipo de dato TODO
+            v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker = 0;
         }
 
         // Se obtiene el siguiente token
@@ -269,17 +199,93 @@ void guardar_productos_pedido(VectorProductosPedido *v_productos_pedido)
     }
 
     int i;
+
+    // Guardar sustituyendo los valores nulos por espacios en blanco
     for (i = 0; i < v_productos_pedido->size; i++)
     {
-        // fprintf(f, "%s-%s-%d-%02d/%02d/%d-%.2f-%d-%s-%s-%s-%02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].id_pedido, v_productos_pedido->productos_pedido[i].id_producto, v_productos_pedido->productos_pedido[i].num_unidades, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio, v_productos_pedido->productos_pedido[i].importe, v_productos_pedido->productos_pedido[i].estado, v_productos_pedido->productos_pedido[i].id_transportista, v_productos_pedido->productos_pedido[i].id_locker, v_productos_pedido->productos_pedido[i].cod_locker, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
-        // Rehacer con el nuevo tipo de dato TODO
+        // Construiremos la línea dato por dato, y luego introduciremos la línea en el archivo, y si algún dato es nulo (a la inversa de lo que se especifica en la carga), lo sustituiremos por un espacio en blanco
+        char linea[100];
+
+        // ID del pedido
+        if (strlen(v_productos_pedido->productos_pedido[i].id_pedido) > 0)
+        {
+            sprintf(linea, "%s-", v_productos_pedido->productos_pedido[i].id_pedido);
+        }
+        else
+        {
+            sprintf(linea, " -");
+        }
+
+        // ID del producto
+        if (strlen(v_productos_pedido->productos_pedido[i].id_producto) > 0)
+        {
+            sprintf(linea, "%s%s-", linea, v_productos_pedido->productos_pedido[i].id_producto);
+        }
+        else
+        {
+            sprintf(linea, "%s -", linea);
+        }
+
+        // Número de unidades
+        sprintf(linea, "%s%d-", linea, v_productos_pedido->productos_pedido[i].num_unidades);
+
+        // Fecha prevista de entrega
+        sprintf(linea, "%s%02d/%02d/%d-", linea, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
+
+        // Importe
+        sprintf(linea, "%s%.2f-", linea, v_productos_pedido->productos_pedido[i].importe);
+
+        // Estado
+        sprintf(linea, "%s%d-", linea, v_productos_pedido->productos_pedido[i].estado);
+
+        // ID del transportista
+        if (strlen(v_productos_pedido->productos_pedido[i].id_transportista) > 0)
+        {
+            sprintf(linea, "%s%s-", linea, v_productos_pedido->productos_pedido[i].id_transportista);
+        }
+        else
+        {
+            sprintf(linea, "%s -", linea);
+        }
+
+        // ID del locker
+        if (strlen(v_productos_pedido->productos_pedido[i].id_locker) > 0)
+        {
+            sprintf(linea, "%s%s-", linea, v_productos_pedido->productos_pedido[i].id_locker);
+        }
+        else
+        {
+            sprintf(linea, "%s -", linea);
+        }
+
+        // Código del locker
+        if(v_productos_pedido->productos_pedido[i].cod_locker > 0)
+        {
+            sprintf(linea, "%s%u-", linea, v_productos_pedido->productos_pedido[i].cod_locker);
+        }
+        else
+        {
+            sprintf(linea, "%s -", linea);
+        }
+
+        // Fecha de entrega/devolución
+        if (v_productos_pedido->productos_pedido[i].estado == 5 || v_productos_pedido->productos_pedido[i].estado == 6)
+        {
+            sprintf(linea, "%s%02d/%02d/%d\n", linea, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
+        }
+        else
+        {
+            sprintf(linea, "%s -\n", linea);
+        }
+
+        fprintf(f, "%s", linea);
     }
 
     fclose(f);
     free(v_productos_pedido->productos_pedido);
 }
 
-Pedido *buscar_pedido_por_id(VectorPedidos *v_pedidos, char *id_pedido)
+Pedido* buscar_pedido_por_id(VectorPedidos *v_pedidos, char *id_pedido)
 {
     int i;
     for (i = 0; i < v_pedidos->size; i++)
@@ -293,60 +299,81 @@ Pedido *buscar_pedido_por_id(VectorPedidos *v_pedidos, char *id_pedido)
     return NULL;
 }
 
-void listar_pedidos_cliente(VectorPedidos *v_pedidos, char *id_cliente)
+void listar_pedido(Pedido *pedido)
 {
+    printf("========================================\n");
+    printf("Pedido: %s\n", pedido->id_pedido);
+    printf("Fecha: %02d/%02d/%d\n", pedido->fecha.dia, pedido->fecha.mes, pedido->fecha.anio);
+    printf("Cliente: %s\n", pedido->id_cliente);
+    printf("Lugar: %s\n", pedido->lugar == 1 ? "domicilio" : "locker");
+    if (pedido->lugar == 2)
+    {
+        printf("Locker: %s\n", pedido->id_locker);
+    }
+    printf("Descuento: %s\n", pedido->id_descuento);
+    printf("========================================\n");
+}
+
+unsigned listar_pedidos_cliente(VectorPedidos *v_pedidos, char *id_cliente)
+{
+    unsigned pedidos_cliente = 0;
     int i;
     for (i = 0; i < v_pedidos->size; i++)
     {
         if (strcmp(v_pedidos->pedidos[i].id_cliente, id_cliente) == 0)
         {
-            printf("Pedido: %s\n", v_pedidos->pedidos[i].id_pedido);
-            printf("Fecha: %02d/%02d/%d\n", v_pedidos->pedidos[i].fecha.dia, v_pedidos->pedidos[i].fecha.mes, v_pedidos->pedidos[i].fecha.anio);
-            printf("Cliente: %s\n", v_pedidos->pedidos[i].id_cliente);
-            printf("Lugar: %s\n", v_pedidos->pedidos[i].lugar == 1 ? "domicilio" : "locker");
-            if (v_pedidos->pedidos[i].lugar == 2)
-            {
-                printf("Locker: %s\n", v_pedidos->pedidos[i].id_locker);
-            }
-            printf("Descuento: %s\n", v_pedidos->pedidos[i].id_descuento);
-            printf("\n");
+            pedidos_cliente++;
+            listar_pedido(&v_pedidos->pedidos[i]);
         }
     }
+    return pedidos_cliente;
 }
 
+void listar_producto_pedido(ProductoPedido *producto_pedido)
+{
+    printf("========================================\n");
+    printf("ID Pedido: %s\n", producto_pedido->id_pedido);
+    printf("ID Producto: %s\n", producto_pedido->id_producto);
+    printf("Unidades: %u\n", producto_pedido->num_unidades);
+    printf("Fecha prevista de entrega: %d/%d/%d\n", producto_pedido->fecha_prevista_entrega.dia,
+           producto_pedido->fecha_prevista_entrega.mes,
+           producto_pedido->fecha_prevista_entrega.anio);
+    printf("Importe: %.2f\n", producto_pedido->importe);
+    printf("Estado: %u\n", producto_pedido->estado);
+    printf("ID Transportista: %s\n", producto_pedido->id_transportista);
+    printf("ID Locker: %s\n", producto_pedido->id_locker);
+    printf("Codigo Locker: %u\n", producto_pedido->cod_locker);
+    printf("Fecha de entrega o devolución: %d/%d/%d\n", producto_pedido->fecha_entrega_devolucion.dia,
+           producto_pedido->fecha_entrega_devolucion.mes,
+           producto_pedido->fecha_entrega_devolucion.anio);
+    printf("========================================\n");
+}
 
 void listar_productos_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido)
 {
     int i;
-    for (i = 0; i < v_productos_pedido->size; i++)
-    {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0)
-        {
-            printf("Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
-            printf("Unidades: %d\n", v_productos_pedido->productos_pedido[i].num_unidades);
-            printf("Fecha prevista de entrega: %02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes, v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
-            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
-            printf("Estado: %d\n", v_productos_pedido->productos_pedido[i].estado);
-            if (v_productos_pedido->productos_pedido[i].estado != 1)
-            {
-                printf("Transportista: %s\n", v_productos_pedido->productos_pedido[i].id_transportista);
-            }
-            if (v_productos_pedido->productos_pedido[i].estado == 4)
-            {
-                printf("Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-                // printf("Código locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
-                // Rehacer con el nuevo tipo de dato TODO
-            }
-            if (v_productos_pedido->productos_pedido[i].estado == 5 || v_productos_pedido->productos_pedido[i].estado == 6)
-            {
-                printf("Fecha de entrega/devolución: %02d/%02d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes, v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
-            }
-            printf("\n");
+    for(i = 0; i < v_productos_pedido->size; i++){
+        if(strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0){
+            listar_producto_pedido(&v_productos_pedido->productos_pedido[i]);
         }
     }
 }
 
-//Funcion que lista los pedidos de un cliente marcados en locker
+unsigned listar_productos_transportista(VectorProductosPedido *v_productos_pedido, char *id_transportista)
+{
+    unsigned n_productos = 0;
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++)
+    {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0)
+        {
+            listar_producto_pedido(&v_productos_pedido->productos_pedido[i]);
+            n_productos++;
+        }
+    }
+    return n_productos;
+}
+
 void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
 {
     int i;
@@ -354,17 +381,21 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
     {
         if (strcmp(v_pedidos->pedidos[i].id_cliente, id_cliente) == 0 && v_pedidos->pedidos[i].lugar == 2)
         {
-            printf("Pedido: %s\n", v_pedidos->pedidos[i].id_pedido);
-            printf("Fecha: %02d/%02d/%d\n", v_pedidos->pedidos[i].fecha.dia, v_pedidos->pedidos[i].fecha.mes, v_pedidos->pedidos[i].fecha.anio);
-            printf("Cliente: %s\n", v_pedidos->pedidos[i].id_cliente);
-            printf("Lugar: locker\n");
-            printf("Locker: %s\n", v_pedidos->pedidos[i].id_locker);
-            printf("Descuento: %s\n", v_pedidos->pedidos[i].id_descuento);
-            printf("\n");
+            listar_pedido(&v_pedidos->pedidos[i]);
         }
     }
 }
 
+/*void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista)
+{
+    int i;
+    for (i = 0; i < v_productos_pedido->size; i++) {
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 &&
+            strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0) {
+            listar_producto_pedido(&v_productos_pedido->productos_pedido[i]);
+        }
+    }
+}*/
 
 int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto)
 {
@@ -376,22 +407,19 @@ int pertenece_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido,
             return 1;
         }
     }
-
     return 0;
 }
 
-
-ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto, char *id_transportista)
+ProductoPedido *buscar_producto_pedido(VectorProductosPedido *v_productos_pedido, char *id_pedido, char *id_producto)
 {
     int i;
     for (i = 0; i < v_productos_pedido->size; i++)
     {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_producto, id_producto) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0 && v_productos_pedido->productos_pedido[i].estado == 3)
+        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 && strcmp(v_productos_pedido->productos_pedido[i].id_producto, id_producto) == 0)
         {
             return &v_productos_pedido->productos_pedido[i];
         }
     }
-
     return NULL;
 }
 
@@ -409,266 +437,224 @@ ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *
     return NULL;
 }
 
-
-void realizar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorLockers v_lockers, VectorCompartimentos v_compartimentos, VectorDescuentos v_descuentos, VectorDescuentosClientes v_descuentos_cliente, VectorProductos v_productos)
+// Modularización de realizar pedido en subfunciones para facilitar la lectura del código y mantenimiento, además la optimización de la memoria y de código
+void nuevo_producto_pedido(Pedido* pedido, VectorProductos* v_productos, VectorProductosPedido* v_productos_pedido)
 {
+    ProductoPedido *temp = (ProductoPedido *)realloc(v_productos_pedido->productos_pedido, (v_productos_pedido->size + 1) * sizeof(ProductoPedido));
+    if (temp == NULL)
+    {
+        perror("Error al reservar memoria");
+        return;
+    }
 
-    // Crear un pedido temporal
-    Pedido pedido_temp;
-    float importe = 0;
+    v_productos_pedido->productos_pedido = temp;
+
+    char id_producto[8];
     unsigned num_unidades;
-    int i;
+    Fecha fecha_prevista_entrega;
+    float importe;
+    unsigned estado;
+    char id_transportista[8];
+    char id_locker[11];
+    unsigned cod_locker;
+    Fecha fecha_entrega_devolucion;
+
+    char respuesta;
+
+    Producto* producto;
+
+    strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_pedido, pedido->id_pedido);
+
+    leer_cadena("Introduce el ID del producto: ", id_producto, 8);
+    producto = buscar_producto_id(v_productos, id_producto);
+    if (producto == NULL)
+    {
+        printf("Producto no encontrado\n");
+        printf("\n¿Desea listar los productos disponibles (S/N): ");
+        leer_caracter("Introduce una opción valida", &respuesta);
+        if(respuesta == 's' || respuesta == 'S')
+        {
+            listar_productos(v_productos);
+            printf("\n¿Desea introducir el ID del producto de nuevo (S/N): ");
+            leer_caracter("Introduce una opción valida", &respuesta);
+        }
+        if(respuesta == 'n' || respuesta == 'N')
+        {
+            return;
+        }
+        leer_cadena("Introduce el ID del producto: ", id_producto, 8);
+        producto = buscar_producto_id(v_productos, id_producto);
+        if (producto == NULL)
+        {
+            printf("Producto no encontrado\n");
+            return;
+        }
+        else{
+            printf("Producto encontrado\n");
+            listar_producto(producto);
+        }
+    }
+
+    leer_unsigned("Introduce el número de unidades: ", &num_unidades);
+    if (num_unidades > producto->stock)
+    {
+        printf("No hay suficiente stock\n");
+        printf("Stock disponible: %u\n", producto->stock);
+        printf("\n¿Desea introducir el número de unidades de nuevo (S/N): ");
+        leer_caracter("Introduce una opción valida", &respuesta);
+        if(respuesta == 's' || respuesta == 'S')
+        {
+            leer_unsigned("Introduce el número de unidades: ", &num_unidades);
+            if (num_unidades > producto->stock)
+            {
+                printf("No hay suficiente stock\n");
+                return;
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    fecha_prevista_entrega = pedido->fecha;
+    fecha_prevista_entrega.dia += producto->entrega;
+
+    importe = producto->importe * num_unidades;
+
+    estado = 1;
+
+    strcpy(id_transportista, " ");
+
+    strcpy(id_locker, pedido->id_locker);
+
+    cod_locker = 0;
+
+    fecha_entrega_devolucion = crearFecha(0, 0, 0);
+
+    strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_producto, id_producto);
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].num_unidades = num_unidades;
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].fecha_prevista_entrega = fecha_prevista_entrega;
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].importe = importe;
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].estado = estado;
+    strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_transportista, id_transportista);
+    strcpy(v_productos_pedido->productos_pedido[v_productos_pedido->size].id_locker, id_locker);
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].cod_locker = cod_locker;
+    v_productos_pedido->productos_pedido[v_productos_pedido->size].fecha_entrega_devolucion = fecha_entrega_devolucion;
+
+    v_productos_pedido->size++;
+}
+
+Pedido* nuevo_pedido(VectorPedidos *v_pedidos, Cliente* cliente, VectorLockers* v_lockers, VectorDescuentos* v_descuentos, VectorDescuentosClientes* v_descuentos_cliente)
+{
+    Pedido *temp = (Pedido *)realloc(v_pedidos->pedidos, (v_pedidos->size + 1) * sizeof(Pedido));
+    if (temp == NULL)
+    {
+        perror("Error al reservar memoria");
+        return NULL;
+    }
+    v_pedidos->pedidos = temp;
+
+    // El ID del pedido se genera automáticamente, accediendo al ID del último pedido, transformándolo a entero y sumándole 1, y luego se convierte a string de nuevo
     char id_pedido[8];
-    unsigned opcion_lugar;
-    sprintf(id_pedido, "%07d", atoi(v_pedidos.pedidos[v_pedidos.size - 1].id_pedido) + 1);
+    sprintf(id_pedido, "%07d", atoi(v_pedidos->pedidos[v_pedidos->size - 1].id_pedido) + 1);
 
-    strcpy(pedido_temp.id_pedido, id_pedido);
-    // Obtener la fecha actual
-    pedido_temp.fecha = obtener_fecha_actual();
-    // Copiar el id del cliente
-    strcpy(pedido_temp.id_cliente, cliente->id_cliente);
+    // Obtenemos la fecha actual
+    Fecha fecha = obtener_fecha_actual();
 
-    // Crear un vector de producos pedido temporal e inicializar su tamaño a 0 y su puntero a NULL
-    VectorProductosPedido v_productos_pedido_temp;
-    v_productos_pedido_temp.size = 0;
-    v_productos_pedido_temp.productos_pedido = NULL;
+    // Copiamos el ID del cliente
+    char id_cliente[8];
+    strcpy(id_cliente, cliente->id_cliente);
 
-    // Crear un producto pedido temporal
-    ProductoPedido producto_pedido_temp;
-    strcpy(producto_pedido_temp.id_pedido, id_pedido);
-
-    // Preguntar si desea entrega del pedido a domicilio o en un locker
+    // Preguntamos si desea entrega del pedido a domicilio o en un locker
+    unsigned lugar;
     do
     {
         printf("1. Domicilio\n");
         printf("2. Locker\n");
-        leer_unsigned("Introduce una opcion valida", &opcion_lugar);
-    } while (opcion_lugar != 1 && opcion_lugar != 2);
+        leer_unsigned("Introduce una opcion valida", &lugar);
+    } while (lugar != 1 && lugar != 2);
 
-    // Inicializar el lugar del pedido
-    pedido_temp.lugar = opcion_lugar;
+    // Inicializamos el ID del locker
+    char id_locker[11];
+    strcpy(id_locker, " ");
 
-
-
-    // Pedirle al cliente que introduzca el id del producto
-    do
+    // Si la entrega es en un locker, mostramos los lockers y solicitamos que introduzca el ID del locker
+    if (lugar == 2)
     {
-        // Listar los productos
-        listado_productos();
+        listar_todo_lockers(v_lockers);
+        leer_cadena("Introduce el ID del locker: ", id_locker, 11);
+    }
 
-        char id_producto[8];
-        leer_cadena("Introduce el id del producto: ", id_producto, 8);
-        // Comprobar que el producto existe
-        Producto *producto = buscar_producto_id(&v_productos, id_producto);
-        if (producto == NULL)
-        {
-            printf("Producto no encontrado\n");
-        }
-        else
-        { // Si el producto existe pedirle el numero de unidades
-            leer_unsigned("Introduce el numero de unidades: ", &num_unidades);
-            if (num_unidades < producto->stock)
-            {
-                printf("No hay suficiente stock\n");
-            }
-            else
-            { // Si hay suficiente stock rellenar los datos del producto pedido temporal
-                // Rellenar los datos de un producto pedido temporal
-                strcpy(producto_pedido_temp.id_producto, id_producto);
-                producto_pedido_temp.num_unidades = num_unidades;
-                producto_pedido_temp.importe = producto->importe * num_unidades;
-                producto_pedido_temp.estado = 1;
-                strcpy(producto_pedido_temp.id_transportista, " ");
-                //SI la entrega es a domicilio
-                if (pedido_temp.lugar == 1 ) {
-                    strcpy(producto_pedido_temp.id_locker, " ");
-                    producto_pedido_temp.cod_locker = 0;
-                }else{
-                    // Si la entrega es en un locker mostrar los lockers y solicitar que introduzca el id del locker
-                    listar_todo_lockers(&v_lockers);
-                    char id_locker[11];
-                    leer_cadena("Introduce el id del locker: ", id_locker, 11);
-                    // Comprobar que el locker existe
-                    Locker *locker = buscar_locker_id(&v_lockers, id_locker);
-                    if (locker == NULL)
-                    {
-                        printf("Locker no encontrado\n");
-                        continue;
-                    }
-                    // Comprobar que el locker tiene compartimentos libres
-                    if (locker->num_compartimentos_total == locker->num_compartimentos_ocupados)
-                    {
-                        printf("Locker lleno\n");
-                        continue;
-                    }
-                    // Rellenar los datos del producto pedido temporal
-                    strcpy(producto_pedido_temp.id_locker, id_locker);
-                    producto_pedido_temp.cod_locker = 0;
-                    // Seleccionar un compartimento del locker, asignamdo la informacion al compartimento locker que lo haga de forma automatica , recorriendo el vector de compartimentos
+    // Inicializamos el ID del descuento
+    char id_descuento[11];
+    strcpy(id_descuento, " ");
 
-
-                    for (i = 0; i < v_compartimentos.size; i++)
-                    {
-                        if (strcmp(v_compartimentos.compartimentos[i].id_locker, id_locker) == 0 && v_compartimentos.compartimentos[i].estado == 0)
-                        {
-                            strcpy(v_compartimentos.compartimentos[i].id_locker, id_locker);
-                            v_compartimentos.compartimentos[i].n_compartimento = v_compartimentos.compartimentos[i].n_compartimento;
-                            v_compartimentos.compartimentos[i].cod_locker = 0;
-                            v_compartimentos.compartimentos[i].estado = 1;
-                            v_compartimentos.compartimentos[i].fecha_ocupacion = obtener_fecha_actual();
-                            v_compartimentos.compartimentos[i].fecha_caducidad = crearFecha(0, 0, 0);
-
-                            break;
-                        }
-
-                    }
-
-
-                }
-                producto_pedido_temp.fecha_entrega_devolucion = crearFecha(0, 0, 0);
-                // suma las fechas para calcular la fecha prevista de entrega
-                producto_pedido_temp.fecha_prevista_entrega = crearFecha(producto->entrega + pedido_temp.fecha.dia, pedido_temp.fecha.mes, pedido_temp.fecha.anio);
-                // Aumentar el numero de productos en el vector de productos pedido temporal
-                v_productos_pedido_temp.size++;
-
-                // Incluir el producto pedido temporal en la ultima posicion del vector de productos pedido temporal y actualizar el importe de ese producto pedido temporal
-                // COmprueba que se haya podido realizar la reserva de memoria
-
-
-
-                ProductoPedido *temp = (ProductoPedido *)realloc(v_productos_pedido_temp.productos_pedido, v_productos_pedido_temp.size * sizeof(ProductoPedido));
-                if (temp == NULL)
-                {
-                    perror("Error al reservar memoria");
-                    return;
-                }
-
-                v_productos_pedido_temp.productos_pedido = temp;
-                v_productos_pedido_temp.productos_pedido[v_productos_pedido_temp.size - 1] = producto_pedido_temp;
-                importe += producto_pedido_temp.importe;
-
-            }
-
-            // Preguntar si quiere añadir otro producto
-            char respuesta;
-            printf("¿Desea añadir otro producto? (s/n): ");
-            leer_caracter("Introduce una opcion valida", &respuesta);
-            if (respuesta == 'n' || respuesta == 'N')
-            {
-                break;
-            }
-        }
-    } while (1); // Se han terminado de añadir productos
-
-    // Mostrar el importe total y  el numero de productos solicitados (size del vector temporal)
-
-    printf("Importe total: %.2f\n", importe);
-    printf("Numero de productos: %u\n", v_productos_pedido_temp.size); // Productos diferentes
-
-    // Preguntar si desea aplicar un descuento
+    // Preguntamos si desea aplicar un descuento
     char respuesta;
     printf("¿Desea aplicar un descuento? (s/n): ");
     leer_caracter("Introduce una opcion valida", &respuesta);
+
+    // Si desea aplicar un descuento, mostramos los descuentos del cliente y solicitamos que introduzca el ID del descuento
     if (respuesta == 's' || respuesta == 'S')
     {
-        // Mostrar los descuentos del cliente EN CONCRETO
-        mostrar_descuentos_cliente(&v_descuentos_cliente, &v_descuentos, cliente->id_cliente);
-        // Pedirle al cliente que introduzca el id del descuento
-        char id_descuento[11];
-        do
+        Descuento* descuento;
+        mostrar_descuentos_cliente(v_descuentos_cliente, v_descuentos, cliente->id_cliente);
+        leer_cadena("Introduce el ID del descuento: ", id_descuento, 11);
+        descuento = buscar_descuento_cliente(v_descuentos_cliente, v_descuentos, cliente->id_cliente, id_descuento); // TODO
+        if (descuento == NULL)
         {
-            respuesta = 'n';
-            leer_cadena("Introduce el id del descuento: ", id_descuento, 11);
-            float aux = importe;
-            importe = aplicar_descuento_a_importe(&v_descuentos_cliente, &v_descuentos, cliente->id_cliente, id_descuento, importe);
-            if (aux == importe)
-            {
-                printf("No se ha podido aplicar el descuento\n");
-                leer_caracter("¿Desea aplicar otro descuento? (s/n): \n ", &respuesta);
-            }
-            else
-            {
-                printf("Descuento aplicado\n");
-                // Imprimir un desglose del importe formateado
-                printf("Importe sin descuento: %.2f\n", aux);
-                printf("Descuento aplicado: %.2f\n", importe);
-                // Copiar el id del descuento en el pedido temporal
-                strcpy(pedido_temp.id_descuento, id_descuento);
-                break;
-            }
-
-        } while (respuesta == 's' || respuesta == 'S');
-    }
-    else
-    {
-        // Si no se aplica descuento copiar un string vacio en el id del descuento del pedido temporal
-        strcpy(pedido_temp.id_descuento, " ");
+            printf("Descuento no encontrado\n");
+        }
+        else if(descuento_valido(descuento, cliente, v_productos_pedido, v_productos))
+        {
+            printf("Descuento aplicado\n");
+        }
+        else
+        {
+            printf("Descuento no aplicable\n");
+        }
     }
 
-    // Restar el importe a la cartera del cliente indicando que se está procediendo al pago , en caso de no tener suficiente saldo mostrar un mensaje
-    if (cliente->cartera < importe)
-    {
-        printf("No tiene suficiente saldo\n");
-        printf("Pedido cancelado \n");
-    }
-    else
-    {
-        //Incluir el pedido temporal en el vector de pedidos e incrementar el tamaño del vector
-        Pedido *temp = (Pedido *)realloc(v_pedidos.pedidos, (v_pedidos.size + 1) * sizeof(Pedido));
-        if (temp == NULL)
-        {
-            perror("Error al reservar memoria");
-            return;
-        }
-        v_pedidos.pedidos = temp;
-        v_pedidos.pedidos[v_pedidos.size] = pedido_temp;
-        v_pedidos.size++;
+    strcpy(v_pedidos->pedidos[v_pedidos->size].id_pedido, id_pedido);
+    v_pedidos->pedidos[v_pedidos->size].fecha = fecha;
+    strcpy(v_pedidos->pedidos[v_pedidos->size].id_cliente, id_cliente);
+    v_pedidos->pedidos[v_pedidos->size].lugar = lugar;
+    strcpy(v_pedidos->pedidos[v_pedidos->size].id_locker, id_locker);
+    strcpy(v_pedidos->pedidos[v_pedidos->size].id_descuento, id_descuento);
 
-        //Incluir el vector de productos pedido temporal en el vector de productos pedido e incrementar el tamaño del vector
-        ProductoPedido *temp2 = (ProductoPedido *)realloc(v_productos_pedido.productos_pedido, (v_productos_pedido.size + v_productos_pedido_temp.size) * sizeof(ProductoPedido));
-        if (temp2 == NULL)
-        {
-            perror("Error al reservar memoria");
-            return;
-        }
-        v_productos_pedido.productos_pedido = temp2;
+    v_pedidos->size++;
 
-        for (i = 0; i < v_productos_pedido_temp.size; i++)
-        {
-            v_productos_pedido.productos_pedido[v_productos_pedido.size + i] = v_productos_pedido_temp.productos_pedido[i];
-            //Actualiza el stock de los productos
-            Producto *producto = buscar_producto_id(&v_productos, v_productos_pedido_temp.productos_pedido[i].id_producto);
-            producto->stock -= v_productos_pedido_temp.productos_pedido[i].num_unidades;
-        }
-        v_productos_pedido.size += v_productos_pedido_temp.size;
-        // Actualizar la cartera del cliente
-        cliente->cartera -= importe;
-        printf("Se ha procedido al pago\n");
+    return &v_pedidos->pedidos[v_pedidos->size - 1];
+}
 
+// realizar_pedido con las subfunciones
+void realizar_pedido(Cliente *cliente, VectorPedidos *v_pedidos, VectorProductosPedido *v_productos_pedido, VectorLockers *v_lockers, VectorDescuentos *v_descuentos, VectorDescuentosClientes *v_descuentos_cliente, VectorProductos *v_productos)
+{
+    // Creamos el pedido
+    Pedido* pedido = nuevo_pedido(v_pedidos, cliente, v_lockers, v_descuentos, v_descuentos_cliente);
+
+    unsigned n_productos = 0;
+    char respuesta;
+
+    // Especificamos un bucle indefinido para añadir productos al pedido
+    while (1) {
+        if (n_productos > 0) {
+            printf("¿Desea añadir otro producto? (S/N): ");
+            leer_caracter("Introduce una opción valida", &respuesta);
+        }
+
+        if (n_productos == 0 || respuesta == 'S' || respuesta == 's') {
+            nuevo_producto_pedido(pedido, v_productos, v_productos_pedido);
+            n_productos++;
+        } else {
+            break;
+        }
     }
 }
 
-void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista)
+Pedido* modificar_pedido(Pedido* pedido)
 {
-    int i;
-    for (i = 0; i < v_productos_pedido->size; i++) {
-        if (strcmp(v_productos_pedido->productos_pedido[i].id_pedido, id_pedido) == 0 &&
-            strcmp(v_productos_pedido->productos_pedido[i].id_transportista, id_transportista) == 0) {
-            printf("========================================\n");
-            printf("ID Pedido: %s\n", v_productos_pedido->productos_pedido[i].id_pedido);
-            printf("ID Producto: %s\n", v_productos_pedido->productos_pedido[i].id_producto);
-            printf("Unidades: %u\n", v_productos_pedido->productos_pedido[i].num_unidades);
-            printf("Fecha prevista de entrega: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
-            printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
-            printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
-            printf("ID Locker: %s\n", v_productos_pedido->productos_pedido[i].id_locker);
-            //printf("Codigo Locker: %s\n", v_productos_pedido->productos_pedido[i].cod_locker);
-            // Rehacer con el nuevo tipo de dato TODO
-            printf("Fecha de entrega o devolución: %d/%d/%d\n", v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.dia,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.mes,
-                   v_productos_pedido->productos_pedido[i].fecha_entrega_devolucion.anio);
-        }
-    }
+    printf("Por cuestiones de logística, únicamente se puede modificar el lugar de entrega si todos los productos del pedido no han sido aún enviados.\n");
+
 }

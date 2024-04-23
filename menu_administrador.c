@@ -54,7 +54,7 @@ void perfilAdministrador(AdminProv* admin) {
         printf("3. Email\n");
         printf("4. Contrasena\n");
         printf("5. Volver\n");
-        leer_entero("Seleccione una opcion para modificar", &opcion);
+        leer_unsigned("Seleccione una opcion para modificar", &opcion);
 
         switch (opcion) {
             case 1:
@@ -94,7 +94,7 @@ void gestionClientes() {
         printf("4. Listar clientes\n");
         printf("5. Modificar cliente\n");
         printf("6. Volver\n");
-        leer_entero("Seleccione una opcion", &opcion);
+        leer_unsigned("Seleccione una opcion", &opcion);
 
         switch (opcion) {
             case 1:
@@ -181,7 +181,7 @@ void gestionProveedores() {
         printf("4. Listar proveedores\n");
         printf("5. Modificar proveedor\n");
         printf("6. Volver\n");
-        leer_entero("Seleccione una opcion", &opcion);
+        leer_unsigned("Seleccione una opcion", &opcion);
 
         switch (opcion) {
             case 1:
@@ -692,7 +692,99 @@ void gestionCategorias()
 
 void gestionPedidos()
 {
+    // Carga de los pedidos
+    VectorPedidos v_pedidos;
+    cargar_pedidos(&v_pedidos);
 
+    // Carga de los productos
+    VectorProductos v_productos;
+    cargar_productos(&v_productos);
+
+    // Carga de los productos pedidos
+    VectorProductosPedido v_productos_pedidos;
+    cargar_productos_pedido(&v_productos_pedidos);
+
+    // Carga de los transportistas
+    VectorTransportistas v_transportistas;
+    cargar_transportistas(&v_transportistas);
+
+    // Carga de los clientes
+    VectorClientes v_clientes;
+    cargar_clientes(&v_clientes);
+
+    unsigned opcion = 0;
+    unsigned opcion_busqueda = 0;
+    char id_pedido[8];
+    char id_cliente[8];
+    char ciudad[16];
+    char respuesta[2];
+    Pedido* pedido;
+
+    do{
+        printf("\nGESTIÓN DE PEDIDOS\n");
+        printf("1. Búsqueda de pedido\n");
+        printf("2. Alta de pedido\n");
+        printf("3. Baja de pedido\n");
+        printf("4. Modificación de pedido\n");
+        printf("5. Listado de pedidos\n");
+        printf("6. Listado de pedidos por estado\n");
+        printf("7. Volver\n");
+        leer_unsigned("Seleccione una opción", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("\nBÚSQUEDA DE PEDIDO\n");
+                printf("1. Buscar por ID\n");
+                printf("2. Buscar por ID de cliente\n");
+                leer_unsigned("Seleccione una opción", &opcion_busqueda);
+                if(opcion_busqueda ==1)
+                {
+                    leer_cadena("Ingrese el ID del pedido a buscar", id_pedido, 8);
+                    pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
+                }
+                else if(opcion_busqueda == 2)
+                {
+                    leer_cadena("Ingrese el ID del cliente a buscar", id_cliente, 8);
+                    if(buscar_cliente_por_id(&v_clientes, id_cliente) == NULL)
+                    {
+                        printf("Cliente no encontrado.\n");
+                        break;
+                    }
+                    if(listar_pedidos_cliente(&v_pedidos, id_cliente) == 0)
+                    {
+                        printf("El cliente no tiene pedidos asociados.\n");
+                    }else{
+                        leer_cadena("Seleccione el ID del pedido a listar individualmente (de los listados por pantalla)", id_pedido, 8);
+                        pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
+                    }
+                }
+                else
+                {
+                    printf("Opción no válida.\n");
+                    break;
+                }
+                if (pedido != NULL) {
+                    printf("Pedido encontrado\n");
+                    listar_pedido(pedido);
+                    listar_productos_pedido(&v_productos_pedidos, pedido->id_pedido);
+                    leer_cadena("Desea modificar este pedido? (S/N)", respuesta, sizeof(respuesta));
+                    if ((strcmp(respuesta, "S") == 0) || (strcmp(respuesta, "s") == 0)) {
+                        modificar_pedido(pedido);
+                        modificar_producto_pedido(); // TODO
+                    }
+                } else {
+                    printf("Pedido no encontrado.\n");
+                }
+                break;
+        }
+
+    } while (opcion != 7);
+
+    guardar_pedidos(&v_pedidos);
+    guardar_productos(&v_productos);
+    guardar_productos_pedido(&v_productos_pedidos);
+    guardar_transportistas(&v_transportistas);
+    guardar_clientes(&v_clientes);
 }
 
 /*
@@ -751,22 +843,132 @@ void gestionTransportistas()
     VectorTransportistas v_transportistas;
     cargar_transportistas(&v_transportistas);
 
-    // Carga de los pedidos
-    VectorPedidos v_pedidos;
-    cargar_pedidos(&v_pedidos);
+    // Carga de los productos pedidos
+    VectorProductosPedido v_productospedidos;
+    cargar_productos_pedido(&v_productospedidos);
 
-    unsigned opcion;
+    unsigned opcion = 0;
+    unsigned opcion_busqueda = 0;
     char id_transportista[5];
     char email_transportista[31];
     char ciudad[16];
     char respuesta[2];
+    Transportista* transportista;
+
+    do{
+        printf("\nGESTIÓN DE TRANSPORTISTAS\n");
+        printf("1. Búsqueda de transportista\n");
+        printf("2. Alta de transportista\n");
+        printf("3. Baja de transportista\n");
+        printf("4. Modificación de transportista\n");
+        printf("5. Listado de transportistas\n");
+        printf("6. Lista de transportistas por ciudad\n");
+        printf("7. Volver\n");
+
+        leer_unsigned("Seleccione una opción", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("\nBÚSQUEDA DE TRANSPORTISTA\n");
+                printf("1. Buscar por ID\n");
+                printf("2. Buscar por email\n");
+                leer_unsigned("Seleccione una opción", &opcion_busqueda);
+                if(opcion_busqueda ==1)
+                {
+                    leer_cadena("Ingrese el ID del transportista a buscar", id_transportista, 5);
+                    transportista = buscar_transportista_id(&v_transportistas, id_transportista);
+                }
+                else if(opcion_busqueda == 2)
+                {
+                    leer_cadena("Ingrese el email del transportista a buscar", email_transportista, 31);
+                    transportista = buscar_transportista_email(&v_transportistas, email_transportista);
+                }
+                else
+                {
+                    printf("Opción no válida.\n");
+                    break;
+                }
+                if (transportista != NULL) {
+                    printf("Transportista encontrado:\n");
+                    listar_transportista(transportista);
+                    leer_cadena("Desea modificar este transportista? (S/N)", respuesta, sizeof(respuesta));
+                    if ((strcmp(respuesta, "s") == 0) || (strcmp(respuesta, "S") == 0)) {
+                        listar_transportista(modificar_transportista(transportista));
+                    }
+                } else {
+                    printf("Transportista no encontrado.\n");
+                }
+                break;
+            case 2:
+                printf("\nALTA DE TRANSPORTISTA\n");
+                alta_transportista(&v_transportistas);
+                break;
+            case 3:
+                printf("\nBAJA DE TRANSPORTISTA\n");
+                // Solicitar el ID o email del transportista a eliminar
+                printf("1. Buscar por ID\n");
+                printf("2. Buscar por email\n");
+                leer_unsigned("Seleccione una opción", &opcion_busqueda);
+                if(opcion_busqueda == 1)
+                {
+                    leer_cadena("Ingrese el ID del transportista a eliminar", id_transportista, 5);
+                    transportista = buscar_transportista_id(&v_transportistas, id_transportista);
+                }
+                else if(opcion_busqueda == 2)
+                {
+                    leer_cadena("Ingrese el email del transportista a eliminar", email_transportista, 31);
+                    transportista = buscar_transportista_email(&v_transportistas, email_transportista);
+                }
+                else
+                {
+                    printf("Opción no válida.\n");
+                    break;
+                }
+                if (transportista != NULL) {
+                    printf("Transportista encontrado:\n");
+                    listar_transportista(transportista);
+                    printf("Analizando dependencias de pedidos...\n");
+                    if (listar_productos_transportista(&v_productospedidos, id_transportista) == 0) {
+                        baja_transportista(&v_transportistas, id_transportista);
+                    } else {
+                        printf("El transportista tiene los anteriores pedidos asignados, por lo que no puede eliminarse.\n");
+                    }
+                }
+                break;
+            case 4:
+                printf("\nMODIFICACIÓN DE TRANSPORTISTA\n");
+                leer_cadena("Ingrese el ID del transportista a modificar", id_transportista, 5);
+                Transportista *transportista_modificar = buscar_transportista_id(&v_transportistas, id_transportista);
+                if (transportista_modificar != NULL) {
+                    printf("Transportista encontrado:\n");
+                    listar_transportista(modificar_transportista(transportista_modificar));
+                } else {
+                    printf("Transportista no encontrado.\n");
+                }
+                break;
+            case 5:
+                printf("\nLISTADO DE TRANSPORTISTAS\n");
+                listar_transportistas(&v_transportistas);
+                break;
+            case 6:
+                printf("\nLISTA DE TRANSPORTISTAS POR CIUDAD\n");
+                leer_cadena("Ingrese la ciudad de la que listar los transportistas", ciudad, 16);
+                listar_transportistas_ciudad(&v_transportistas, ciudad);
+                break;
+            case 7:
+                printf("Volviendo al menú principal...\n");
+                break;
+            default:
+                printf("Opción no válida, por favor intente de nuevo.\n");
+                break;
+        }
+    }while(opcion != 7);
 
     // Guardar los transportistas
     guardar_transportistas(&v_transportistas);
 
-    // Guardar los pedidos
-    guardar_pedidos(&v_pedidos);
-
+    // Guardar los productos pedidos
+    guardar_productos_pedido(&v_productospedidos);
 }
 
 
@@ -784,7 +986,7 @@ void mostrarMenuAdministrador(AdminProv* admin) {
         printf("8. Descuentos\n");
         printf("9. Devoluciones\n");
         printf("10. Salir del sistema\n");
-        leer_entero("Seleccione una opcion", &opcion);
+        leer_unsigned("Seleccione una opcion", &opcion);
 
         switch (opcion) {
             case 1:
@@ -806,7 +1008,7 @@ void mostrarMenuAdministrador(AdminProv* admin) {
                 //gestionPedidos();
                 break;
             case 7:
-                //gestionTransportistas();
+                gestionTransportistas();
                 break;
             case 8:
                 //gestionDescuentos();

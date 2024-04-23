@@ -117,7 +117,7 @@ void gestionar_pedidos(Cliente *cliente)
         switch (opcion)
         {
         case 1:
-            realizar_pedido( cliente, v_pedidos, v_productos_pedido, v_lockers, v_compartimentos, v_descuentos, v_descuentos_cliente, v_productos);
+            realizar_pedido(cliente, v_pedidos, v_productos_pedido, v_lockers, v_compartimentos, v_descuentos, v_descuentos_cliente, v_productos);
             break;
         case 2:
 

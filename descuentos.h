@@ -1,6 +1,6 @@
 #ifndef DESCUENTOS_H_
 #define DESCUENTOS_H_
-#include "cliente.h
+#include "cliente.h"
 #include "fecha.h"
 
 // Estructura para almacenar la información de los distintos códigos promocionales de

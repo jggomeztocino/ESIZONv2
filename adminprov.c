@@ -18,7 +18,7 @@ void cargar_adminprov(VectorAdminProv *v_adminprov) {
 
     AdminProv ap;
 
-    while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%20[^\n]\n",
+    while (fscanf(f, "%4[^-]-%20[^-]-%30[^-]-%15[^-]-%11[^\n]\n",
                   ap.id_empresa,
                   ap.nombre,
                   ap.email,
