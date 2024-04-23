@@ -121,11 +121,17 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
     leer_cadena("Introduzca el id del producto: ", id_producto, 9);
 
     //Buscar el producto en el pedido
-    ProductoPedido* producto_pedido = buscar_producto_pedido(&v_productos_pedido, id_pedido, id_producto, transportista->id_transportista);
+    ProductoPedido* producto_pedido = buscar_producto_pedido(&v_productos_pedido, id_pedido, id_producto);
     if(producto_pedido == NULL)
     {
         printf("No se ha encontrado un producto asociado a ese id para su entrega\n");
         return;
+    }
+
+    if (producto_pedido->id_transportista != transportista->id_transportista) {
+        printf("El producto no está asignado a este transportista\n");
+        return;
+    
     }
 
     //Comprobar si el pedido se entrega a domicilio o en locker
