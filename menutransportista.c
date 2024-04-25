@@ -77,8 +77,7 @@ void listar_productos_no_recogidos(VectorCompartimentos *v_compartimentos, Vecto
 
 
 
-
-void gestion_perfil( Transportista* transportista)
+void gestion_perfil_transportista(Transportista* transportista)
 {
     printf("\nPerfil del transportista\n");
     printf("ID: %s\n", transportista->id_transportista);
@@ -374,7 +373,7 @@ void mostrar_menu_transportista(Transportista *transportista)
         switch(opcion)
         {
             case 1:
-                gestion_perfil(transportista);
+                gestion_perfil_transportista(transportista);
                 break;
             case 2:
                 gestion_repartos(transportista);

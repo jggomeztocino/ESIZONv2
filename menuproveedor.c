@@ -163,7 +163,7 @@ do
                     return;
                 }
 
-                unsigned numero= listar_productospedidos_proveedor(proveedor->id_empresa, &v_pedidos,&v_productos_pedido);
+                unsigned numero= listar_productospedidos_proveedor(proveedor->id_empresa, &v_productos, &v_productos_pedido);
                 if (numero ==0){
                     printf("No hay pedidos para este producto\n");
                 }

@@ -690,6 +690,10 @@ void gestionPedidos()
     VectorDescuentosClientes v_descuentos_cliente;
     cargar_descuentos_clientes(&v_descuentos_cliente);
 
+    // Carga de las devoluciones
+    VectorDevoluciones v_devoluciones;
+    cargar_devoluciones(&v_devoluciones);
+
     unsigned opcion = 0;
     unsigned opcion_busqueda = 0;
     char id_pedido[8];
@@ -775,7 +779,7 @@ void gestionPedidos()
                                         eliminar_producto_pedido(id_pedido, id_producto, &v_productos_pedidos);
                                     }
                                     else if(opcion == 2) {
-                                        iniciar_devolucion(id_pedido, id_producto, &v_productos_pedidos);
+                                        iniciar_devolucion(producto_pedido, id_producto, &v_devoluciones);
                                     }
                                 }
                                 else
@@ -859,6 +863,7 @@ void gestionPedidos()
     guardar_lockers(&v_lockers);
     guardar_descuentos(&v_descuentos);
     guardar_descuentos_clientes(&v_descuentos_cliente);
+    guardar_devoluciones(&v_devoluciones);
 }
 
 /*
