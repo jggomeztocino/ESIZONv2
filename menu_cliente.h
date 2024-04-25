@@ -14,5 +14,9 @@
 #include "stdio.h"
 #include "fecha.h"
 
+/**
+    * @brief Muestra el menú de opciones para el cliente
+    * @param cliente Puntero a la estructura Cliente
+*/
 void menu_cliente(Cliente *cliente);
 #endif//MENU_CLIENTE_H_

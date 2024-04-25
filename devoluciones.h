@@ -71,13 +71,42 @@ void baja_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_d
 //void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones);
 
 Devolucion* buscar_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones);
+/**
 
+    * @brief Función que lista una devolución
+    * @param devolucion Devolución a listar
+    * @return void
+    
+*/
 void listar_devolucion(Devolucion* devolucion);
+/**
 
+    * @brief Función que lista todas las devoluciones
+    * @param v_devoluciones Vector de devoluciones
+    * @return void
+    
+
+*/
 void listar_devoluciones(VectorDevoluciones* v_devoluciones);
+/**
+    
+        * @brief Función que lista las devoluciones de un cliente
+        * @param v_devoluciones Vector de devoluciones
+        * @param id_cliente ID del cliente
+        * @return unsigned Número de devoluciones del cliente
+        
 
+
+*/
 unsigned listar_devoluciones_cliente(VectorDevoluciones* v_devoluciones, char* id_cliente);
+/**
+    
+        * @brief Función que modifica una devolución
+        * @param devolucion Devolución a modificar
+        * @return Devolucion* Puntero a la devolución modificada
+        
 
+*/
 Devolucion* modificar_devolucion(Devolucion* devolucion);
 
 #endif//DEVOLUCIONES_H_

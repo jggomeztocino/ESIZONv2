@@ -91,8 +91,33 @@ void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
  */
 void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
-Producto* alta_producto_proveedor(VectorProductos* v_productos, VectorCategorias* v_categorias, char* id_prov);
+/**
 
+    * @brief Da de alta un producto de un proveedor
+    
+    * @param v_productos Puntero a la estructura VectorProductos
+    
+    * @param v_categorias Puntero a la estructura VectorCategorias
+    
+    * @param id_prov Identificador del proveedor
+    
+    * @return Puntero al producto añadido
+*/
+
+Producto* alta_producto_proveedor(VectorProductos* v_productos, VectorCategorias* v_categorias, char* id_prov);
+/**
+
+    * @brief Modifica un producto de un proveedor
+    
+    * @param producto Puntero al producto a modificar
+    
+    * @param v_categorias Puntero al vector de categorías
+    
+    * @return Puntero al producto modificado
+    
+    
+
+*/
 Producto* modificar_producto_prov(Producto* producto, VectorCategorias* v_categorias);
 
 #endif //PRODUCTOS_H_

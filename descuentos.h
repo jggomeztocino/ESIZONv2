@@ -112,37 +112,86 @@ Descuento* buscar_descuento_id(VectorDescuentos* v_descuentos, char* id_codigo);
  */
 DescuentoCliente * buscar_descuentocliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
 
-/**
- * @brief Aplica un descuento a un importe.
- * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
- * @param v_descuentos Un puntero al vector de descuentos.
- * @param id_cliente El identificador del cliente.
- * @param id_descuento El identificador del descuento.
- * @param importe El importe al que se le aplica el descuento.
- * @pre Los punteros v_descuentosclientes y v_descuentos no deben ser nulos.
- * @post Aplica un descuento a un importe.
- * @return El importe con el descuento aplicado.
- */
-//float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe);
+/** 
+ * @brief Función que verifica si un descuento es válido.
+    * @param descuento_cliente Un puntero al descuento de cliente.
+    * @param id_cliente El identificador del cliente.
+    * @pre El puntero descuento_cliente no debe ser nulo.
+    * @post Verifica si un descuento es válido.
+    * @return 1 si el descuento es válido, 0 en caso contrario.
 
+*/
 int descuento_valido(DescuentoCliente *descuento_cliente, char* id_cliente);
+/**
+    * @brief Función que lista un descuento.
+    * @param descuento El descuento a listar.
+    * @return void
+    
 
+*/
 void listar_descuento(Descuento* descuento);
+/**
 
+    * @brief Función que lista todos los descuentos.
+    * @param v_descuentos Vector de descuentos
+    * @return void
+*/
 void listar_descuentos(VectorDescuentos* v_descuentos);
+/**
+    *@brief Funcion que modifica un descuento
+    * @param descuento Un puntero al descuento a modificar
+    * @return Descuento* Puntero al descuento modificado
 
+
+*/
 Descuento* modificar_descuento(Descuento* descuento);
 
 void listar_clientes_descuento(VectorClientes* v_clientes, VectorDescuentosClientes* v_descuentosclientes, char* id_codigo);
+/**
+    * @brief Función que da de alta un descuento
+    * @param v_clientes Vector de clientes
+    * @param v_descuentos Vector de descuentos
+    * @param v_descuentoscliente Vector de descuentos de clientes
+    
 
+*/
 Descuento* alta_descuento(VectorDescuentos* v_descuentos, VectorDescuentosClientes* v_descuentoscliente, VectorClientes* v_clientes);
+/**
 
+    * @brief Función que da de baja un descuento
+    * @param id_descuento ID del descuento
+    * @param v_descuentos Vector de descuentos
+    * @param v_descuentoscliente Vector de descuentos de clientes
+    
+
+
+*/
 void baja_descuento(char* id_descuento, VectorDescuentos* v_descuentos, VectorDescuentosClientes* v_descuentoscliente);
-
+/**
+    *@brief funcion que da de baja un descuento cliente
+    * @param v_descuentoscliente Vector de descuentos de clientes
+    * @param id_cliente ID del cliente
+    * @param id_codigo ID del descuento
+*/
 void baja_descuentocliente(VectorDescuentosClientes* v_descuentoscliente, char* id_cliente, char* id_codigo);
+/**
+    * @brief Lista los clientes que han un descuento
+    * @param v_clientes Vector de clientes
+    * @param v_descuentosclientes Vector de descuentos de clientes
+    * @param id_codigo Código del descuento
+    
 
+*/
 void listar_clientes_descuento_usado(VectorClientes* v_clientes, VectorDescuentosClientes* v_descuentosclientes, char* id_codigo);
 
+/**
+    * @brief Función que asigna un descuento a un cliente
+    * @param id_descuento ID del descuento
+    * @param id_cliente ID del cliente
+    * @param v_descuentos_cliente Vector de descuentos de clientes
+    
+
+*/
 void asignar_descuento_cliente(char* id_descuento, char* id_cliente, VectorDescuentosClientes *v_descuentos_cliente);
 
 #endif//DESCUENTOS_H_

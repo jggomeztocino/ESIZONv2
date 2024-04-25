@@ -12,7 +12,10 @@
 #include "string.h"
 #include "fecha.h"
 
-
+/**
+ * @brief Muestra el menú de opciones para el transportista
+ * @param transportista Puntero a la estructura Transportista
+ */
 void mostrar_menu_transportista(Transportista *transportista);
 
 #endif //ESIZON_MENUTRANSPORTISTA_H

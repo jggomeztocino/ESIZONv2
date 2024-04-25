@@ -6,6 +6,12 @@
 #include "adminprov.h"
 #include "utilidades.h"
 #include "transportista.h"
+/**
+    * @brief Muestra el menú de opciones para el proveedor
+    * @param proveedor Puntero a la estructura AdminProv
+    
+
+*/
 void mostrar_menu_proveedor(AdminProv *proveedor);
 
 #endif //ESIZON_MENUPROVEEDOR_H

@@ -189,21 +189,76 @@ void listar_producto_pedido(ProductoPedido* producto_pedido);
  * \returns Pedido* Puntero al pedido modificado
  */
 Pedido* modificar_pedido(Pedido* pedido, VectorProductosPedido* v_pp, VectorClientes* v_clientes, VectorLockers* v_lockers);
+/**
+    * @brief Función que comprueba si todos los productos de un pedido están en estado enPreparación
+    * 
+    * @param id_pedido char* ID del pedido
+    * @param v_pedidos VectorProductosPedido* Vector de productos pedidos
+    * @return int
 
+*/
 int enPreparacion(char* id_pedido, VectorProductosPedido* v_pedidos);
 
+/**
+    * @brief Función que permite eliminar un producto de un pedido
+    * 
+    * @param id_pedido char* ID del pedido
+    * @param id_producto char* ID del producto
+    * @param v_productos_pedido VectorProductosPedido* Vector de productos pedidos
+    * @return void
+*/
 void eliminar_producto_pedido(char* id_pedido, char* id_producto, VectorProductosPedido* v_productos_pedido);
+/** 
+    * @brief Función que permite eliminar los productos de un pedido
+    * 
+    * @param id_pedido char* ID del pedido
+    * @param v_productos_pedido VectorProductosPedido* Vector de productos pedidos
+    * @return void
 
+*/
 void eliminar_productos_pedido(char* id_pedido, VectorProductosPedido* v_productos_pedido);
+/**
+    * @brief Función que permite eliminar un pedido
+    * 
+    * @param id_pedido char* ID del pedido
+    * @param v_pedidos VectorPedidos* Vector de pedidos
+    * @param v_productos_pedido VectorProductosPedido* Vector de productos pedidos
+    * @return void
 
+*/
 void eliminar_pedido(char* id_pedido, VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido);
 
+/**
+    * @brief Función que permite listar los pedidos
+    * 
+    * @param v_pedidos VectorPedidos* Vector de pedidos
+    * @return void
+*/
 void listar_pedidos(VectorPedidos* v_pedidos);
-
+/**
+    * @brief Función que permite listar los productos pedidos 
+    * 
+    * @param v_productos_pedido VectorProductosPedido* Vector de productos pedidos
+    * @return void
+*/
 void listar_todos_productos_pedidos(VectorProductosPedido* v_productos_pedido);
 
+/**
+    * @brief Función que permite listar los productos pedidos de un proveedor
+    * 
+    * @param id_cliente char* ID del proveedor
+    * @param v_productos_pedido VectorProductosPedido* Vector de productos pedidos
+    * @return unsigned Número de productos pedidos del proveedor
+    
+*/
 unsigned listar_productospedidos_proveedor(char* id_proveedor, VectorProductos* v_productos, VectorProductosPedido* v_productos_pedido);
 
+/** 
+    * @brief Función que permite enviar un producto pedido a un transportista
+    * 
+    * @param producto_pedido ProductoPedido* Producto pedido a enviar
+    * @param v_transportistas VectorTransportistas* Vector de transportistas
+*/
 void enviar_producto_pedido(ProductoPedido* producto_pedido, VectorTransportistas* v_transportistas);
 
 #endif//PEDIDO_H_
