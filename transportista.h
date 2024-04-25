@@ -1,6 +1,6 @@
 #ifndef TRANSPORTISTA_H
 #define TRANSPORTISTA_H
-
+#include "utilidades.h"
 
 // Estructura que representa a un transportista
 typedef struct {

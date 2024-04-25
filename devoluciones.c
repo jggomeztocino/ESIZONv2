@@ -30,15 +30,13 @@
 
 void cargar_devoluciones(VectorDevoluciones *v_devoluciones)
 {
-    // Abrir archivo de devoluciones para lectura
     FILE *f = fopen("../data/Devoluciones.txt", "r");
     if (f == NULL)
     {
-        perror("Error al abrir el archivo");
+        perror("Error al abrir el archivo de devoluciones");
         return;
     }
 
-    // Inicializar la memoria para almacenar devoluciones
     v_devoluciones->devoluciones = (Devolucion *)malloc(sizeof(Devolucion));
     if (v_devoluciones->devoluciones == NULL)
     {
@@ -48,25 +46,30 @@ void cargar_devoluciones(VectorDevoluciones *v_devoluciones)
     }
     v_devoluciones->n_devoluciones = 0;
 
+    char dia_dev[3], mes_dev[3], anio_dev[5];
+    char dia_acept[3], mes_acept[3], anio_acept[5];
+    char dia_cad[3], mes_cad[3], anio_cad[5];
     Devolucion *temp;
     unsigned n_devoluciones_actual = 0;
 
-    // Leer los datos de las devoluciones del archivo
-    while (fscanf(f, "%7[^-]-%7[^-]-%d/%d/%d-%50[^-]-%8[^-]-%d/%d/%d-%d/%d/%d\n",
+    while (fscanf(f, "%7[^-]-%7[^-]-%2[^/]/%2[^/]/%4[^-]-%50[^-]-%8[^-]-%2[^/]/%2[^/]/%4[^-]-%2[^/]/%2[^/]/%4[^\n]",
                   v_devoluciones->devoluciones[n_devoluciones_actual].id_pedido,
                   v_devoluciones->devoluciones[n_devoluciones_actual].id_producto,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.dia,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.mes,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.anio,
+                  dia_dev, mes_dev, anio_dev,
                   v_devoluciones->devoluciones[n_devoluciones_actual].motivo,
                   v_devoluciones->devoluciones[n_devoluciones_actual].estado,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.dia,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.mes,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.anio,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.dia,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.mes,
-                  &v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.anio) == 14)
+                  dia_acept, mes_acept, anio_acept,
+                  dia_cad, mes_cad, anio_cad) == 14)
     {
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.dia = atoi(dia_dev);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.mes = atoi(mes_dev);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_devolucion.anio = atoi(anio_dev);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.dia = atoi(dia_acept);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.mes = atoi(mes_acept);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_aceptacion.anio = atoi(anio_acept);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.dia = atoi(dia_cad);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.mes = atoi(mes_cad);
+        v_devoluciones->devoluciones[n_devoluciones_actual].fecha_caducidad.anio = atoi(anio_cad);
 
         n_devoluciones_actual++;
         temp = (Devolucion *)realloc(v_devoluciones->devoluciones, (n_devoluciones_actual + 1) * sizeof(Devolucion));
@@ -80,10 +83,11 @@ void cargar_devoluciones(VectorDevoluciones *v_devoluciones)
         v_devoluciones->devoluciones = temp;
     }
 
-    // Actualizar la cantidad de devoluciones después de la lectura completa
     v_devoluciones->n_devoluciones = n_devoluciones_actual;
     fclose(f);
 }
+
+
 
 void guardar_devoluciones(VectorDevoluciones *v_devoluciones)
 {
@@ -215,6 +219,7 @@ Devolucion* buscar_devolucion(char* id_pedido, char* id_producto, VectorDevoluci
 
 void listar_devolucion(Devolucion* devolucion)
 {
+    printf("\n-------------------\n");
     printf("ID Pedido: %s\n", devolucion->id_pedido);
     printf("ID Producto: %s\n", devolucion->id_producto);
     printf("Fecha de devolución: %02d/%02d/%d\n", devolucion->fecha_devolucion.dia, devolucion->fecha_devolucion.mes, devolucion->fecha_devolucion.anio);
@@ -222,7 +227,7 @@ void listar_devolucion(Devolucion* devolucion)
     printf("Estado: %s\n", devolucion->estado);
     printf("Fecha de aceptación: %02d/%02d/%d\n", devolucion->fecha_aceptacion.dia, devolucion->fecha_aceptacion.mes, devolucion->fecha_aceptacion.anio);
     printf("Fecha de caducidad: %02d/%02d/%d\n", devolucion->fecha_caducidad.dia, devolucion->fecha_caducidad.mes, devolucion->fecha_caducidad.anio);
-    printf("\n");
+    printf("\n-------------------\n");
 }
 
 void listar_devoluciones(VectorDevoluciones* v_devoluciones)

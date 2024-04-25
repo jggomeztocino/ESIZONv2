@@ -10,7 +10,7 @@ typedef struct {
     char nombre[21];
     char email[31];
     char contrasena[16];
-    char perfil_usuario[12]; // "administrador" o "proveedor"
+    char perfil_usuario[14]; // "administrador" o "proveedor"
 } AdminProv;
 
 // Vector de administradores proveedores

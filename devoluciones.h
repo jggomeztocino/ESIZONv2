@@ -5,10 +5,6 @@
 
 // #include "pedido.h"
  #include "fecha.h"
-// #include "productos.h"
-// #include "cliente.h"
-
-
 
 typedef struct
 {

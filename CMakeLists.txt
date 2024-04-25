@@ -42,5 +42,4 @@ add_executable(
         menuproveedor.c
         menuproveedor.h
         main.c
-        main.c
 )

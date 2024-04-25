@@ -62,8 +62,10 @@ Categoria* buscar_categoria_id(VectorCategorias* categorias, char* id_categoria)
 
 void listar_categoria(Categoria* categoria)
 {
+    printf("-------------------\n");
     printf("ID: %s\n", categoria->id_categoria);
     printf("Descripción: %s\n", categoria->descripcion);
+    printf("-------------------\n");
 }
 
 void listar_categorias(VectorCategorias* categorias)

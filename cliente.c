@@ -21,22 +21,28 @@ void cargar_clientes(VectorClientes* v_clientes)
     // 0000002-Guillermo López-Calle Sacramento 2 11003-Cádiz-Cádiz-guillelopez@gmail.com/psw4321/500
     // Debe cargar todos los clientes del archivo
 
+    char id_cliente[8], nombre_cliente[21], direccion_cliente[51], poblacion[21], provincia[21], email[31], contrasena[16];
+    float cartera = 0.0f;
+
     while (fscanf(f, "%7[^-]-%20[^-]-%50[^-]-%20[^-]-%20[^-]-%30[^-]-%15[^-]-%f\n",
-                  v_clientes->clientes[v_clientes->size].id_cliente,
-                  v_clientes->clientes[v_clientes->size].nombre_cliente,
-                  v_clientes->clientes[v_clientes->size].direccion_cliente,
-                  v_clientes->clientes[v_clientes->size].poblacion,
-                  v_clientes->clientes[v_clientes->size].provincia,
-                  v_clientes->clientes[v_clientes->size].email,
-                  v_clientes->clientes[v_clientes->size].contrasena,
-                  &v_clientes->clientes[v_clientes->size].cartera) == 8) {
-        v_clientes->size++;
+                  id_cliente, nombre_cliente, direccion_cliente, poblacion, provincia, email, contrasena, &cartera) == 8) {
         Cliente* temp = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size + 1) * sizeof(Cliente));
         if(temp == NULL) {
-            free(v_clientes->clientes);
             perror("\nError al reservar memoria\n");
+            free(v_clientes->clientes);
+            fclose(f);
+            return;
         }
         v_clientes->clientes = temp;
+        strcpy(v_clientes->clientes[v_clientes->size].id_cliente, id_cliente);
+        strcpy(v_clientes->clientes[v_clientes->size].nombre_cliente, nombre_cliente);
+        strcpy(v_clientes->clientes[v_clientes->size].direccion_cliente, direccion_cliente);
+        strcpy(v_clientes->clientes[v_clientes->size].poblacion, poblacion);
+        strcpy(v_clientes->clientes[v_clientes->size].provincia, provincia);
+        strcpy(v_clientes->clientes[v_clientes->size].email, email);
+        strcpy(v_clientes->clientes[v_clientes->size].contrasena, contrasena);
+        v_clientes->clientes[v_clientes->size].cartera = cartera;
+        v_clientes->size++;
     }
     fclose(f);
 }
@@ -167,7 +173,6 @@ Cliente* buscar_cliente_por_email(VectorClientes* v_clientes, char* email) {
 }
 
 void listar_clientes(VectorClientes* v_clientes) {
-    printf("Tamaño del vector: %d\n", v_clientes->size);
     int i;
     printf("---------------------------\n");
     for (i = 0; i < v_clientes->size; i++) {

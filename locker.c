@@ -22,11 +22,6 @@ void cargar_lockers(VectorLockers* lockers)
                   &lockers->lockers[lockers->size].num_compartimentos_total,
                   &lockers->lockers[lockers->size].num_compartimentos_ocupados) == 6) {
         lockers->size++;
-        /*lockers->lockers = (Locker*)realloc(lockers->lockers, (lockers->size + 1) * sizeof(Locker));
-        if(lockers->lockers == NULL) {
-            free(lockers->lockers);
-            perror("\nError al reservar memoria\n");
-        }*/
         Locker* temp = (Locker*)realloc(lockers->lockers, (lockers->size + 1) * sizeof(Locker));
         if (temp == NULL) {
             perror("\nError al reservar memoria\n");
@@ -73,12 +68,15 @@ Locker* buscar_locker_id(VectorLockers* lockers, char* id_locker)
 
 void listar_locker(Locker* locker)
 {
+    printf("-------------------------------------------\n");
     printf("ID: %s\n", locker->id_locker);
     printf("Localidad: %s\n", locker->localidad);
     printf("Provincia: %s\n", locker->provincia);
     printf("Ubicación: %s\n", locker->ubicacion);
     printf("Número total de compartimentos: %u\n", locker->num_compartimentos_total);
     printf("Número de compartimentos ocupados: %u\n", locker->num_compartimentos_ocupados);
+    printf("-------------------------------------------\n");
+
 }
 
 void listar_lockers_localidad(VectorLockers* lockers, char* localidad)
@@ -113,7 +111,7 @@ void cargar_compartimentos(VectorCompartimentos* v_compartimentos) {
     unsigned n_compartimentos_actual = 0;
 
     // Leer los datos de los compartimentos del archivo
-    while (fscanf(f, "%10[^-]-%u-%u-%u-%u-%u-%u-%u-%u-%u\n",
+    while (fscanf(f, "%10[^-]-%u-%u-%u-%u/%u/%u-%u/%u/%u\n",
                   v_compartimentos->compartimentos[n_compartimentos_actual].id_locker,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].n_compartimento,
                   &v_compartimentos->compartimentos[n_compartimentos_actual].cod_locker,
@@ -149,7 +147,7 @@ void guardar_compartimentos(VectorCompartimentos* v_compartimentos)
     }
     int i;
     for (i = 0; i < v_compartimentos->size; i++) {
-        fprintf(f, "%s-%u-%u-%u-%u-%u-%u-%u-%u-%u\n",
+        fprintf(f, "%s-%u-%u-%u-%u/%u/%u-%u/%u/%u\n",
                 v_compartimentos->compartimentos[i].id_locker,
                 v_compartimentos->compartimentos[i].n_compartimento,
                 v_compartimentos->compartimentos[i].cod_locker,

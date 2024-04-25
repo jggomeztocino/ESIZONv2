@@ -31,7 +31,7 @@ void cargar_descuentos(VectorDescuentos* v_descuentos)
 {
     FILE* f = fopen("../data/Descuentos.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("\nError al abrir el archivo de descuentos\n");
         return;
     }
     v_descuentos->descuentos = (Descuento*)malloc(sizeof(Descuento));
@@ -76,14 +76,14 @@ void guardar_descuentos(VectorDescuentos* v_descuentos)
 
 void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 {
-    FILE* f = fopen("../data/descuentos_clientes.txt", "r");
+    FILE* f = fopen("../data/DescuentosClientes.txt", "r");
     if (f == NULL) {
-        perror("\nError al abrir el archivo\n");
+        perror("\nError al abrir el archivo descuentos cliente\n");
         return;
     }
     v_descuentosclientes->descuentosClientes = (DescuentoCliente*)malloc(sizeof(DescuentoCliente));
     v_descuentosclientes->n_descuentosclientes = 0;
-    while (fscanf(f, "%9[^-]-%10[^-]-%d-%d-%d-%d-%d-%d\n",
+    while (fscanf(f, "%7[^-]-%10[^-]-%d/%d/%d-%d/%d/%d-%d\n",
                   v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].id_cliente,
                   v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].id_codigo,
                   &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_asignacion.dia,
@@ -91,11 +91,13 @@ void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
                   &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_asignacion.anio,
                   &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_caducidad.dia,
                   &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_caducidad.mes,
-                  &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_caducidad.anio) == 8) {
+                  &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].fecha_caducidad.anio,
+                  &v_descuentosclientes->descuentosClientes[v_descuentosclientes->n_descuentosclientes].estado) == 9) {
         v_descuentosclientes->n_descuentosclientes++;
         DescuentoCliente* temp = (DescuentoCliente*)realloc(v_descuentosclientes->descuentosClientes, (v_descuentosclientes->n_descuentosclientes + 1) * sizeof(DescuentoCliente));
         if(temp == NULL) {
             perror("\nError al reservar memoria\n");
+            return;
         }
         v_descuentosclientes->descuentosClientes = temp;
     }
@@ -105,13 +107,13 @@ void cargar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 
 void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 {
-    FILE* f = fopen("../data/descuentos_clientes.txt", "w");
+    FILE* f = fopen("../data/DescuentosClientes.txt", "w");
     if (f == NULL) {
         return;
     }
     int i;
     for (i = 0; i < v_descuentosclientes->n_descuentosclientes; i++) {
-        fprintf(f, "%s-%s-%d-%d-%d-%d-%d-%d\n",
+        fprintf(f, "%s-%s-%d/%d/%d-%d/%d/%d\n",
                 v_descuentosclientes->descuentosClientes[i].id_cliente,
                 v_descuentosclientes->descuentosClientes[i].id_codigo,
                 v_descuentosclientes->descuentosClientes[i].fecha_asignacion.dia,
@@ -128,11 +130,13 @@ void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
 
 void listar_descuento(Descuento* descuento)
 {
+    printf("--------------------------------------\n");
     printf("Código: %s\n", descuento->id_codigo);
     printf("Descripción: %s\n", descuento->descripcion);
     printf("Tipo: %s\n", descuento->tipo);
     printf("Importe: %.2f\n", descuento->importe);
     printf("Aplicable: %s\n", descuento->aplicable);
+    printf("--------------------------------------\n");
 }
 
 void listar_descuentos(VectorDescuentos* v_descuentos)

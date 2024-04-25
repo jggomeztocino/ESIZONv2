@@ -1,3 +1,3 @@
-0001-ESIZON-antonio.martin@esizon.com-antmar01-administrado0002
-0002-DISTGEN-donáto.lima@distgen.com-donlim04-proveedor
+0001-ESIZON-antonio.martin@esizon.com-antmar01-administrador
+0002-DISTGEN-donato.lima@distgen.com-donlim04-proveedor
 0003-MERCADONA-mercadona@mercadona.es-merca123-proveedor

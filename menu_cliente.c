@@ -16,30 +16,25 @@ void perfil_cliente(Cliente *cliente)
     // Preguntar si quiere modificar
     char respuesta;
     printf("¿Desea modificar su perfil? (s/n): ");
-    leer_caracter("Introduce una opcion valida", &respuesta);
+    leer_caracter("\nIntroduce una opcion valida\n", &respuesta);
     if (respuesta == 's' || respuesta == 'S')
     {
         modificar_cliente(cliente);
     }
 }
 
-
-
-
-
 // Gestionar la recogida de un pedido depositado en un locker antes de la fecha de caducidad
 /*
  recoger_pedido(cliente, v_pedidos, v_productos_pedido, id_locker,num_compartimento);
  */
-void recoger_pedido(ProductoPedido *producto,Locker *locker,CompartimentoLocker *compartimento)
+void recoger_pedido(ProductoPedido *producto, Locker *locker, CompartimentoLocker *compartimento)
 {
     producto->estado = 5;
-    //cambiar el estado del compartimento
-    compartimento->estado=0;
-    compartimento->cod_locker=0;
+    // cambiar el estado del compartimento
+    compartimento->estado = 0;
+    compartimento->cod_locker = 0;
     locker->num_compartimentos_ocupados--;
 }
-
 
 // Funcion que pregunta si quiere mirar la informacion de todos sus pedidos o de uno concreto por ID
 void consultar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido)
@@ -48,8 +43,8 @@ void consultar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductos
     listar_pedidos_cliente(&v_pedidos, cliente->id_cliente);
     // Preguntar si quiere ver un pedido en concreto
     char respuesta;
-    printf("¿Desea ver un pedido en concreto? (s/n): ");
-    leer_caracter("Introduce una opcion valida", &respuesta);
+    printf("\n¿Desea ver un pedido en concreto? (s/n): \n");
+    leer_caracter("\nIntroduce una opcion valida", &respuesta);
     if (respuesta == 's' || respuesta == 'S')
     {
         char id_pedido[8];
@@ -60,7 +55,7 @@ void consultar_pedido(Cliente *cliente, VectorPedidos v_pedidos, VectorProductos
         }
         else
         {
-            printf("El pedido no pertenece al cliente\n");
+            printf("\nEl pedido no pertenece al cliente\n");
         }
     }
 }
@@ -109,50 +104,52 @@ void gestionar_pedidos(Cliente *cliente)
             realizar_pedido(cliente, &v_pedidos, &v_productos_pedido, &v_lockers, &v_descuentos, &v_descuentos_cliente, &v_productos);
             break;
         case 2:
-            leer_cadena("Introduce el ID del locker: ", id_locker, 11);
-            //comprueba si el locker existe
+            leer_cadena("\nIntroduce el ID del locker: ", id_locker, 11);
+            // comprueba si el locker existe
             Locker *locker = buscar_locker_id(&v_lockers, id_locker);
             if (locker == NULL)
             {
-                printf("El locker no existe\n");
+                printf("\nEl locker no existe\n");
                 break;
             }
-            leer_unsigned("Introduce el numero de compartimento: ", &num_compartimento);
-            //comprueba si el compartimento existe
+            leer_unsigned("\nIntroduce el numero de compartimento: ", &num_compartimento);
+            // comprueba si el compartimento existe
             CompartimentoLocker *compartimento = buscar_compartimento(&v_compartimentos, id_locker, num_compartimento);
             if (compartimento == NULL)
             {
-                printf("El compartimento no existe\n");
+                printf("\nEl compartimento no existe\n");
                 break;
             }
 
-            //COmprobar si se puede recoger
-                if (compartimento->estado == 0)
-                {
-                    printf("El compartimento esta vacio\n");
-                    break;
-                }
-                //buscar el producto pedido del compartimento
-                ProductoPedido *producto = buscar_producto_pedido_por_compartimento(&v_productos_pedido, id_locker, num_compartimento);
+            // COmprobar si se puede recoger
+            if (compartimento->estado == 0)
+            {
+                printf("\nEl compartimento esta vacio\n");
+                break;
+            }
+            // buscar el producto pedido del compartimento
+            ProductoPedido *producto = buscar_producto_pedido_por_compartimento(&v_productos_pedido, id_locker, num_compartimento);
 
-                Pedido * pedido = buscar_pedido_por_id( &v_pedidos, producto->id_pedido);
-                if (strcmp(pedido->id_cliente, cliente->id_cliente)!=0 ){
+            Pedido *pedido = buscar_pedido_por_id(&v_pedidos, producto->id_pedido);
+            if (strcmp(pedido->id_cliente, cliente->id_cliente) != 0)
+            {
 
-                    printf("El producto no le pertenece al cliente");
-                    return;
-                }
+                printf("\nEl producto no le pertenece al cliente\n");
+                return;
+            }
 
-                if(comparar_fechas(obtener_fecha_actual(), compartimento->fecha_caducidad)>0){
-                    printf(" El plazo para recoger el producto ha pasado\n");
-                    return;
-                }
+            if (comparar_fechas(obtener_fecha_actual(), compartimento->fecha_caducidad) > 0)
+            {
+                printf("\nEl plazo para recoger el producto ha pasado\n");
+                return;
+            }
 
-            //solicitar codigo del compartimento
-                leer_unsigned( "Introduce el codigo del compartimento: ", &cod_compartimento);
-            //comprueba si el codigo es correcto
+            // solicitar codigo del compartimento
+            leer_unsigned("\nIntroduce el codigo del compartimento: ", &cod_compartimento);
+            // comprueba si el codigo es correcto
             if (cod_compartimento != compartimento->cod_locker)
             {
-                printf("El codigo no es correcto\n");
+                printf("\nEl codigo no es correcto\n");
                 break;
             }
             recoger_pedido(producto, locker, compartimento);
@@ -163,7 +160,7 @@ void gestionar_pedidos(Cliente *cliente)
         case 4:
             break;
         default:
-            printf("Opcion no valida\n");
+            printf("\nOpcion no valida\n");
             break;
         }
     } while (opcion != 4);
@@ -178,8 +175,6 @@ void gestionar_pedidos(Cliente *cliente)
     guardar_descuentos_clientes(&v_descuentos_cliente);
     guardar_productos(&v_productos);
 }
-
-
 
 // FUncion que hace que aparezca un menu y pregunta que quiere hacer el cliente
 void gestionar_devolucion(Cliente *cliente)
@@ -205,29 +200,32 @@ void gestionar_devolucion(Cliente *cliente)
         switch (opcion)
         {
         case 1:
-            //Solicitar el ID del producto
-                leer_cadena("Introduce el ID del producto\n",id_producto,8);
-                leer_cadena("Introduce el ID del pedido\n",id_pedido,8);
+            // Solicitar el ID del producto
+            leer_cadena("\nIntroduce el ID del producto\n", id_producto, 8);
+            leer_cadena("\nIntroduce el ID del pedido\n", id_pedido, 8);
 
-            Pedido *pedido = buscar_pedido_por_id( &v_pedidos,id_pedido);
-                if (pedido->id_cliente !=cliente->id_cliente){
-                    printf(" El pedido no pertenece al cliente\n");
-                    return;
-                }
+            Pedido *pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
 
-            //Buscar el producto pedido
-            ProductoPedido *productoPedido = buscar_producto_pedido( &v_productos_pedido, id_pedido, id_producto);
-            if(productoPedido == NULL){
-
-                printf("El producto no pertenece a ese pedido\n");
+            if (strcmp(pedido->id_cliente, cliente->id_cliente) != 0)
+            {
+                printf("\nEl pedido no pertenece al cliente\n");
                 return;
             }
-            if (productoPedido->estado!=6 ){
-                    printf("El producto no ha sido entregado\n");
+
+            // Buscar el producto pedido
+            ProductoPedido *productoPedido = buscar_producto_pedido(&v_productos_pedido, id_pedido, id_producto);
+            if (productoPedido == NULL)
+            {
+
+                printf("\nEl producto no pertenece a ese pedido\n");
+                return;
+            }
+            if (productoPedido->estado != 6)
+            {
+                printf("\nEl producto no ha sido entregado\n");
             }
 
-            iniciar_devolucion(productoPedido, id_producto,&v_devoluciones);
-
+            iniciar_devolucion(productoPedido, id_producto, &v_devoluciones);
 
             break;
         case 2:
@@ -236,7 +234,7 @@ void gestionar_devolucion(Cliente *cliente)
         case 3:
             break;
         default:
-            printf("Opcion no valida\n");
+            printf("\nOpcion no valida\n");
             break;
         }
     } while (opcion != 3);
@@ -249,12 +247,11 @@ void gestionar_devolucion(Cliente *cliente)
 // que ha iniciado sesion
 void menu_cliente(Cliente *cliente)
 {
-    //cargar vector descuentos y descuentos cliente
+    // cargar vector descuentos y descuentos cliente
     VectorDescuentos v_descuentos;
     VectorDescuentosClientes v_descuentos_cliente;
 
     VectorProductos v_productos;
-
 
     unsigned opcion;
     do
@@ -275,34 +272,34 @@ void menu_cliente(Cliente *cliente)
             break;
         case 2:
             cargar_productos(&v_productos);
-                 printf("1. Buscar por ID\n");
-                printf("2. Buscar por categoria\n");
-                leer_unsigned("Introduce una opcion valida", &opcion);
-                if (opcion == 1)
+            printf("1. Buscar por ID\n");
+            printf("2. Buscar por categoria\n");
+            leer_unsigned("\nIntroduce una opcion valida", &opcion);
+            if (opcion == 1)
+            {
+                char id_producto[8];
+                leer_cadena("Introduce el ID del producto: ", id_producto, 8);
+                Producto *producto = buscar_producto_id(&v_productos, id_producto);
+                if (producto == NULL)
                 {
-                    char id_producto[8];
-                    leer_cadena("Introduce el ID del producto: ", id_producto, 8);
-                    Producto *producto = buscar_producto_id(&v_productos, id_producto);
-                    if (producto == NULL)
-                    {
-                        printf("Producto no encontrado\n");
-                    }
-                    else
-                    {
-                        listar_producto(producto);
-                    }
-                }
-                else if (opcion == 2)
-                {
-                    char id_categoria[5];
-                    leer_cadena("Introduce el ID de la categoría: ", id_categoria, 5);
-                    listar_productos_categoria(&v_productos, id_categoria);
+                    printf("\nProducto no encontrado\n");
                 }
                 else
                 {
-                    printf("Opcion no valida\n");
+                    listar_producto(producto);
                 }
-                guardar_productos(&v_productos);
+            }
+            else if (opcion == 2)
+            {
+                char id_categoria[5];
+                leer_cadena("\nIntroduce el ID de la categoría: ", id_categoria, 5);
+                listar_productos_categoria(&v_productos, id_categoria);
+            }
+            else
+            {
+                printf("\nOpcion no valida\n");
+            }
+            guardar_productos(&v_productos);
             break;
         case 3:
             cargar_descuentos(&v_descuentos);
@@ -322,7 +319,7 @@ void menu_cliente(Cliente *cliente)
         case 6:
             break;
         default:
-            printf("Opcion no valida\n");
+            printf("\nOpcion no valida\n");
             break;
         }
     } while (opcion != 6);

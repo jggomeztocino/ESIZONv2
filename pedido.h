@@ -37,7 +37,7 @@ typedef struct{
 typedef struct
 {
     char id_pedido[8];                // 7 dígitos + '\0'
-    char id_producto[9];                // 7 dígitos + '\0'
+    char id_producto[8];                // 7 dígitos + '\0'
     unsigned num_unidades;               // Número de unidades del producto en el pedido
     Fecha fecha_prevista_entrega;   // Fecha prevista para la entrega
     float importe;                  // Importe total del producto en el pedido
