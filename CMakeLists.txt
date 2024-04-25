@@ -41,4 +41,6 @@ add_executable(
         menutransportista.h
         menuproveedor.c
         menuproveedor.h
+        main.c
+        main.c
 )

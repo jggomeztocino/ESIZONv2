@@ -1,39 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <locale.h>
 #include "menu_administrador.h"
-
-// Funcion para modificar el ID de la empresa del administrador
-void modificarIdEmpresa(AdminProv *admin) {
-    char nuevoId[5];
-    leer_cadena("Ingrese el nuevo ID de Empresa", nuevoId, sizeof(nuevoId));
-    strcpy(admin->id_empresa, nuevoId);
-    printf("ID de Empresa actualizado con exito.\n");
-}
-
-// Funcion para modificar el nombre del administrador
-void modificarNombre(AdminProv *admin) {
-    char nuevoNombre[21];
-    leer_cadena("Ingrese el nuevo nombre", nuevoNombre, sizeof(nuevoNombre));
-    strcpy(admin->nombre, nuevoNombre);
-    printf("Nombre actualizado con exito.\n");
-}
-
-// Funcion para modificar el email del administrador
-void modificarEmail(AdminProv *admin) {
-    char nuevoEmail[31];
-    leer_cadena("Ingrese el nuevo email", nuevoEmail, sizeof(nuevoEmail));
-    strcpy(admin->email, nuevoEmail);
-    printf("Email actualizado con exito.\n");
-}
-
-// Funcion para modificar la contrasena del administrador
-void modificarContrasena(AdminProv *admin) {
-    char nuevaContrasena[16];
-    leer_cadena("Ingrese la nueva contrasena", nuevaContrasena, sizeof(nuevaContrasena));
-    strcpy(admin->contrasena, nuevaContrasena);
-    printf("Contrasena actualizada con exito.\n");
-}
 
 // Funcion para mostrar y modificar el perfil del administrador
 void perfilAdministrador(AdminProv* admin) {
@@ -244,7 +211,6 @@ void gestionProveedores() {
     } while (opcion != 6);
     guardar_adminprov(&v_adminprov);
 }
-
 
 void gestionProductos()
 {
@@ -712,13 +678,28 @@ void gestionPedidos()
     VectorClientes v_clientes;
     cargar_clientes(&v_clientes);
 
+    // Carga de los lockers
+    VectorLockers v_lockers;
+    cargar_lockers(&v_lockers);
+
+    // Carga de los descuentos
+    VectorDescuentos v_descuentos;
+    cargar_descuentos(&v_descuentos);
+
+    // Carga los descuentos de los clientes
+    VectorDescuentosClientes v_descuentos_cliente;
+    cargar_descuentos_clientes(&v_descuentos_cliente);
+
     unsigned opcion = 0;
     unsigned opcion_busqueda = 0;
     char id_pedido[8];
     char id_cliente[8];
-    char ciudad[16];
-    char respuesta[2];
+    char id_producto[8];
+    char respuesta;
+
     Pedido* pedido;
+    ProductoPedido *producto_pedido;
+    Cliente* cliente;
 
     do{
         printf("\nGESTIÓN DE PEDIDOS\n");
@@ -764,17 +745,107 @@ void gestionPedidos()
                     break;
                 }
                 if (pedido != NULL) {
+                    strcpy(id_pedido, pedido->id_pedido);
                     printf("Pedido encontrado\n");
                     listar_pedido(pedido);
-                    listar_productos_pedido(&v_productos_pedidos, pedido->id_pedido);
-                    leer_cadena("Desea modificar este pedido? (S/N)", respuesta, sizeof(respuesta));
-                    if ((strcmp(respuesta, "S") == 0) || (strcmp(respuesta, "s") == 0)) {
-                        modificar_pedido(pedido);
-                        modificar_producto_pedido(); // TODO
+                    listar_productos_pedido(&v_productos_pedidos, id_pedido);
+                    leer_caracter("Desea modificar este pedido? (S/N)", &respuesta);
+                    if (respuesta == 'S' || respuesta == 's') {
+                        modificar_pedido(pedido, &v_productos_pedidos, &v_clientes, &v_lockers);
+                        printf("Mostrando los productos del pedido...\n");
+                        listar_productos_pedido(&v_productos_pedidos, id_pedido);
+                        printf("¿Desea modificar algún producto del pedido? (S/N)\n");
+                        leer_caracter("Seleccione una opción", &respuesta);
+                        if(respuesta == 'S' || respuesta == 's')
+                        {
+                            while(respuesta != 'N' && respuesta != 'n')
+                            {
+                                listar_productos_pedido(&v_productos_pedidos, id_pedido);
+                                leer_cadena("Ingrese el ID del producto a modificar", id_producto, 8);
+                                producto_pedido = buscar_producto_pedido(&v_productos_pedidos, id_pedido, id_producto);
+                                if(producto_pedido != NULL)
+                                {
+                                    printf("Por cuestiones de integridad, solo se permite dar de baja un producto de un producto no enviado o iniciar una devolución de un producto entregado.\n");
+                                    printf("¿Qué desea hacer con el producto?\n");
+                                    printf("1. Eliminar el producto\n");
+                                    printf("2. Iniciar devolución\n");
+                                    leer_unsigned("Seleccione una opción", &opcion);
+                                    if(opcion == 1)
+                                    {
+                                        eliminar_producto_pedido(id_pedido, id_producto, &v_productos_pedidos);
+                                    }
+                                    else if(opcion == 2) {
+                                        iniciar_devolucion(id_pedido, id_producto, &v_productos_pedidos);
+                                    }
+                                }
+                                else
+                                {
+                                    printf("Producto no encontrado.\n");
+                                }
+                                leer_caracter("¿Desea modificar otro producto del pedido? (S/N)", &respuesta);
+                            }
+                        }
                     }
                 } else {
                     printf("Pedido no encontrado.\n");
                 }
+                break;
+            case 2:
+                printf("\nALTA DE PEDIDO\n");
+                leer_cadena("Ingrese el ID del cliente que realiza el pedido", id_cliente, 8);
+                cliente = buscar_cliente_por_id(&v_clientes, id_cliente);
+                if(cliente == NULL)
+                {
+                    printf("Cliente no encontrado.\n");
+                    break;
+                }
+                realizar_pedido(cliente, &v_pedidos, &v_productos_pedidos, &v_lockers, &v_descuentos, &v_descuentos_cliente, &v_productos);
+                break;
+            case 3:
+                printf("\nBAJA DE PEDIDO\n");
+                leer_cadena("Ingrese el ID del pedido a eliminar", id_pedido, 8);
+                pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
+                if(pedido != NULL)
+                {
+                    listar_pedido(pedido);
+                    leer_caracter("Desea eliminar este pedido? (S/N)", &respuesta);
+                    if(respuesta == 'S' || respuesta == 's')
+                    {
+                        eliminar_pedido(id_pedido, &v_pedidos, &v_productos_pedidos);
+                    }
+                }
+                else
+                {
+                    printf("Pedido no encontrado.\n");
+                }
+                break;
+            case 4:
+                printf("\nMODIFICACIÓN DE PEDIDO\n");
+                leer_cadena("Ingrese el ID del pedido a modificar", id_pedido, 8);
+                pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
+                if(pedido != NULL)
+                {
+                    listar_pedido(pedido);
+                    modificar_pedido(pedido, &v_productos_pedidos, &v_clientes, &v_lockers);
+                }
+                else
+                {
+                    printf("Pedido no encontrado.\n");
+                }
+                break;
+            case 5:
+                printf("\nLISTADO DE PEDIDOS\n");
+                listar_pedidos(&v_pedidos);
+                break;
+            case 6:
+                printf("\nLISTADO DE PEDIDOS POR ESTADO\n");
+                listar_todos_productos_pedidos(&v_productos_pedidos);
+                break;
+            case 7:
+                printf("Volviendo al menú principal...\n");
+                break;
+            default:
+                printf("Opción no válida, por favor intente de nuevo.\n");
                 break;
         }
 
@@ -785,6 +856,9 @@ void gestionPedidos()
     guardar_productos_pedido(&v_productos_pedidos);
     guardar_transportistas(&v_transportistas);
     guardar_clientes(&v_clientes);
+    guardar_lockers(&v_lockers);
+    guardar_descuentos(&v_descuentos);
+    guardar_descuentos_clientes(&v_descuentos_cliente);
 }
 
 /*
@@ -971,8 +1045,420 @@ void gestionTransportistas()
     guardar_productos_pedido(&v_productospedidos);
 }
 
+/*
+ * h) Descuentos
+    Mediante esta opción el administrador podrá acceder a la información de todos los códigos
+    promocionales y/o cheques regalo dados de alta en la plataforma.
+    • Mediante el menú correspondiente podrá realizar altas, bajas, búsquedas, listados y
+    modificaciones de estos descuentos.
+    • Además también podrá generar los listados de clientes que tienen asignado algún cheque
+    regalo/código promocional, así como los listados de clientes que han hecho uso de algún
+    cheque regalo/código promocional.
+    • Por supuesto podrá asignar a un cliente determinado un cheque regalo.
+    • En el caso de la creación de un nuevo código promocional, éste deberá ser asignado a todos
+    los clientes.
 
-void mostrarMenuAdministrador(AdminProv* admin) {
+    Para ello deberá hacer uso de las funciones de gestión de descuentos.
+
+    Las opciones a mostrar son:
+    1. Búsqueda de descuento
+    2. Alta de descuento
+    3. Baja de descuento
+    4. Modificación de descuento
+    5. Listado de descuentos
+    6. Listado de clientes con descuentos
+    7. Listado de clientes que han usado descuentos
+    8. Asignar descuento a cliente
+    9. Volver
+
+    1. Búsqueda de descuento
+    a. El sistema solicitará al administrador que introduzca el ID del descuento a buscar.
+    b. Si el descuento existe, se mostrará la información del descuento y se preguntará si se desea modificar.
+    c. Si el descuento no existe, se mostrará un mensaje indicando que el descuento no existe.
+
+    2. Alta de descuento
+    a. En este caso, el ID es el propio código del descuento, por lo que el sistema solicitará al administrador que introduzca el ID.
+    b. El sistema solicitará al administrador que introduzca la descripción del descuento.
+    c. El sistema solicitará al administrador que introduzca el tipo de descuento (promocional [codpro] o cheque regalo [cheqreg]).
+    d. El sistema solicitará al administrador que indique el estado del descuento (activo o inactivo).
+    e. El sistema solicitará al administrador que introduzca el importe del descuento.
+    f. El sistema solicitará al administrador que introduzca aplicable a todos los clientes (S/N) (Sí: Todos, No: ESIZON).
+    Nota: En el caso de que el descuento sea un código promocional y esté indicado para todos, se asignará a todos los clientes.
+
+    3. Baja de descuento
+    a. El sistema solicitará al administrador que introduzca el ID del descuento a eliminar.
+    b. Si el descuento existe, se mostrará la información del descuento y se pedirá confirmación para eliminarlo.
+    c. Si existen clientes asociados al descuento, se eliminará la asociación.
+
+    4. Modificación de descuento
+    a. El sistema solicitará al administrador que introduzca el ID del descuento a modificar.
+    b. Si el descuento existe, se mostrará la información del descuento y se permitirá modificar la información del descuento.
+    c. Si el descuento no existe, se mostrará un mensaje indicando que el descuento no existe.
+
+    5. Listado de descuentos
+    a. Se mostrará un listado con la información de todos los descuentos dados de alta en el sistema.
+
+    6. Listado de clientes con descuentos
+    a. Se mostrará un listado con la información de todos los clientes que tienen asignado algún descuento.
+
+    7. Listado de clientes que han usado descuentos
+    a. Se mostrará un listado con la información de todos los clientes que han hecho uso de algún descuento.
+
+    8. Asignar descuento a cliente
+    a. El sistema solicitará al administrador que introduzca el ID del cliente al que asignar el descuento.
+    b. El sistema solicitará al administrador que introduzca el ID del descuento a asignar.
+    c. El sistema comprobará si el descuento existe. Si no existe, se mostrará un mensaje indicando que el descuento no existe.
+    d. El sistema comprobará si el cliente existe. Si no existe, se mostrará un mensaje indicando que el cliente no existe.
+
+    9. Volver
+    a. Volverá al menú principal de administrador.
+ */
+
+void gestionDescuentos()
+{
+    unsigned opcion = 0;
+    char respuesta;
+    unsigned opcion_busqueda = 0;
+
+    // Carga de los descuentos
+    VectorDescuentos v_descuentos;
+    cargar_descuentos(&v_descuentos);
+
+    // Carga de los descuentos de los clientes
+    VectorDescuentosClientes v_descuentos_cliente;
+    cargar_descuentos_clientes(&v_descuentos_cliente);
+
+    // Carga de los clientes
+    VectorClientes v_clientes;
+    cargar_clientes(&v_clientes);
+
+    char id_descuento[5];
+    char id_cliente[8];
+
+    Descuento* descuento;
+    Cliente* cliente;
+
+    do{
+        printf("\nGESTIÓN DE DESCUENTOS\n");
+        printf("1. Búsqueda de descuento\n");
+        printf("2. Alta de descuento\n");
+        printf("3. Baja de descuento\n");
+        printf("4. Modificación de descuento\n");
+        printf("5. Listado de descuentos\n");
+        printf("6. Listado de clientes con descuentos\n");
+        printf("7. Listado de clientes que han usado descuentos\n");
+        printf("8. Asignar descuento a cliente\n");
+        printf("9. Volver\n");
+        leer_unsigned("Seleccione una opción", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("\nBÚSQUEDA DE DESCUENTO\n");
+
+                leer_cadena("Ingrese el ID del descuento a buscar", id_descuento, 5);
+                descuento = buscar_descuento_id(&v_descuentos, id_descuento);
+                if(descuento == NULL)
+                {
+                    printf("Descuento no encontrado.\n");
+                }
+                else{
+                    listar_descuento(descuento);
+
+                    printf("\nOpciones:\n");
+                    printf("1. Modificar descuento\n");
+                    printf("2. Listar los clientes con el descuento asignado.\n");
+                    printf("3. Volver\n");
+                    leer_unsigned("Seleccione una opción", &opcion_busqueda);
+
+                    switch(opcion_busqueda)
+                    {
+                        case 1:
+                            modificar_descuento(descuento);
+                            break;
+                        case 2:
+                            listar_clientes_descuento(&v_clientes, &v_descuentos_cliente, id_descuento);
+                            break;
+                        case 3:
+                            printf("Volviendo al menú principal...\n");
+                            break;
+                        default:
+                            printf("Opción no válida.\n");
+                            break;
+                    }
+                }
+                break;
+            case 2:
+                printf("\nALTA DE DESCUENTO\n");
+                alta_descuento(&v_descuentos, &v_descuentos_cliente, &v_clientes);
+                break;
+            case 3:
+                printf("\nBAJA DE DESCUENTO\n");
+                leer_cadena("Ingrese el ID del descuento a eliminar", id_descuento, 5);
+                descuento = buscar_descuento_id(&v_descuentos, id_descuento);
+                if(descuento != NULL)
+                {
+                    listar_descuento(descuento);
+                    printf("¿Desea eliminar el descuento? (Todos los clientes que tuvieran asociado dicho descuento, lo perderán) [S/N]\n");
+                    leer_caracter("Seleccione una opción", &respuesta);
+                    if(respuesta == 'S' || respuesta == 's')
+                    {
+                        baja_descuento(id_descuento, &v_descuentos, &v_descuentos_cliente);
+                    }
+                }
+                else
+                {
+                    printf("Descuento no encontrado.\n");
+                }
+                break;
+            case 4:
+                printf("\nMODIFICACIÓN DE DESCUENTO\n");
+                leer_cadena("Ingrese el ID del descuento a modificar", id_descuento, 5);
+                descuento = buscar_descuento_id(&v_descuentos, id_descuento);
+                if(descuento != NULL)
+                {
+                    listar_descuento(modificar_descuento(descuento));
+                }
+                else
+                {
+                    printf("Descuento no encontrado.\n");
+                }
+                break;
+            case 5:
+                printf("\nLISTADO DE DESCUENTOS\n");
+                listar_descuentos(&v_descuentos);
+                break;
+            case 6:
+                printf("\nLISTADO DE CLIENTES CON DESCUENTOS\n");
+                leer_cadena("Ingrese el ID del descuento a listar los clientes", id_descuento, 5);
+                listar_clientes_descuento(&v_clientes, &v_descuentos_cliente, id_descuento);
+                break;
+            case 7:
+                printf("\nLISTADO DE CLIENTES QUE HAN USADO DESCUENTOS\n");
+                listar_clientes_descuento_usado(&v_clientes, &v_descuentos_cliente, id_descuento);
+                break;
+            case 8:
+                printf("\nASIGNAR DESCUENTO A CLIENTE\n");
+                leer_cadena("Ingrese el ID del descuento a asignar", id_descuento, 5);
+                descuento = buscar_descuento_id(&v_descuentos, id_descuento);
+                if(descuento == NULL)
+                {
+                    printf("Descuento no encontrado.\n");
+                    break;
+                }
+                leer_cadena("Ingrese el ID del cliente al que asignar el descuento", id_cliente, 8);
+                cliente = buscar_cliente_por_id(&v_clientes, id_cliente);
+                if(cliente == NULL)
+                {
+                    printf("Cliente no encontrado.\n");
+                    break;
+                }
+                asignar_descuento_cliente(id_descuento, id_cliente, &v_descuentos_cliente);
+                break;
+            case 9:
+                printf("Volviendo al menú principal...\n");
+                break;
+            default:
+                printf("Opción no válida, por favor intente de nuevo.\n");
+                break;
+        }
+    }while(opcion != 9);
+}
+
+/*
+ * i)   Devoluciones
+        Mediante esta opción el administrador podrá acceder a la información de todas las
+        devoluciones de productos.
+        • Mediante el menú correspondiente podrá realizar altas de devoluciones (aunque lo
+        habitual es que sean generadas por los clientes se permite esta opción por si el
+        cliente tuviera algún problema y no pudiera realizarla), bajas, búsquedas, listados y
+        modificaciones de devoluciones.
+        • Entre las modificaciones de los pedidos el administrador tendrá la posibilidad de consultar
+        todos las devoluciones, solicitadas por un cliente, que se encuentran pendientes de
+        aceptación, así como modificar el estado de éstas para aceptarlas o no. Si la devolución es
+        aceptada se debe actualizar la fecha de aceptación y la fecha de caducidad de la devolución.
+        • También se permitirá modificar el estado a «recibido» en el momento que reciba el
+        producto. Hay que tener en cuenta que en este último caso se debe actualizar el stock
+        del producto recibido.
+
+        Para ello deberá hacer uso de las funciones de gestión de devoluciones.
+
+        Las opciones a mostrar son:
+        1. Búsqueda de devolución
+        2. Alta de devolución
+        3. Baja de devolución
+        4. Modificación de devolución
+        5. Listado de devoluciones
+        6. Listado de devoluciones por cliente
+        7. Volver
+
+        1. Búsqueda de devolución
+        a. El sistema solicitará al administrador que introduzca el ID de la devolución a buscar.
+        b. Si la devolución existe, se mostrará la información de la devolución y se preguntará si se desea modificar.
+        c. Si la devolución no existe, se mostrará un mensaje indicando que la devolución no existe.
+
+        2. Alta de devolución
+        a. El ID será generado automáticamente por el sistema. Para ello, se deberá buscar el último ID existente en el vector, transformarlo a entero, incrementarlo en 1 y convertirlo de nuevo a cadena de caracteres.
+        b. El sistema solicitará al administrador que introduzca el ID del pedido al que pertenece la devolución.
+        c. El sistema solicitará al administrador que introduzca el ID del producto a devolver.
+        d. El sistema solicitará al administrador que introduzca el motivo de la devolución.
+
+        3. Baja de devolución
+        a. El sistema solicitará al administrador que introduzca el ID de la devolución a eliminar.
+        b. Si la devolución existe, se mostrará la información de la devolución y se pedirá confirmación para eliminarla.
+        c. Si la devolución no existe, se mostrará un mensaje indicando que la devolución no existe.
+
+        4. Modificación de devolución
+        a. Solo se podrá modificar el estado de la devolución.
+
+        5. Listado de devoluciones
+        a. Se mostrará un listado con la información de todas las devoluciones dadas de alta en el sistema.
+
+        6. Listado de devoluciones por cliente
+        a. Se mostrará un listado con la información de todas las devoluciones de un cliente dado.
+
+        7. Volver
+ */
+
+void gestionDevoluciones()
+{
+    // Carga de las devoluciones
+    VectorDevoluciones v_devoluciones;
+    cargar_devoluciones(&v_devoluciones);
+
+    // Carga de los productos pedidos
+    VectorProductosPedido v_productospedidos;
+    cargar_productos_pedido(&v_productospedidos);
+
+    // Carga de los clientes
+    VectorClientes v_clientes;
+    cargar_clientes(&v_clientes);
+
+
+    unsigned opcion = 0;
+    char id_pedido[8];
+    char id_producto[8];
+    char id_cliente[8];
+    char respuesta;
+    Fecha fecha_actual;
+
+    Devolucion* devolucion;
+    ProductoPedido* producto_pedido;
+
+    do{
+        printf("\nGESTIÓN DE DEVOLUCIONES\n");
+        printf("1. Búsqueda de devolución\n");
+        printf("2. Alta de devolución\n");
+        printf("3. Baja de devolución\n");
+        printf("4. Modificación de devolución\n");
+        printf("5. Listado de devoluciones\n");
+        printf("6. Listado de devoluciones por cliente\n");
+        printf("7. Volver\n");
+        leer_unsigned("Seleccione una opción", &opcion);
+
+        switch(opcion)
+        {
+            case 1:
+                printf("\nBÚSQUEDA DE DEVOLUCIÓN\n");
+                leer_cadena("Ingrese el ID de la devolución a buscar", id_pedido, 8);
+                leer_cadena("Ingrese el ID del producto a buscar", id_producto, 8);
+                devolucion = buscar_devolucion(id_pedido, id_producto, &v_devoluciones);
+                if(devolucion != NULL)
+                {
+                    printf("Devolución encontrada\n");
+                    listar_devolucion(devolucion);
+                    leer_caracter("Desea modificar esta devolución? (S/N)", &respuesta);
+                    if(respuesta == 'S' || respuesta == 's')
+                    {
+                        modificar_devolucion(devolucion);
+                    }
+                }
+                else
+                {
+                    printf("Devolución no encontrada.\n");
+                }
+                break;
+            case 2:
+                printf("\nALTA DE DEVOLUCIÓN\n");
+                leer_cadena("Ingrese el ID del pedido al que pertenece la devolución", id_pedido, 8);
+                leer_cadena("Ingrese el ID del producto a devolver", id_producto, 8);
+                producto_pedido = buscar_producto_pedido(&v_productospedidos, id_pedido, id_producto);
+                if(producto_pedido == NULL)
+                {
+                    printf("Producto o pedido no encontrado.\n");
+                }
+                fecha_actual = obtener_fecha_actual();
+                alta_devolucion(id_pedido, id_producto, &fecha_actual, &v_devoluciones);
+                break;
+            case 3:
+                printf("\nBAJA DE DEVOLUCIÓN\n");
+                leer_cadena("Ingrese el ID de la devolución a eliminar", id_pedido, 8);
+                leer_cadena("Ingrese el ID del producto a eliminar", id_producto, 8);
+                devolucion = buscar_devolucion(id_pedido, id_producto, &v_devoluciones);
+                if(devolucion != NULL)
+                {
+                    listar_devolucion(devolucion);
+                    leer_caracter("Desea eliminar esta devolución? (S/N)", &respuesta);
+                    if(respuesta == 'S' || respuesta == 's')
+                    {
+                        if(strcmp(devolucion->estado, "enviada") != 0 || strcmp(devolucion->estado, "aceptada") != 0)
+                        {
+                            baja_devolucion(id_pedido, id_producto, &v_devoluciones);
+                        }
+                        else
+                        {
+                            printf("No se puede eliminar una devolución que no esté pendiente o aceptada.\n");
+                        }
+                    }
+                }
+                else
+                {
+                    printf("Devolución no encontrada.\n");
+                }
+                break;
+            case 4:
+                printf("\nMODIFICACIÓN DE DEVOLUCIÓN\n");
+                leer_cadena("Ingrese el ID de la devolución a modificar", id_pedido, 8);
+                leer_cadena("Ingrese el ID del producto a modificar", id_producto, 8);
+                devolucion = buscar_devolucion(id_pedido, id_producto, &v_devoluciones);
+                if(devolucion != NULL)
+                {
+                    listar_devolucion(modificar_devolucion(devolucion));
+                }
+                else
+                {
+                    printf("Devolución no encontrada.\n");
+                }
+                break;
+            case 5:
+                printf("\nLISTADO DE DEVOLUCIONES\n");
+                listar_devoluciones(&v_devoluciones);
+                break;
+            case 6:
+                printf("\nLISTADO DE DEVOLUCIONES POR CLIENTE\n");
+                leer_cadena("Ingrese el ID del cliente a listar las devoluciones", id_cliente, 8);
+                if(buscar_cliente_por_id(&v_clientes, id_cliente) == NULL)
+                {
+                    printf("Cliente no encontrado.\n");
+                    break;
+                }
+                listar_devoluciones_cliente(&v_devoluciones, id_cliente);
+                break;
+            case 7:
+                printf("Volviendo al menú principal...\n");
+                break;
+            default:
+                printf("Opción no válida, por favor intente de nuevo.\n");
+                break;
+        }
+    }while(opcion != 7);
+
+    guardar_devoluciones(&v_devoluciones);
+    guardar_productos_pedido(&v_productospedidos);
+    guardar_clientes(&v_clientes);
+
+}
+
+void mostrarMenuAdministrador(AdminProv *admin) {
     unsigned opcion;
     do {
         printf("\nMENU ADMINISTRADOR\n");
@@ -1005,16 +1491,16 @@ void mostrarMenuAdministrador(AdminProv* admin) {
                 gestionCategorias();
                 break;
             case 6:
-                //gestionPedidos();
+                gestionPedidos();
                 break;
             case 7:
                 gestionTransportistas();
                 break;
             case 8:
-                //gestionDescuentos();
+                gestionDescuentos();
                 break;
             case 9:
-                //gestionDevoluciones();
+                gestionDevoluciones();
                 break;
             case 10:
                 printf("Saliendo del menú de Administradores...\n");
@@ -1024,16 +1510,5 @@ void mostrarMenuAdministrador(AdminProv* admin) {
                 break;
         }
     } while (opcion != 10);
-}
-
-int main(){
-    setlocale(LC_ALL, "spanish");
-    AdminProv admin;
-    strcpy(admin.id_empresa, "MERCAD");
-    strcpy(admin.nombre, "Juan Perez");
-    strcpy(admin.email, "juanitoGolondrina@gmail.com");
-    strcpy(admin.contrasena, "securePassword");
-    mostrarMenuAdministrador(&admin);
-    return 0;
 }
 

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "utilidades.h"
 
 /* Especificación: void leer_cadena(char *, char *, int);
@@ -30,21 +29,6 @@ void leer_cadena(char *texto, char *cadena, int largo) {
 void leer_caracter(char *texto, char *caracter) {
     printf("%s", texto);
     while ((*caracter = getchar()) == '\n'); // Repeat until a non-newline character is read
-    int ch;
-    while ((ch = getchar()) != '\n' && ch != EOF); // Clear the rest of the line
-}
-
-/* Especificación: void leer_entero(char *, int *)
- * Precondición: num apunta a la variable de tipo entero a la que se le quiere asignar un valor,
- *               y texto será la frase que se imprimirá para solicitar ese valor
- * Postcondición: asigna un valor al puntero a entero num */
-void leer_entero(char *texto, int *num) {
-    printf("%s: ", texto);
-    while (scanf("%d", num) != 1) {
-        int ch;
-        while ((ch = getchar()) != '\n' && ch != EOF); // Clear incorrect input
-        printf("Entrada invalida. %s: ", texto);
-    }
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF); // Clear the rest of the line
 }

@@ -14,5 +14,5 @@
 #include "stdio.h"
 #include "fecha.h"
 
-void menu_cliente(Cliente* cliente);
+void menu_cliente(Cliente *cliente);
 #endif//MENU_CLIENTE_H_

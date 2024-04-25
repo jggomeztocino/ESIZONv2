@@ -48,7 +48,7 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones);
 void guardar_devoluciones(VectorDevoluciones* v_devoluciones);
 
 /**
- * @brief Función que busca una devolución por su id.
+ * @brief Función que busca una devolución por su ID.
  * @param v_pedidos
  * @param v_devoluciones
  * @param id_cliente
@@ -58,16 +58,9 @@ void guardar_devoluciones(VectorDevoluciones* v_devoluciones);
  void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente);
 
 
-void alta_devolucion(VectorDevoluciones* v_devoluciones, Pedido* pedido, char* id_producto, char* motivo);
-/*
- * Función que permite modificar el estado de una devolución
- * 1. Pendiente
- * 2. Aceptado
- * 3. Denegado
- * 4. Enviado
- * 5. Recibido
- */
-void modificar_estado_devolucion(VectorDevoluciones* v_devoluciones, char* id_devolucion, unsigned nuevo_estado);
+void alta_devolucion(char* id_pedido, char* id_producto, Fecha* fecha_devolucion, VectorDevoluciones* v_devoluciones);
+void iniciar_devolucion(ProductoPedido* productoPedido, char* id_producto, VectorDevoluciones* v_devoluciones);
+void baja_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones);
 /**
  * Función que solicita los datos de una devolución
  * @param cliente
@@ -75,6 +68,16 @@ void modificar_estado_devolucion(VectorDevoluciones* v_devoluciones, char* id_de
  * @param v_productos_pedido
  * @param v_devoluciones
  */
-void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones);
+//void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones);
+
+Devolucion* buscar_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones);
+
+void listar_devolucion(Devolucion* devolucion);
+
+void listar_devoluciones(VectorDevoluciones* v_devoluciones);
+
+unsigned listar_devoluciones_cliente(VectorDevoluciones* v_devoluciones, char* id_cliente);
+
+Devolucion* modificar_devolucion(Devolucion* devolucion);
 
 #endif//DEVOLUCIONES_H_

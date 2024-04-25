@@ -31,11 +31,12 @@ void cargar_clientes(VectorClientes* v_clientes)
                   v_clientes->clientes[v_clientes->size].contrasena,
                   &v_clientes->clientes[v_clientes->size].cartera) == 8) {
         v_clientes->size++;
-        v_clientes->clientes = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size + 1) * sizeof(Cliente));
-        if(v_clientes->clientes == NULL) {
+        Cliente* temp = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size + 1) * sizeof(Cliente));
+        if(temp == NULL) {
             free(v_clientes->clientes);
             perror("\nError al reservar memoria\n");
         }
+        v_clientes->clientes = temp;
     }
     fclose(f);
 }
@@ -188,15 +189,22 @@ void eliminar_cliente(VectorClientes* v_clientes, char* id_cliente) {
             break;
         }
     }
-    v_clientes->clientes = (Cliente*)realloc(v_clientes->clientes, v_clientes->size * sizeof(Cliente));
-    if(v_clientes->clientes == NULL) {
+    Cliente* temp = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size) * sizeof(Cliente));
+    if(temp == NULL) {
         free(v_clientes->clientes);
         perror("\nError al reservar memoria\n");
     }
+    v_clientes->clientes = temp;
 }
 
 
 void alta_cliente(VectorClientes* v_clientes) {
+    Cliente* temp = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size + 1) * sizeof(Cliente));
+    if(temp == NULL) {
+        free(v_clientes->clientes);
+        perror("\nError al reservar memoria\n");
+    }
+    v_clientes->clientes = temp;
     char nombre[21], direccion[51], poblacion[21], provincia[21], email[31], contrasena[16];
     float cartera;
     leer_cadena("Introduzca su nombre\n", nombre, 21);
@@ -215,9 +223,4 @@ void alta_cliente(VectorClientes* v_clientes) {
     strcpy(v_clientes->clientes[v_clientes->size].contrasena, contrasena);
     v_clientes->clientes[v_clientes->size].cartera = cartera;
     v_clientes->size++;
-    v_clientes->clientes = (Cliente*)realloc(v_clientes->clientes, (v_clientes->size + 1) * sizeof(Cliente));
-    if(v_clientes->clientes == NULL) {
-        free(v_clientes->clientes);
-        perror("\nError al reservar memoria\n");
-    }
 }

@@ -15,7 +15,7 @@ void listar_productos_asignados(VectorProductosPedido *v_productos_pedido, char 
                    v_productos_pedido->productos_pedido[i].fecha_prevista_entrega.anio);
             printf("Importe: %.2f\n", v_productos_pedido->productos_pedido[i].importe);
             printf("Estado: %u\n", v_productos_pedido->productos_pedido[i].estado);
-            //Puede que no tengan id locker
+            //Puede que no tengan ID locker
 
             if(strcmp(v_productos_pedido->productos_pedido[i].id_locker, " ")!=0) {
 
@@ -31,7 +31,7 @@ void listar_productos_asignados(VectorProductosPedido *v_productos_pedido, char 
 }
 
 //Funcion que lista los productos pedidos no recogidos en fecha de lockers de una localidad
-////Funcion que devuelve un producto pedido que se busca mediante , id del pedido , id del producto ,transportista asignado y estado de enReparto
+////Funcion que devuelve un producto pedido que se busca mediante , ID del pedido , ID del producto ,transportista asignado y estado de enReparto
 //ProductoPedido *buscar_producto_pedido_por_compartimento(VectorProductosPedido *v_productos_pedido, char *id_locker, unsigned n_compartimento);
 void listar_productos_no_recogidos(VectorCompartimentos *v_compartimentos, VectorProductosPedido *v_productos_pedido,VectorLockers *v_lockers, char *localidad)
 {
@@ -104,35 +104,39 @@ void gestion_perfil( Transportista* transportista)
 
 //Gestiona la entrega de un producto pedido
 void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, Transportista* transportista , VectorLockers v_lockers, VectorCompartimentos v_compartimentos) {
-    //buscar el pedido por id
+    //buscar el pedido por ID
     char id_pedido[8];
-    leer_cadena("Introduzca el id del pedido: ", id_pedido, 8);
+    leer_cadena("Introduzca el ID del pedido: ", id_pedido, 8);
     Pedido* pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
     if(pedido == NULL)
     {
-        printf("No se ha encontrado el pedido con id %s\n", id_pedido);
+        printf("No se ha encontrado el pedido con ID %s\n", id_pedido);
         return;
     }
-    //Listar los productos asignados al transportista en el pedido
-    listar_productos_asignados_pedido(&v_productos_pedido, id_pedido, transportista->id_transportista);
+     listar_productos_pedido(&v_productos_pedido,pedido->id_pedido );
 
     //Seleccionar un producto para gestionar la entrega
     char id_producto[9];
-    leer_cadena("Introduzca el id del producto: ", id_producto, 9);
+    leer_cadena("Introduzca el ID del producto: ", id_producto, 9);
+
 
     //Buscar el producto en el pedido
     ProductoPedido* producto_pedido = buscar_producto_pedido(&v_productos_pedido, id_pedido, id_producto);
     if(producto_pedido == NULL)
     {
-        printf("No se ha encontrado un producto asociado a ese id para su entrega\n");
+        printf("No se ha encontrado un producto asociado a ese ID para su entrega\n");
         return;
     }
 
-    if (producto_pedido->id_transportista != transportista->id_transportista) {
-        printf("El producto no está asignado a este transportista\n");
+    //Comprobar si el producto está asignado al transportista
+    if(strcmp(producto_pedido->id_transportista, transportista->id_transportista)!=0){
+
+        printf("EL producto no está asignado al transportista\n");
         return;
-    
     }
+
+
+
 
     //Comprobar si el pedido se entrega a domicilio o en locker
     if(pedido->lugar == 1)
@@ -143,9 +147,8 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
         printf("Importe: %.2f\n", producto_pedido->importe);
         printf("Estado: %d\n", producto_pedido->estado);
         printf("Fecha de entrega: %02d/%02d/%d\n", producto_pedido->fecha_entrega_devolucion.dia, producto_pedido->fecha_entrega_devolucion.mes, producto_pedido->fecha_entrega_devolucion.anio);
-        printf("¿Ha podido realizar la entrega? (s/n): ");
         char respuesta;
-        scanf(" %c", &respuesta);
+        leer_caracter("¿Ha podido realizar la entrega? (s/n): ",&respuesta);
         if(respuesta == 's')
         {
             producto_pedido->estado = 5;
@@ -160,11 +163,11 @@ void gestion_entrega(  VectorPedidos v_pedidos, VectorProductosPedido v_producto
     if(pedido->lugar == 2)
     {
 
-        //Buscar el locker asignado al pedido mediante el id de locker en pedido
+        //Buscar el locker asignado al pedido mediante el ID de locker en pedido
         Locker* locker = buscar_locker_id(&v_lockers, pedido->id_locker);
         if(locker == NULL)
         {
-            printf("No se ha encontrado el locker con id %s\n", pedido->id_locker);
+            printf("No se ha encontrado el locker con ID %s\n", pedido->id_locker);
             return;
         }
 
@@ -216,8 +219,7 @@ void gestion_repartos( Transportista* transportista)
         printf("1. Listar productos asignados al transportista con su fecha de entrega\n");
         printf("2. Gestionar una entrega\n");
         printf("3. Salir\n");
-        printf("\nOpcion: ");
-        scanf("%d", &opcion);
+        leer_unsigned("Seleccione una opcion:",&opcion);
         switch(opcion)
         {
             case 1:
@@ -242,16 +244,16 @@ void gestion_repartos( Transportista* transportista)
 }
 
 //Funcion que gestiona la recogida de un producto de un compartimento locker
-void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido, Transportista* transportista, VectorLockers* v_lockers, VectorCompartimentos* v_compartimentos)
+void gestion_recogida(VectorProductosPedido* v_productos_pedido, Transportista* transportista, VectorLockers* v_lockers, VectorCompartimentos* v_compartimentos)
 {
-    //Pedir el id del locker
+    //Pedir el ID del locker
     char id_locker[11];
-    leer_cadena("Introduzca el id del locker: ", id_locker, 11);
+    leer_cadena("Introduzca el ID del locker: ", id_locker, 11);
     //Buscar el locker
     Locker* locker = buscar_locker_id(v_lockers, id_locker);
     if(locker == NULL)
     {
-        printf("No se ha encontrado el locker con id %s\n", id_locker);
+        printf("No se ha encontrado el locker con ID %s\n", id_locker);
         return;
     }
     //Listar los compartimentos ocupados del locker
@@ -270,7 +272,7 @@ void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_product
     CompartimentoLocker* compartimento = buscar_compartimento(v_compartimentos, id_locker, num_compartimento);
     if(compartimento == NULL)
     {
-        printf("No se ha encontrado el compartimento con id %s y numero %u\n", id_locker, num_compartimento);
+        printf("No se ha encontrado el compartimento con ID %s y numero %u\n", id_locker, num_compartimento);
         return;
     }
     //Buscar el producto pedido asociado al compartimento
@@ -281,10 +283,14 @@ void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_product
         return;
     }
     //Marcar el producto como recogido
-    producto_pedido->estado = 5;
+    strcpy(producto_pedido->id_locker," ");
+    producto_pedido->cod_locker=0;
+    strcpy(producto_pedido->id_transportista,transportista->id_transportista);
+    producto_pedido->estado = 7;
     producto_pedido->fecha_entrega_devolucion = obtener_fecha_actual();
     //Marcar el compartimento como vacio
     compartimento->estado = 0;
+    compartimento->cod_locker=0;
     //Actualizar el numero de compartimentos ocupados en el locker
     locker->num_compartimentos_ocupados--;
     printf("Producto recogido\n");
@@ -294,8 +300,6 @@ void gestion_recogida(VectorPedidos* v_pedidos, VectorProductosPedido* v_product
 void gestion_retornos( Transportista* transportista)
 {
     //Cargar en memoria los vectores necesarios
-    VectorPedidos v_pedidos;
-    cargar_pedidos(&v_pedidos);
     VectorProductosPedido v_productos_pedido;
     cargar_productos_pedido(&v_productos_pedido);
     //Inicializar los vectores de lockers y compartimentos
@@ -313,8 +317,7 @@ void gestion_retornos( Transportista* transportista)
         printf("1. Consultar lockers por localidad y mostrando pedidos no recogidos en fecha\n");
         printf("2. Gestionar recogida de producto de un locker\n");
         printf("3. Salir\n");
-        printf("\nOpcion: ");
-        scanf("%u", &opcion);
+        leer_unsigned("Seleccione una opcion:",&opcion);
         switch (opcion) {
             case 1:
                 //Consultar lockers por localidad y mostrando pedidos no recogidos en fecha
@@ -326,17 +329,16 @@ void gestion_retornos( Transportista* transportista)
                 break;
             case 2:
                 //Funcion para gestionar la recogida de un producto de un locker
-                gestion_recogida(&v_pedidos, &v_productos_pedido, transportista, &v_lockers, &v_compartimentos);
+                gestion_recogida(&v_productos_pedido, transportista, &v_lockers, &v_compartimentos);
                 break;
             case 3:
                 break;
             default:
-                printf("\nOpcion no valida\n");
+                printf("\n Opcion no valida\n");
         }
     } while (opcion != 3);
 
     //Guardar en memoria los vectores necesarios
-    guardar_pedidos(&v_pedidos);
     guardar_productos_pedido(&v_productos_pedido);
     guardar_lockers(&v_lockers);
     guardar_compartimentos(&v_compartimentos);
@@ -344,7 +346,7 @@ void gestion_retornos( Transportista* transportista)
 
 
 //Mostrará las distintas opciones del menu de transportistas y seguirá mostrando el menu hasta que se seleccione salir
-void mostrar_menu_transportista(Transportista* transportista)
+void mostrar_menu_transportista(Transportista *transportista)
 {
     /*
      Menu transportista
@@ -363,8 +365,7 @@ void mostrar_menu_transportista(Transportista* transportista)
         printf("2. Repartos\n");
         printf("3. Retorno\n");
         printf("4. Salir del sistema\n");
-        printf("\nOpcion: ");
-        scanf("%d", &opcion);
+        leer_unsigned("Seleccione una opcion:",&opcion);
         switch(opcion)
         {
             case 1:

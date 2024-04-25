@@ -91,7 +91,8 @@ void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor);
  */
 void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categoria);
 
+Producto* alta_producto_proveedor(VectorProductos* v_productos, VectorCategorias* v_categorias, char* id_prov);
 
-// Menu que pregunta si se quiere listar los productos por id o categoria
-void listado_productos();
+Producto* modificar_producto_prov(Producto* producto, VectorCategorias* v_categorias);
+
 #endif //PRODUCTOS_H_

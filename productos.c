@@ -155,11 +155,13 @@ void listar_productos_gestor(VectorProductos* v_productos, char* id_gestor)
 
 Producto* alta_producto(VectorProductos* v_productos, VectorCategorias* v_categorias, VectorAdminProv* v_adminprov)
 {
-    v_productos->productos = (Producto*)realloc(v_productos->productos, (v_productos->size + 1) * sizeof(Producto));
-    if(v_productos->productos == NULL) {
+    Producto* temp = (Producto*)realloc(v_productos->productos, (v_productos->size + 1) * sizeof(Producto));
+    if(temp == NULL) {
         perror("\nError al reservar memoria\n");
         return NULL;
     }
+    v_productos->productos = temp;
+
     // El identificador del producto se generará automáticamente, convirtiendo el ID del último producto en entero y sumándole 1
     sprintf(v_productos->productos[v_productos->size].id_producto, "%07d", atoi(v_productos->productos[v_productos->size - 1].id_producto) + 1);
     leer_cadena("Introduzca el nombre del producto (16 caracteres): ", v_productos->productos[v_productos->size].nombre, 16);
@@ -221,10 +223,13 @@ void baja_producto(VectorProductos* v_productos, char* id_producto)
         v_productos->productos[i] = v_productos->productos[i + 1];
     }
     v_productos->size--;
-    v_productos->productos = (Producto*)realloc(v_productos->productos, v_productos->size * sizeof(Producto));
-    if(v_productos->productos == NULL) {
+
+    Producto* temp = (Producto*)realloc(v_productos->productos, v_productos->size * sizeof(Producto));
+    if(temp == NULL) {
         perror("\nError al reservar memoria\n");
+        return;
     }
+    v_productos->productos = temp;
 }
 
 Producto* modificar_producto(Producto* producto, VectorCategorias* v_categorias, VectorAdminProv* v_adminprov) {
@@ -316,41 +321,101 @@ void eliminar_productos_categoria(VectorProductos* v_productos, char* id_categor
     }
 }
 
-// Menu que pregunta si se quiere listar los productos por id o categoria
-void listado_productos()
+Producto* alta_producto_proveedor(VectorProductos* v_productos, VectorCategorias* v_categorias, char* id_prov)
 {
-
-    VectorProductos v_productos;
-    cargar_productos(&v_productos);
-
-    printf("1. Buscar por id\n");
-    printf("2. Buscar por categoria\n");
-    unsigned opcion;
-    leer_unsigned("Introduce una opcion valida", &opcion);
-    if (opcion == 1)
-    {
-        char id_producto[8];
-        leer_cadena("Introduce el id del producto: ", id_producto, 8);
-        Producto *producto = buscar_producto_id(&v_productos, id_producto);
-        if (producto == NULL)
-        {
-            printf("Producto no encontrado\n");
-        }
-        else
-        {
-            listar_producto(producto);
-        }
+    Producto* temp = (Producto*)realloc(v_productos->productos, (v_productos->size + 1) * sizeof(Producto));
+    if(temp == NULL) {
+        perror("\nError al reservar memoria\n");
+        return NULL;
     }
-    else if (opcion == 2)
-    {
+    v_productos->productos = temp;
+
+    // El identificador del producto se generará automáticamente, convirtiendo el ID del último producto en entero y sumándole 1
+    sprintf(v_productos->productos[v_productos->size].id_producto, "%07d", atoi(v_productos->productos[v_productos->size - 1].id_producto) + 1);
+    leer_cadena("Introduzca el nombre del producto (16 caracteres): ", v_productos->productos[v_productos->size].nombre, 16);
+    leer_cadena("Introduzca la descripción del producto (50 caracteres): ", v_productos->productos[v_productos->size].descripcion, 51);
+    int valido = 0;
+    char opcion_listado[2];
+    while (!valido) {
         char id_categoria[5];
-        leer_cadena("Introduce el ID de la categoría: ", id_categoria, 5);
-        listar_productos_categoria(&v_productos, id_categoria);
+        leer_cadena("Introduzca el ID de la categoría del producto (4 dígitos): ", id_categoria, 5);
+        Categoria* categoria = buscar_categoria_id(v_categorias, id_categoria);
+        if (categoria != NULL) {
+            strcpy(v_productos->productos[v_productos->size].id_categoria, id_categoria);
+            valido = 1;
+        } else {
+            printf("\nCategoría no existente. Introduzca un ID de categoría válido.\n");
+            leer_cadena("¿Desea listar las categorías existentes? (S/N): ", opcion_listado, 2);
+            if (strcmp(opcion_listado, "S") == 0 || strcmp(opcion_listado, "s") == 0) {
+                listar_categorias(v_categorias);
+            }
+        }
     }
-    else
-    {
-        printf("Opcion no valida\n");
-    }
-    guardar_productos(&v_productos);
+
+    strcpy(v_productos->productos[v_productos->size].id_gestor, id_prov);
+    leer_unsigned("Introduzca el stock del producto: ", &v_productos->productos[v_productos->size].stock);
+    leer_unsigned("Introduzca el número de días máximo para la entrega del producto (Compromiso de entrega): ", &v_productos->productos[v_productos->size].entrega);
+    leer_real("Introduzca el importe del producto: ", &v_productos->productos[v_productos->size].importe);
+    v_productos->size++;
+    return &v_productos->productos[v_productos->size - 1];
 }
 
+
+Producto* modificar_producto_prov(Producto* producto, VectorCategorias* v_categorias) {
+    unsigned opcion;
+    char opcion_listado[2];
+    int valido;
+    do {
+        printf("\n1. Nombre: %s\n", producto->nombre);
+        printf("2. Descripción: %s\n", producto->descripcion);
+        printf("3. Categoría: %s\n", producto->id_categoria);
+        printf("4. Stock: %u\n", producto->stock);
+        printf("5. Entrega: %u\n", producto->entrega);
+        printf("6. Importe: %.2f\n", producto->importe);
+        printf("7. Salir\n");
+        leer_unsigned("Seleccione el campo a modificar: ", &opcion);
+        switch (opcion) {
+            case 1:
+                leer_cadena("Introduzca el nuevo nombre del producto (15 caracteres): ", producto->nombre, 16);
+                break;
+            case 2:
+                leer_cadena("Introduzca la nueva descripción (50 caracteres): ", producto->descripcion, 51);
+                break;
+            case 3:
+                valido = 0;
+                while (!valido) {
+                    char id_categoria[5];
+                    leer_cadena("Introduzca el ID de la categoría del producto (4 dígitos): ", id_categoria, 5);
+                    Categoria *categoria = buscar_categoria_id(v_categorias, id_categoria);
+                    if (categoria != NULL) {
+                        strcpy(producto->id_categoria, id_categoria);
+                        valido = 1;
+                    } else {
+                        printf("\nCategoría no existente. Introduzca un ID de categoría válido.\n");
+                        leer_cadena("¿Desea listar las categorías existentes? (S/N): ", opcion_listado, 2);
+                        if (strcmp(opcion_listado, "S") == 0 || strcmp(opcion_listado, "s") == 0) {
+                            listar_categorias(v_categorias);
+                        }
+                    }
+                }
+                break;
+            case 4:
+                leer_unsigned("Introduzca el nuevo stock: ", &producto->stock);
+                break;
+            case 5:
+                leer_unsigned("Introduzca la nueva entrega: ", &producto->entrega);
+                break;
+            case 6:
+                leer_real("Introduzca el nuevo importe: ", &producto->importe);
+                break;
+            case 7:
+                printf("\nSaliendo del menú de modificación de producto...\n");
+                break;
+            default:
+                printf("\nOpción no válida\n");
+                break;
+        }
+    } while (opcion != 7);
+
+    return producto;
+}

@@ -13,7 +13,7 @@ typedef struct
 Fecha crearFecha(int dia, int mes, int anio);
 
 Fecha obtener_fecha_actual();
-void imprimir_cadena_y_fecha(char *cadena, Fecha fecha);
+
 int comparar_fechas(Fecha fecha1, Fecha fecha2);
 
 #endif // FECHA_H

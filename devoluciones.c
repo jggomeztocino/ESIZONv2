@@ -25,7 +25,6 @@
     Luego, abrir el archivo en modo lectura y leer cada línea, separando los campos por el carácter '-'.
     Si el vector, definido en el puntero de clientes, no tiene espacio suficiente, deberá incrementar su tamaño en 1 unidad.
  */
-#include <stdio.h>
 #include <stdlib.h>
 
 void cargar_devoluciones(VectorDevoluciones *v_devoluciones)
@@ -137,37 +136,168 @@ void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevolucione
     }
 }
 
-
-void realizar_devolucion(Cliente *cliente, VectorPedidos v_pedidos, VectorProductosPedido v_productos_pedido, VectorDevoluciones v_devoluciones)
+void alta_devolucion(char* id_pedido, char* id_producto, Fecha* fecha_devolucion, VectorDevoluciones* v_devoluciones)
 {
+    Fecha fecha_nula = {0, 0, 0}; // Fecha nula para inicializar la fecha de aceptación y caducidad
 
-    // Mostrar los productos de los pedidos entregados y en fecha de devolucion
-    // tienes que comprobar en todo momento que el pedido pertenezca al cliente y
-    // los productos mostrados al pedido
-    listar_pedidos_cliente(&v_pedidos, cliente->id_cliente);
-    Pedido *pedido;
-    char id_pedido[8];
-    leer_cadena("Introduce el id del pedido: ", id_pedido, 8);
-    if (pertenece_pedido(&v_productos_pedido, id_pedido, cliente->id_cliente))
+    char motivo[51];
+    leer_cadena("Introduce el motivo de la devolución: ", motivo, 51);
+
+    Devolucion* temp = (Devolucion*)realloc(v_devoluciones->devoluciones, (v_devoluciones->n_devoluciones + 1) * sizeof(Devolucion));
+    if (temp == NULL)
     {
-        listar_productos_pedido(&v_productos_pedido, id_pedido);
-        char id_producto[8];
-        leer_cadena("Introduce el id del producto: ", id_producto, 8);
-        if (pertenece_pedido(&v_productos_pedido, id_pedido, id_producto))
+        perror("Error al reservar memoria para la devolución");
+        return;
+    }
+    v_devoluciones->devoluciones = temp;
+
+    Devolucion* devolucion = &v_devoluciones->devoluciones[v_devoluciones->n_devoluciones];
+    strcpy(devolucion->id_pedido, id_pedido);
+    strcpy(devolucion->id_producto, id_producto);
+    devolucion->fecha_devolucion = crearFecha(fecha_devolucion->dia, fecha_devolucion->mes, fecha_devolucion->anio);
+    strcpy(devolucion->motivo, motivo);
+    strcpy(devolucion->estado, "pendiente");
+    devolucion->fecha_aceptacion = fecha_nula;
+    devolucion->fecha_caducidad = fecha_nula;
+
+    v_devoluciones->n_devoluciones++;
+}
+
+void iniciar_devolucion(ProductoPedido* productoPedido, char* id_producto, VectorDevoluciones* v_devoluciones)
+{
+    Fecha fecha_actual = obtener_fecha_actual();
+
+    productoPedido->estado = 6;
+    productoPedido->fecha_entrega_devolucion = fecha_actual;
+
+    alta_devolucion(productoPedido->id_pedido, id_producto, &fecha_actual, v_devoluciones);
+}
+
+void baja_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones)
+{
+    int i;
+    for(i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
+        if(strcmp(v_devoluciones->devoluciones[i].id_pedido, id_pedido) == 0 && strcmp(v_devoluciones->devoluciones[i].id_producto, id_producto) == 0)
         {
-            pedido = buscar_pedido_por_id(&v_pedidos, id_pedido);
-            char motivo[51];
-            leer_cadena("Introduce el motivo de la devolucion: ", motivo, 51);
-            alta_devolucion(&v_devoluciones,pedido, id_producto, motivo);
-        }
-        else
-        {
-            printf("El producto no pertenece al pedido\n");
+            break;
         }
     }
-    else
+    for(; i < v_devoluciones->n_devoluciones - 1; i++)
     {
-        printf("El pedido no pertenece al cliente\n");
+        v_devoluciones->devoluciones[i] = v_devoluciones->devoluciones[i + 1];
+    }
+    v_devoluciones->n_devoluciones--;
+
+    Devolucion* temp = (Devolucion*)realloc(v_devoluciones->devoluciones, v_devoluciones->n_devoluciones * sizeof(Devolucion));
+    if(temp == NULL && v_devoluciones->n_devoluciones > 0)
+    {
+        perror("Error al liberar memoria de la devolución");
+        return;
+    }
+    v_devoluciones->devoluciones = temp;
+    
+}
+
+Devolucion* buscar_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones)
+{
+    int i;
+    for(i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
+        if(strcmp(v_devoluciones->devoluciones[i].id_pedido, id_pedido) == 0 && strcmp(v_devoluciones->devoluciones[i].id_producto, id_producto) == 0)
+        {
+            return &v_devoluciones->devoluciones[i];
+        }
+    }
+    return NULL;
+}
+
+void listar_devolucion(Devolucion* devolucion)
+{
+    printf("ID Pedido: %s\n", devolucion->id_pedido);
+    printf("ID Producto: %s\n", devolucion->id_producto);
+    printf("Fecha de devolución: %02d/%02d/%d\n", devolucion->fecha_devolucion.dia, devolucion->fecha_devolucion.mes, devolucion->fecha_devolucion.anio);
+    printf("Motivo: %s\n", devolucion->motivo);
+    printf("Estado: %s\n", devolucion->estado);
+    printf("Fecha de aceptación: %02d/%02d/%d\n", devolucion->fecha_aceptacion.dia, devolucion->fecha_aceptacion.mes, devolucion->fecha_aceptacion.anio);
+    printf("Fecha de caducidad: %02d/%02d/%d\n", devolucion->fecha_caducidad.dia, devolucion->fecha_caducidad.mes, devolucion->fecha_caducidad.anio);
+    printf("\n");
+}
+
+void listar_devoluciones(VectorDevoluciones* v_devoluciones)
+{
+    int i;
+    for(i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
+        listar_devolucion(&v_devoluciones->devoluciones[i]);
+    }
+}
+
+unsigned listar_devoluciones_cliente(VectorDevoluciones* v_devoluciones, char* id_cliente)
+{
+    unsigned n_devoluciones = 0;
+    int i;
+    for(i = 0; i < v_devoluciones->n_devoluciones; i++)
+    {
+        if(strcmp(v_devoluciones->devoluciones[i].id_pedido, id_cliente) == 0)
+        {
+            n_devoluciones++;
+            listar_devolucion(&v_devoluciones->devoluciones[i]);
+        }
+    }
+    return n_devoluciones;
+}
+
+Devolucion* modificar_devolucion(Devolucion* devolucion)
+{
+    Fecha fecha_actual = obtener_fecha_actual();
+    Fecha fecha_devolucion = fecha_actual;
+    fecha_devolucion.dia += 7;
+
+    printf("ID Pedido: %s\n", devolucion->id_pedido);
+    printf("ID Producto: %s\n", devolucion->id_producto);
+    printf("Fecha de devolución: %02d/%02d/%d\n", devolucion->fecha_devolucion.dia, devolucion->fecha_devolucion.mes, devolucion->fecha_devolucion.anio);
+    printf("Motivo: %s\n", devolucion->motivo);
+    printf("Estado: %s\n", devolucion->estado);
+    if(strcmp(devolucion->estado, "aceptado") == 0)
+    {
+        printf("Fecha de aceptación: %02d/%02d/%d\n", devolucion->fecha_aceptacion.dia, devolucion->fecha_aceptacion.mes, devolucion->fecha_aceptacion.anio);
+        printf("Fecha de caducidad: %02d/%02d/%d\n", devolucion->fecha_caducidad.dia, devolucion->fecha_caducidad.mes, devolucion->fecha_caducidad.anio);
+    }
+    unsigned nuevo_estado;
+    do
+    {
+        printf("Nuevo estado de la devolución:\n");
+        printf("1. Aceptado\n");
+        printf("2. Denegado\n");
+        printf("3. Enviado\n");
+        printf("4. Recibido\n");
+        printf("5. Salir\n");
+        leer_unsigned("Seleccione una opción: ", &nuevo_estado);
+    } while(nuevo_estado < 1 || nuevo_estado > 5);
+
+    switch(nuevo_estado)
+    {
+        case 1:
+            strcpy(devolucion->estado, "aceptado");
+            devolucion->fecha_aceptacion = fecha_actual;
+            devolucion->fecha_caducidad = fecha_devolucion;
+            break;
+        case 2:
+            strcpy(devolucion->estado, "denegado");
+            break;
+        case 3:
+            strcpy(devolucion->estado, "enviado");
+            break;
+        case 4:
+            strcpy(devolucion->estado, "recibido");
+            break;
+        case 5:
+            printf("Saliendo...\n");
+            break;
+        default:
+            break;
     }
 
+    return devolucion;
 }

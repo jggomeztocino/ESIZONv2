@@ -22,11 +22,19 @@ void cargar_lockers(VectorLockers* lockers)
                   &lockers->lockers[lockers->size].num_compartimentos_total,
                   &lockers->lockers[lockers->size].num_compartimentos_ocupados) == 6) {
         lockers->size++;
-        lockers->lockers = (Locker*)realloc(lockers->lockers, (lockers->size + 1) * sizeof(Locker));
+        /*lockers->lockers = (Locker*)realloc(lockers->lockers, (lockers->size + 1) * sizeof(Locker));
         if(lockers->lockers == NULL) {
             free(lockers->lockers);
             perror("\nError al reservar memoria\n");
+        }*/
+        Locker* temp = (Locker*)realloc(lockers->lockers, (lockers->size + 1) * sizeof(Locker));
+        if (temp == NULL) {
+            perror("\nError al reservar memoria\n");
+            free(lockers->lockers);
+            fclose(f);
+            return;
         }
+        lockers->lockers = temp;
     }
     fclose(f);
 }
@@ -169,16 +177,6 @@ void listar_compartimento(CompartimentoLocker* v_compartimento)
     printf("Estado: %s\n", v_compartimento->estado == 0 ? "vacío" : "ocupado");
     printf("Fecha de ocupación: %u/%u/%u\n", v_compartimento->fecha_ocupacion.dia, v_compartimento->fecha_ocupacion.mes, v_compartimento->fecha_ocupacion.anio);
     printf("Fecha de caducidad: %u/%u/%u\n", v_compartimento->fecha_caducidad.dia, v_compartimento->fecha_caducidad.mes, v_compartimento->fecha_caducidad.anio);
-}
-
-void listar_compartimentos_locker(VectorCompartimentos* v_compartimentos, char* id_locker)
-{
-    int i;
-    for (i = 0; i < v_compartimentos->size; i++) {
-        if (strcmp(v_compartimentos->compartimentos[i].id_locker, id_locker) == 0) {
-            listar_compartimento(&v_compartimentos->compartimentos[i]);
-        }
-    }
 }
 
 void listar_todo_lockers(VectorLockers* v_lockers)

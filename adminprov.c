@@ -93,16 +93,6 @@ void listar_adminprov(AdminProv* adminprov)
     printf("==============================");
 }
 
-void listar_admins(VectorAdminProv* v_adminprov)
-{
-    int i;
-    for (i = 0; i < v_adminprov->size; i++) {
-        if (strcmp(v_adminprov->admin_provs[i].perfil_usuario, "administrador") == 0) {
-            listar_adminprov(&v_adminprov->admin_provs[i]);
-        }
-    }
-}
-
 void listar_provs(VectorAdminProv* v_adminprov)
 {
     int i;
@@ -118,12 +108,17 @@ AdminProv* alta_proveedor(VectorAdminProv *v_adminprov)
 {
     if (v_adminprov->size == 0) {
         v_adminprov->admin_provs = (AdminProv*)malloc(sizeof(AdminProv));
+        if(v_adminprov->admin_provs == NULL) {
+            free(v_adminprov->admin_provs);
+            perror("\nError al reservar memoria\n");
+        }
     } else {
-        v_adminprov->admin_provs = (AdminProv*)realloc(v_adminprov->admin_provs, (v_adminprov->size + 1) * sizeof(AdminProv));
-    }
-    if(v_adminprov->admin_provs == NULL) {
-        free(v_adminprov->admin_provs);
-        perror("\nError al reservar memoria\n");
+        AdminProv* temp = (AdminProv*)realloc(v_adminprov->admin_provs, (v_adminprov->size + 1) * sizeof(AdminProv));
+        if(temp == NULL) {
+            free(v_adminprov->admin_provs);
+            perror("\nError al reservar memoria\n");
+        }
+        v_adminprov->admin_provs=temp;
     }
     // Los IDs son consecutivos a la hora de dar de alta
     sprintf(v_adminprov->admin_provs[v_adminprov->size].id_empresa, "%04d", v_adminprov->size + 1);
@@ -142,15 +137,18 @@ void eliminar_proveedor(VectorAdminProv *v_adminprov, AdminProv *proveedor)
         if (proveedor == &v_adminprov->admin_provs[i])
             break;
     }
+    if(i == v_adminprov->size) {
+        printf("No se ha encontrado el proveedor\n");
+        return;
+    }
     for (; i < v_adminprov->size - 1; i++)
         v_adminprov->admin_provs[i] = v_adminprov->admin_provs[i + 1];
     v_adminprov->size--;
-    v_adminprov->admin_provs = (AdminProv*)realloc(v_adminprov->admin_provs, v_adminprov->size * sizeof(AdminProv));
-    if(v_adminprov->admin_provs == NULL) {
-        free(v_adminprov->admin_provs);
+    AdminProv *temp = (AdminProv*)realloc(v_adminprov->admin_provs, v_adminprov->size * sizeof(AdminProv));
+    if(temp == NULL) {
         perror("\nError al reservar memoria\n");
     }
-    printf("Proveedor eliminado correctamente\n");
+    v_adminprov->admin_provs = temp;
 }
 
 void baja_proveedor(VectorAdminProv *v_adminprov)
@@ -246,4 +244,36 @@ AdminProv* buscar_proveedor_email(VectorAdminProv* v_adminprov, char* email)
         return NULL;
     }
     return proveedor;
+}
+
+// Funcion para modificar el ID de la empresa del administrador
+void modificarIdEmpresa(AdminProv *admin) {
+    char nuevoId[5];
+    leer_cadena("Ingrese el nuevo ID de Empresa", nuevoId, sizeof(nuevoId));
+    strcpy(admin->id_empresa, nuevoId);
+    printf("ID de Empresa actualizado con exito.\n");
+}
+
+// Funcion para modificar el nombre del administrador
+void modificarNombre(AdminProv *admin) {
+    char nuevoNombre[21];
+    leer_cadena("Ingrese el nuevo nombre", nuevoNombre, sizeof(nuevoNombre));
+    strcpy(admin->nombre, nuevoNombre);
+    printf("Nombre actualizado con exito.\n");
+}
+
+// Funcion para modificar el email del administrador
+void modificarEmail(AdminProv *admin) {
+    char nuevoEmail[31];
+    leer_cadena("Ingrese el nuevo email", nuevoEmail, sizeof(nuevoEmail));
+    strcpy(admin->email, nuevoEmail);
+    printf("Email actualizado con exito.\n");
+}
+
+// Funcion para modificar la contrasena del administrador
+void modificarContrasena(AdminProv *admin) {
+    char nuevaContrasena[16];
+    leer_cadena("Ingrese la nueva contrasena", nuevaContrasena, sizeof(nuevaContrasena));
+    strcpy(admin->contrasena, nuevaContrasena);
+    printf("Contrasena actualizada con exito.\n");
 }

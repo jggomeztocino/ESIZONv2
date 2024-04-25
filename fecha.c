@@ -35,10 +35,6 @@ Fecha obtener_fecha_actual() {
 }
 
 
-void imprimir_cadena_y_fecha(char* cadena, Fecha fecha) {
-    printf("%s %02d/%02d/%d\n", cadena, fecha.dia, fecha.mes, fecha.anio);
-}
-
 //FUncion que compara fechas
 int comparar_fechas(Fecha fecha1, Fecha fecha2) {
     if(fecha1.anio < fecha2.anio) {

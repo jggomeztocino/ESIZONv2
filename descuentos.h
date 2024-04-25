@@ -9,7 +9,7 @@ typedef struct {
     char id_codigo[11]; // 10 caracteres + '\0'
     char descripcion[51]; // Descripción del descuento
     char tipo[8]; // "codpro" o "cheqreg"
-    char estado[8]; // "activo" o "inactivo"
+    char estado[9]; // "activo" o "inactivo"
     float importe; // Importe del descuento
     char aplicable[8]; // "todos" o "esizon"
 } Descuento;
@@ -90,27 +90,27 @@ void guardar_descuentos_clientes(VectorDescuentosClientes* v_descuentosclientes)
  * @post Muestra los descuentos de un cliente.
  * @return void
  */
-void mostrar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos,  char *id_cliente);
+unsigned listar_descuentos_cliente(VectorDescuentosClientes* v_descuentosclientes, VectorDescuentos* v_descuentos, char* id_cliente);
 
 /**
- * @brief Devuelve un descuento a partir de su id.
+ * @brief Devuelve un descuento a partir de su ID.
  * @param v_descuentos Un puntero al vector de descuentos.
  * @param id_codigo El identificador del descuento.
  * @pre El puntero v_descuentos no debe ser nulo.
- * @post Devuelve un descuento a partir de su id.
+ * @post Devuelve un descuento a partir de su ID.
  * @return Un puntero al descuento.
  */
-Descuento* obtener_descuento(VectorDescuentos* v_descuentos, char* id_codigo);
+Descuento* buscar_descuento_id(VectorDescuentos* v_descuentos, char* id_codigo);
 /**
- * @brief Devuelve un descuento de cliente a partir de su id.
+ * @brief Devuelve un descuento de cliente a partir de su ID.
  * @param v_descuentosclientes Un puntero al vector de descuentos de clientes.
  * @param id_cliente El identificador del cliente.
  * @param id_codigo El identificador del descuento.
  * @pre El puntero v_descuentosclientes no debe ser nulo.
- * @post Devuelve un descuento de cliente a partir de su id.
+ * @post Devuelve un descuento de cliente a partir de su ID.
  * @return Un puntero al descuento de cliente.
  */
-DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
+DescuentoCliente * buscar_descuentocliente(VectorDescuentosClientes* v_descuentosclientes, char* id_cliente, char* id_codigo);
 
 /**
  * @brief Aplica un descuento a un importe.
@@ -123,5 +123,26 @@ DescuentoCliente * obtener_descuento_cliente(VectorDescuentosClientes* v_descuen
  * @post Aplica un descuento a un importe.
  * @return El importe con el descuento aplicado.
  */
-float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe);
+//float aplicar_descuento_a_importe(VectorDescuentosClientes *v_descuentos_cliente, VectorDescuentos *v_descuentos, char *id_cliente, char *id_descuento, float importe);
+
+int descuento_valido(DescuentoCliente *descuento_cliente, char* id_cliente);
+
+void listar_descuento(Descuento* descuento);
+
+void listar_descuentos(VectorDescuentos* v_descuentos);
+
+Descuento* modificar_descuento(Descuento* descuento);
+
+void listar_clientes_descuento(VectorClientes* v_clientes, VectorDescuentosClientes* v_descuentosclientes, char* id_codigo);
+
+Descuento* alta_descuento(VectorDescuentos* v_descuentos, VectorDescuentosClientes* v_descuentoscliente, VectorClientes* v_clientes);
+
+void baja_descuento(char* id_descuento, VectorDescuentos* v_descuentos, VectorDescuentosClientes* v_descuentoscliente);
+
+void baja_descuentocliente(VectorDescuentosClientes* v_descuentoscliente, char* id_cliente, char* id_codigo);
+
+void listar_clientes_descuento_usado(VectorClientes* v_clientes, VectorDescuentosClientes* v_descuentosclientes, char* id_codigo);
+
+void asignar_descuento_cliente(char* id_descuento, char* id_cliente, VectorDescuentosClientes *v_descuentos_cliente);
+
 #endif//DESCUENTOS_H_

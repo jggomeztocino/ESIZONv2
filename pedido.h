@@ -9,6 +9,7 @@
 #include "devoluciones.h"
 #include "utilidades.h"
 #include "cliente.h"
+#include "transportista.h"
 
 
 typedef struct{
@@ -98,9 +99,6 @@ Pedido* buscar_pedido_por_id(VectorPedidos* v_pedidos, char* id_pedido);
  */
  // void listar_productos_asignados_pedido(VectorProductosPedido* v_productos_pedido, char* id_pedido, char* id_transportista);
 
-//Funcion que lista los pedidos de un cliente que se encuentran en lockers
-void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente);
-
 /**
  * Función que comprueba si un producto pedido pertenece a un pedido
  * @param v_productos_pedido Vector de productos pedido
@@ -141,7 +139,16 @@ void listar_pedidos_locker_decliente(VectorPedidos *v_pedidos, char *id_cliente)
  * @param v_descuentos_cliente Vector de descuentos de cliente
  * @param v_productos Vector de productos
  */
-void realizar_pedido(Cliente *cliente, VectorPedidos *v_pedidos, VectorProductosPedido *v_productos_pedido, VectorLockers *v_lockers, VectorDescuentos *v_descuentos, VectorDescuentosClientes *v_descuentos_cliente, VectorProductos *v_productos);
+void realizar_pedido
+        (
+                Cliente *cliente,
+                VectorPedidos *v_pedidos,
+                VectorProductosPedido *v_productos_pedido,
+                VectorLockers *v_lockers,
+                VectorDescuentos *v_descuentos,
+                VectorDescuentosClientes *v_descuentos_cliente,
+                VectorProductos *v_productos
+        );
 /**
  * @brief Carga los productos de pedido desde el archivo productos_pedido.txt
  * @param v_productos_pedido Vector de productos de pedido
@@ -181,6 +188,22 @@ void listar_producto_pedido(ProductoPedido* producto_pedido);
  *
  * \returns Pedido* Puntero al pedido modificado
  */
-Pedido* modificar_pedido(Pedido* pedido);
+Pedido* modificar_pedido(Pedido* pedido, VectorProductosPedido* v_pp, VectorClientes* v_clientes, VectorLockers* v_lockers);
+
+int enPreparacion(char* id_pedido, VectorProductosPedido* v_pedidos);
+
+void eliminar_producto_pedido(char* id_pedido, char* id_producto, VectorProductosPedido* v_productos_pedido);
+
+void eliminar_productos_pedido(char* id_pedido, VectorProductosPedido* v_productos_pedido);
+
+void eliminar_pedido(char* id_pedido, VectorPedidos* v_pedidos, VectorProductosPedido* v_productos_pedido);
+
+void listar_pedidos(VectorPedidos* v_pedidos);
+
+void listar_todos_productos_pedidos(VectorProductosPedido* v_productos_pedido);
+
+unsigned listar_productospedidos_proveedor(char* id_proveedor, VectorProductos* v_productos, VectorProductosPedido* v_productos_pedido);
+
+void enviar_producto_pedido(ProductoPedido* producto_pedido, VectorTransportistas* v_transportistas);
 
 #endif//PEDIDO_H_

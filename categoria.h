@@ -41,9 +41,9 @@ void cargar_categorias(VectorCategorias* categorias);
  */
 void guardar_categorias(VectorCategorias* categorias);
 /**
-    * Función que busca una categoría por su id.
+    * Función que busca una categoría por su ID.
     * @param categorias Un puntero al vector de categorías.
-    * @param id_categoria El id de la categoría a buscar.
+    * @param id_categoria El ID de la categoría a buscar.
     * @pre El puntero categorias no debe ser nulo.
     * @post Se muestra por pantalla la categoría encontrada.
     * @return Un puntero a la categoría encontrada o NULL si no se encuentra.
@@ -89,7 +89,7 @@ Categoria* alta_categoria(VectorCategorias* categorias);
 /**
     * Función que permite dar de baja una categoría
     * @param categorias Un puntero al vector de categorías.
-    * @param id_categoria El id de la categoría a dar de baja.
+    * @param id_categoria El ID de la categoría a dar de baja.
     * @pre El puntero categorias no debe ser nulo.
     * @post Se elimina la categoría del vector de categorías.
  */

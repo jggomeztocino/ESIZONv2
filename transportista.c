@@ -109,11 +109,6 @@ void listar_transportista(Transportista* transportista)
         transportista->ciudad);
 }
 
-
-
-
-
-
 Transportista* alta_transportista(VectorTransportistas* v_transportistas)
 {
     Transportista* temp;

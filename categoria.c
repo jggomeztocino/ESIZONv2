@@ -21,11 +21,11 @@ void cargar_categorias(VectorCategorias* categorias)
                   categorias->categorias[categorias->size].id_categoria,
                   categorias->categorias[categorias->size].descripcion) == 2) {
         categorias->size++;
-        categorias->categorias = (Categoria*)realloc(categorias->categorias, (categorias->size + 1) * sizeof(Categoria));
-        if(categorias->categorias == NULL) {
-            free(categorias->categorias);
+        Categoria* temp = (Categoria*)realloc(categorias->categorias, (categorias->size + 1) * sizeof(Categoria));
+        if(temp == NULL) {
             perror("\nError al reservar memoria\n");
         }
+        categorias->categorias = temp;
     }
     fclose(f);
 }
@@ -82,11 +82,11 @@ Categoria* modificar_categoria(Categoria* categoria)
 
 Categoria* alta_categoria(VectorCategorias* categorias)
 {
-    categorias->categorias = (Categoria*)realloc(categorias->categorias, (categorias->size + 1) * sizeof(Categoria));
-    if(categorias->categorias == NULL) {
-        free(categorias->categorias);
+    Categoria* temp = (Categoria*)realloc(categorias->categorias, (categorias->size + 1) * sizeof(Categoria));
+    if(temp == NULL) {
         perror("\nError al reservar memoria\n");
     }
+    categorias->categorias = temp;
     sprintf(categorias->categorias[categorias->size].id_categoria, "%04d", atoi(categorias->categorias[categorias->size - 1].id_categoria) + 1);
     leer_cadena("Ingrese la descripción de la categoría: ", categorias->categorias[categorias->size].descripcion, 51);
     categorias->size++;
@@ -102,13 +102,16 @@ void baja_categoria(VectorCategorias *categorias, char *id_categoria)
             break;
         }
     }
+    if(i == categorias->size) {
+        return;
+    }
     for (; i < categorias->size - 1; i++) {
         categorias->categorias[i] = categorias->categorias[i + 1];
     }
     categorias->size--;
-    categorias->categorias = (Categoria*)realloc(categorias->categorias, categorias->size * sizeof(Categoria));
-    if(categorias->categorias == NULL) {
-        free(categorias->categorias);
+    Categoria* temp = (Categoria*)realloc(categorias->categorias, (categorias->size) * sizeof(Categoria));
+    if(temp == NULL) {
         perror("\nError al reservar memoria\n");
     }
+    categorias->categorias = temp;
 }

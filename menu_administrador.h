@@ -9,14 +9,7 @@
 #include "categoria.h"
 #include "transportista.h"
 #include "pedido.h"
-
-void modificarIdEmpresa(AdminProv *admin);
-
-void modificarNombre(AdminProv *admin);
-
-void modificarEmail(AdminProv *admin);
-
-void modificarContrasena(AdminProv *admin);
+#include "descuentos.h"
 
 void perfilAdministrador(AdminProv* admin);
 
@@ -36,6 +29,6 @@ void gestionDescuentos();
 
 void gestionDevoluciones();
 
-void mostrarMenuAdministrador(AdminProv* admin);
+void mostrarMenuAdministrador(AdminProv *admin);
 
 #endif //MENU_ADMINISTRADOR_H

@@ -110,7 +110,7 @@ void listar_compartimento(CompartimentoLocker* v_compartimento);
  */
  void listar_todo_lockers(VectorLockers* v_lockers);
 /**
- * Buscar un compartimento por su número de compartimento y el id del locker
+ * Buscar un compartimento por su número de compartimento y el ID del locker
  * @param v_compartimentos Vector de compartimentos
  * @param id_locker Identificador del locker
  * @param num_compartimento Número de compartimento
@@ -119,7 +119,7 @@ void listar_compartimento(CompartimentoLocker* v_compartimento);
 CompartimentoLocker* buscar_compartimento(VectorCompartimentos* v_compartimentos, char* id_locker, unsigned num_compartimento);
 
 /**
- * Buscar el primer compartimento libre por su número de compartimento y el id del locker
+ * Buscar el primer compartimento libre por su número de compartimento y el ID del locker
  * @param v_compartimentos Vector de compartimentos
  * @param id_locker Identificador del locker
  * @param num_compartimento Número de compartimento

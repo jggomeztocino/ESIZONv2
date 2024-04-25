@@ -55,9 +55,9 @@ void listar_cliente(Cliente* cliente);
  */
 void modificar_cliente(Cliente* cliente);
 /**
-  Funcion que busca un cliente por su id
+  Funcion que busca un cliente por su ID
  * @param v_clientes Un puntero al vector de clientes
- * @param id_cliente El id del cliente a buscar
+ * @param id_cliente El ID del cliente a buscar
  * @pre El puntero v_clientes no debe ser nulo
  * @post Se devuelve el cliente si se encuentra, en caso contrario se devuelve NULL
  * @return Cliente* El cliente encontrado o NULL
@@ -83,7 +83,7 @@ void listar_clientes(VectorClientes* v_clientes);
 /**
   Funcion que eliminar un cliente
     * @param v_clientes Un puntero al vector de clientes
-    * @param id_cliente El id del cliente a eliminar
+    * @param id_cliente El ID del cliente a eliminar
     * @pre El puntero v_clientes no debe ser nulo
     * @post Se elimina el cliente del vector de clientes
     * @return void
