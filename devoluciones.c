@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+#include "pedido.h"
 // Funciones para cargar y guardar las devoluciones (al estilo de cliente.c)
 /*
     Los campos, separados por guiones, son los que se describen a continuación:

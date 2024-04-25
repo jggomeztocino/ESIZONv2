@@ -3,10 +3,11 @@
 #define DEVOLUCIONES_H_
 
 
-#include "pedido.h"
-#include "fecha.h"
-#include "productos.h"
-#include "cliente.h"
+// #include "pedido.h"
+ #include "fecha.h"
+// #include "productos.h"
+// #include "cliente.h"
+
 
 
 typedef struct
@@ -47,19 +48,24 @@ void cargar_devoluciones(VectorDevoluciones* v_devoluciones);
  */
 void guardar_devoluciones(VectorDevoluciones* v_devoluciones);
 
-/**
- * @brief Función que busca una devolución por su ID.
- * @param v_pedidos
- * @param v_devoluciones
- * @param id_cliente
- * @pre El puntero v_devoluciones no debe ser nulo.
- * @post Se muestra por pantalla la devolución encontrada.
- */
- void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente);
 
+
+
+
+/**
+
+    * @brief Función que da de alta una devolución
+    * @param id_pedido ID del pedido
+    * @param id_producto ID del producto
+    * @param fecha_devolucion Fecha de la devolución
+    * @param v_devoluciones Vector de devoluciones
+    * @return void
+
+*/
 
 void alta_devolucion(char* id_pedido, char* id_producto, Fecha* fecha_devolucion, VectorDevoluciones* v_devoluciones);
-void iniciar_devolucion(ProductoPedido* productoPedido, char* id_producto, VectorDevoluciones* v_devoluciones);
+
+
 void baja_devolucion(char* id_pedido, char* id_producto, VectorDevoluciones* v_devoluciones);
 /**
  * Función que solicita los datos de una devolución

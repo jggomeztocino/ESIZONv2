@@ -1,9 +1,9 @@
 #ifndef PRODUCTOS_H_
 #define PRODUCTOS_H_
 
-#include "utilidades.h"
-#include "categoria.h"
-#include "adminprov.h"
+ #include "utilidades.h"
+ #include "categoria.h"
+ #include "adminprov.h"
 
 typedef struct{
 	char id_producto[8];

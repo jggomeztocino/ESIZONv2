@@ -1,6 +1,5 @@
 #ifndef TRANSPORTISTA_H
 #define TRANSPORTISTA_H
-#include "pedido.h"
 
 
 // Estructura que representa a un transportista

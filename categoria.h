@@ -1,9 +1,7 @@
 #ifndef CATEGORIA_H
 #define CATEGORIA_H
 
-#include "pedido.h"
-//#include "productos.h"
-#include "utilidades.h"
+ #include "utilidades.h"
 
 // Estructura que representa a una categoría de productos
 typedef struct {

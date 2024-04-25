@@ -1,5 +1,10 @@
 #include "menutransportista.h"
+#include "stdlib.h"
+#include "pedido.h"
 
+#include "stdio.h"
+#include "string.h"
+#include "fecha.h"
 
 void listar_productos_asignados(VectorProductosPedido *v_productos_pedido, char *id_transportista)
 {

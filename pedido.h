@@ -2,15 +2,22 @@
 #define PEDIDO_H_
 
 #include "fecha.h"
-#include "descuentos.h"
+ #include "descuentos.h"
 #include "productos.h"
 #include "locker.h"
-#include "pedido.h"
 #include "devoluciones.h"
 #include "utilidades.h"
-#include "cliente.h"
 #include "transportista.h"
 
+// Declaración adelantadada de VectorCliente y Cliente
+// typedef struct Cliente Cliente;
+// typedef struct VectorClientes VectorClientes;
+
+/*
+                VectorDescuentos *v_descuentos,
+                VectorDescuentosClientes *v_descuentos_cliente,
+                VectorProductos *v_productos
+*/
 
 typedef struct{
 	char id_pedido[8]; // 7 dígitos + '\0'
@@ -260,5 +267,31 @@ unsigned listar_productospedidos_proveedor(char* id_proveedor, VectorProductos* 
     * @param v_transportistas VectorTransportistas* Vector de transportistas
 */
 void enviar_producto_pedido(ProductoPedido* producto_pedido, VectorTransportistas* v_transportistas);
+
+
+/**
+ * @brief Función que busca una devolución por su ID.
+ * @param v_pedidos
+ * @param v_devoluciones
+ * @param id_cliente
+ * @pre El puntero v_devoluciones no debe ser nulo.
+ * @post Se muestra por pantalla la devolución encontrada.
+ */
+ void mostrar_devoluciones_pendientes(VectorPedidos *v_pedidos, VectorDevoluciones *v_devoluciones, char *id_cliente);
+
+/**
+
+    * @brief Función que inicia una devolución
+    * @param productoPedido ProductoPedido a devolver
+    * @param id_producto ID del producto
+    * @param v_devoluciones Vector de devoluciones
+    * @return void
+
+*/
+void iniciar_devolucion(ProductoPedido* productoPedido, char* id_producto, VectorDevoluciones* v_devoluciones);
+
+
+
+
 
 #endif//PEDIDO_H_

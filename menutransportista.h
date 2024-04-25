@@ -3,14 +3,10 @@
 
 
 #include "productos.h"
-#include "pedido.h"
 #include "locker.h"
 #include "transportista.h"
 #include "utilidades.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "fecha.h"
+
 
 /**
  * @brief Muestra el menú de opciones para el transportista
